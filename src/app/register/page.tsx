@@ -2,11 +2,18 @@
 import { supabase } from '../../lib/supabase';
 import { useState } from 'react';
 
+/**
+ * 新規登録ページ
+ */
 export default function RegisterPage() {
     const [errorMessage, setErrorMessage] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
+    /**
+     * ユーザー登録処理
+     */
+    const handleRegister = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+        // フォームが送信される時のデフォルトの動作（ページのリロード）を防ぐ
         event.preventDefault();
         setLoading(true);
         setErrorMessage('');
@@ -16,35 +23,32 @@ export default function RegisterPage() {
         const password = (event.target as HTMLFormElement).elements.namedItem('password') as HTMLInputElement;
 
         try {
-            // 1. ユーザー登録
-            const { data: authData, error: authError } = await supabase.auth.signUp({
+            // supabaseのユーザー登録
+            const { data: _authData, error: authError } = await supabase.auth.signUp({
                 email: email.value,
                 password: password.value,
             });
 
+            // 登録エラーチェック
             if (authError) {
                 setErrorMessage(authError.message);
                 return;
             }
 
-            if (!authData.user) {
-                setErrorMessage('ユーザー作成に失敗しました');
-                return;
-            }
-
-            // 2. 登録直後にログイン（セッション確立）
+            // supabaseのユーザー登録が成功した場合、ログインを試みる
             const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
                 email: email.value,
                 password: password.value,
             });
 
+            // ログインエラーチェック
             if (loginError) {
                 console.error('ログインエラー:', loginError);
                 setErrorMessage('ユーザー登録は成功しましたが、ログインに失敗しました');
                 return;
             }
 
-            // 3. セッション確立後にプロフィール保存
+            // profilesのuser_idにログインしたユーザーのIDを保存、nameに入力された名前を保存
             const { error: profileError } = await supabase
                 .from('profiles')
                 .insert([
@@ -54,14 +58,15 @@ export default function RegisterPage() {
                     }
                 ]);
 
+            // プロフィール保存エラーチェック
             if (profileError) {
                 console.error('プロフィール保存エラー:', profileError);
                 setErrorMessage(`プロフィール保存エラー: ${profileError.message}`);
-            } else {
-                alert('登録が成功しました！');
-                // フォームをクリア
-                (event.target as HTMLFormElement).reset();
+                return;
             }
+            alert('登録が成功しました！');
+            // フォームをクリア
+            (event.target as HTMLFormElement).reset();
 
         } catch (error) {
             console.error('登録エラー:', error);
