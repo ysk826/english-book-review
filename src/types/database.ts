@@ -1,4 +1,4 @@
-export type Profile = {
+export interface Profile {
     id: string;
     user_id: string;
     name: string;
@@ -11,7 +11,7 @@ export type Profile = {
     updated_at: string;
 }
 
-export type UserBook = {
+export interface UserBook {
     id: string;
     user_id: string;
     book_id: string;

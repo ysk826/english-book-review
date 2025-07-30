@@ -29,7 +29,7 @@ export default function LoginPage() {
                 email: email.value,
                 password: password.value,
             });
-            console.log('ログインデータ:', _loginData);
+
             // ログインエラーチェック
             if (loginError) {
                 setErrorMessage(loginError.message);
