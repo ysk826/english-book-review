@@ -1,13 +1,14 @@
 "use client";
 import { supabase } from '../../lib/supabase';
 import { useState } from 'react';
-
+import { useRouter } from 'next/navigation';
 /**
  * 新規登録ページ
  */
 export default function RegisterPage() {
     const [errorMessage, setErrorMessage] = useState('');
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
     /**
      * ユーザー登録処理
@@ -65,8 +66,8 @@ export default function RegisterPage() {
                 return;
             }
             alert('登録が成功しました！');
-            // フォームをクリア
-            (event.target as HTMLFormElement).reset();
+
+            router.push('/profile');
 
         } catch (error) {
             console.error('登録エラー:', error);
