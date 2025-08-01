@@ -1,5 +1,12 @@
 import { Profile } from '@/types/database'
 export interface userProfileProps {
-    profile: Profile | null;
-    onEditProfile: () => void;
+    /** ユーザープロフィールコンポーネントのプロパティ */
+    profile: Profile;
+    /** プロフィール編集時のコールバック関数 */
+    onEditProfile: (profile: Profile) => void;
+}
+
+export interface UserProfileEditModalProps {
+    profile: Profile;
+    onClose: () => void;
 }

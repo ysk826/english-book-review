@@ -10,6 +10,13 @@ export const useProfile = (): UseProfileReturn => {
     const [user, setUser] = useState<User | null>(null)
     const [loading, setLoading] = useState(true)
 
+    // モーダルの表示状態を管理
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+    const openEditModal = () => setIsEditModalOpen(true)
+    const closeEditModal = () => setIsEditModalOpen(false)
+
+    // ユーザー情報をsupabaseから取得
     const fetchProfile = async () => {
         try {
             // ユーザー情報を取得
@@ -44,6 +51,9 @@ export const useProfile = (): UseProfileReturn => {
 
     return {
         fetchProfile,
-        profile
+        profile,
+        isEditModalOpen,
+        openEditModal,
+        closeEditModal
     }
 }

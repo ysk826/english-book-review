@@ -9,4 +9,10 @@ export type UseProfileReturn = {
     profile: Profile | null;
     /** プロフィールを取得する関数 */
     fetchProfile: () => Promise<void>;
+    /** プロフィール編集モーダルの表示状態 */
+    isEditModalOpen?: boolean;
+    /** プロフィール編集モーダルを開く関数 */
+    openEditModal?: () => void;
+    /** プロフィール編集モーダルを閉じる関数 */
+    closeEditModal?: () => void;
 };

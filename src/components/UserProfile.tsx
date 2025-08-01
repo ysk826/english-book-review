@@ -1,6 +1,10 @@
 import { userProfileProps } from "@/types/props"
 
-
+/**
+ * ユーザープロフィールコンポーネント
+ * @param profile - ユーザープロフィールデータ
+ * @param onEditProfile - プロフィール編集時のコールバック関数
+ */
 export default function UserProfile({ profile, onEditProfile }: userProfileProps) {
     return (
         <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
@@ -25,7 +29,7 @@ export default function UserProfile({ profile, onEditProfile }: userProfileProps
 
                 {/* 編集ボタン */}
                 <button
-                    onClick={onEditProfile}
+                    onClick={() => onEditProfile(profile)}
                     className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors"
                 >
                     プロフィールを編集
