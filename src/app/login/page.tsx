@@ -25,6 +25,8 @@ export default function LoginPage() {
 
         try {
             // Supabaseのログイン処理
+            // dataにはsession情報(jwt、reflesh tokenなど)が含まれる
+            // dataはCookieに保存され、以降のリクエストで自動的に認証される
             const { data: _loginData, error: loginError } = await supabase.auth.signInWithPassword({
                 email: email.value,
                 password: password.value,

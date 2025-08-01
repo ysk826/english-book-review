@@ -7,10 +7,10 @@ import { Profile } from '@/types/database';
 export default function ProfilePage() {
 
     // useProfileフックを使用して、現在のユーザープロフィールと編集モーダルの状態を取得
-    const { profile, fetchProfile, isEditModalOpen, openEditModal, closeEditModal } = useProfile();
+    const { profile, isEditModalOpen, openEditModal, closeEditModal, handleSaveUserProfile } = useProfile();
 
     // プロフィール編集時のコールバック関数
-    const handleEditProfile = (profile: Profile) => {
+    const handleEditProfile = (_profile: Profile) => {
         openEditModal();
     }
 
@@ -25,6 +25,7 @@ export default function ProfilePage() {
                 <UserProfileEditModal
                     profile={profile}
                     onClose={closeEditModal}
+                    onSave={handleSaveUserProfile}
 
                 />
             )}

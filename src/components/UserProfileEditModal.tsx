@@ -1,13 +1,22 @@
 "use client"
 import Image from "next/image";
-import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import { useState } from "react";
 import { Profile } from "@/types/database";
 import { UserProfileEditModalProps } from "@/types/props"
 
-export default function UserProfileEditModal({ profile, onClose }: UserProfileEditModalProps) {
-    const [editingName, setEditingName] = useState("");
-    const [edittingBio, setEditingBio] = useState("");
+export default function UserProfileEditModal({ profile, onClose, onSave }: UserProfileEditModalProps) {
+    const [editingName, setEditingName] = useState(profile.name);
+    const [edittingBio, setEditingBio] = useState(profile.bio || "");
+
+    // 保存ボタンがクリックされたときの処理
+    const handleSaveClick = () => {
+        const updatedProfile: Profile = {
+            ...profile,
+            name: editingName,
+            bio: edittingBio
+        };
+        onSave(updatedProfile);
+    };
 
     return (
         <div
@@ -96,7 +105,7 @@ export default function UserProfileEditModal({ profile, onClose }: UserProfileEd
                             キャンセル
                         </button>
                         <button
-                            onClick={() => { }}
+                            onClick={handleSaveClick}
                             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                         >
                             保存
