@@ -58,11 +58,11 @@ export const useProfile = (): UseProfileReturn => {
 
         if (error) {
             console.error('エラー:', error)
-        } else {
-            // 更新成功時の処理
-            setProfile(updatedProfile)
-            closeEditModal();
+            return;
         }
+        // 更新成功時の処理
+        setProfile(updatedProfile)
+        closeEditModal();
     }
 
     // プロフィール編集モーダルを開く/閉じる関数
