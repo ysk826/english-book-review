@@ -51,8 +51,6 @@ export default function UserProfile({ profile, onEditProfile }: userProfileProps
                     <div className="text-sm text-gray-600">読みたい本</div>
                 </div>
             </div>
-
-
         </div>
     )
 }
