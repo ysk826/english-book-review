@@ -1,0 +1,100 @@
+import { useState, useCallback } from "react";
+import { useRouter } from 'next/navigation';
+import { BookDetailInfo } from "@/types/book";
+import { supabase } from '@/lib/supabase';
+
+
+
+
+export const useBookLibrary = (bookInfo: BookDetailInfo) => {
+    const router = useRouter();
+    const [saving, setSaving] = useState(false);
+    const [status, setStatus] = useState<string>("read");
+    const [rating, setRating] = useState<number | null>(null);
+    const [review, setReview] = useState<string>("");
+
+    /**
+     * 本をDBに追加する関数
+     */
+    const addBookToLibrary = useCallback(async () => {
+
+        // ボタンが無効化： "保存中..."と表示
+        setSaving(true);
+        try {
+            // 現在のユーザーを取得
+            const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+            if (authError || !user) {
+                alert('ログインが必要です');
+                router.push('/login');
+                return;
+            }
+            // 1. 本の存在確認
+            let { data: book } = await supabase
+                .from('books')
+                .select('id')
+                .eq('isbn13', bookInfo.isbn13) // todo: ISBN13がnullの時の処理はどうするか？
+                .maybeSingle();
+
+            // 2. 本が存在しない場合のみ作成
+            if (!book) {
+                // booksテーブルに保存
+                // select: upsert後の最新データを取得
+                // single: 追加したレコード1件を取得
+                const { data: newBook, error: newBookError } = await supabase
+                    .from('books')
+                    .insert({
+                        title: bookInfo.title,
+                        authors: bookInfo.authors,
+                        thumbnail: bookInfo.images,
+                        published_date: bookInfo.publishedDate,
+                        isbn10: bookInfo.isbn10,
+                        isbn13: bookInfo.isbn13,
+                        issn: bookInfo.issn,
+                    })
+                    .select()
+                    .single();
+                // エラーハンドリング
+                if (newBookError) throw newBookError;
+                book = newBook;
+            }
+            // 3. ユーザーの読書記録を保存(更新)
+            const { data: _userBook, error: userBookError } = await supabase
+                .from('user_books')
+                .upsert({
+                    user_id: user.id,
+                    book_id: book!.id,
+                    status: status,
+                    rating: rating,
+                    review: review,
+                    started_reading_at: null, // todo: 必要に応じて設定
+                    finished_reading_at: null, // todo: 必要に応じて設定
+                })
+                .select()
+                .single();
+
+            // エラーハンドリング
+            if (userBookError) throw userBookError;
+
+            alert('ライブラリに追加しました！');
+        }
+        catch (error) {
+            console.error("Error saving book to library:", error);
+            const errorMessage = error instanceof Error ? error.message : "保存に失敗しました";
+            alert(errorMessage);
+        } finally {
+            setSaving(false);
+        }
+    }, [bookInfo, router, status, rating, review]);
+
+    return {
+        saving,
+        status,
+        rating,
+        review,
+        setStatus,
+        setRating,
+        setReview,
+        addBookToLibrary
+    };
+}

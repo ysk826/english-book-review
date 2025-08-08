@@ -2,6 +2,8 @@
 import { supabase } from '../../lib/supabase';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+
 /**
  * 新規登録ページ
  */
@@ -131,7 +133,13 @@ export default function RegisterPage() {
                 </button>
             </form>
             <p style={{ marginTop: '1rem', textAlign: 'center' }}>
-                既にアカウントをお持ちですか？<a href="/login" style={{ color: '#0070f3', textDecoration: 'underline' }}>ログインはこちら</a>
+                既にアカウントをお持ちですか？
+                <Link
+                    href="/login"
+                    style={{ color: '#0070f3', textDecoration: 'underline' }}
+                >
+                    ログインはこちら
+                </Link>
             </p>
         </div>
     );

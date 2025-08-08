@@ -1,5 +1,5 @@
 import { Profile } from "./database";
-import { SearchResultBook } from "./book";
+import { SearchResultBook, BookDetailInfo } from "./book";
 
 /**
  * useProfileの戻り値の型定義
@@ -43,4 +43,14 @@ export type useBookSearchReturn = {
     loading: boolean;
     /** 本の検索を実行する関数 */
     handleSearchBook: () => Promise<void>;
+}
+
+/**
+ * useBookDetailフックの戻り値の型定義
+ * @usedBy hooks/useBookDetail.tsx
+ */
+export interface UseBookDetailReturn {
+    bookInfo: BookDetailInfo | null;
+    loading: boolean;
+    displayImage: string | null;
 }

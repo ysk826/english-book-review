@@ -1,4 +1,5 @@
 import { Profile } from '@/types/database'
+import { BookDetailInfo } from './book';
 
 export interface userProfileProps {
     /** ユーザープロフィールコンポーネントのプロパティ */
@@ -29,4 +30,19 @@ export interface BookSearchFormProps {
     loading: boolean;
     /** 本の検索を実行する関数 */
     handleSearchBook: () => Promise<void>;
+}
+
+export interface BookInfoDisplayProps {
+    book: BookDetailInfo;
+}
+
+export interface BookAddFormProps {
+    status: string;
+    rating: number | null;
+    review: string;
+    saving: boolean;
+    onStatusChange: (status: string) => void;
+    onRatingChange: (rating: number | null) => void;
+    onReviewChange: (review: string) => void;
+    onSubmit: () => void;
 }

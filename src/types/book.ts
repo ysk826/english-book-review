@@ -20,15 +20,16 @@ export interface SearchResultBook {
     publishedDate: string;
 }
 
-export interface FormattedBook {
+export interface BookDetailInfo {
+    id: string;
+    title: string;
+    authors: string[];
+    publishedDate: string;
     isbn10: string | null;
     isbn13: string | null;
     issn: string | null;
-    title: string;
-    authors: string[];
-    images: {
-        smallThumbnail: string | null;
-        thumbnail: string | null;
-    };
-    publishedDate: string;
+    images: BookImages | null;
+    description: string | null;
+    pageCount: number | null;
+    publisher: string | null;
 }
