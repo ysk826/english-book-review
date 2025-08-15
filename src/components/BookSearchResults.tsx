@@ -6,6 +6,8 @@ import { generateBookUrl } from "@/utils/slugify";
 
 /**
  * 検索結果表示コンポーネント
+ * @usedBy app/profile/page.tsx
+ * @param books 検索結果の本のリスト
  */
 export default function BookSearchResults({ books }: { books: SearchResultBook[] }) {
 

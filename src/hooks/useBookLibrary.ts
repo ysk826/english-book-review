@@ -5,7 +5,12 @@ import { supabase } from '@/lib/supabase';
 
 
 
-
+/**
+ * 本のライブラリ管理に関するカスタムフック
+ * @usedBy books/[id]/[slug]/page.tsx
+ * @param bookInfo 本の詳細情報
+ * @returns
+ */
 export const useBookLibrary = (bookInfo: BookDetailInfo) => {
     const router = useRouter();
     const [saving, setSaving] = useState(false);
@@ -18,7 +23,7 @@ export const useBookLibrary = (bookInfo: BookDetailInfo) => {
      */
     const addBookToLibrary = useCallback(async () => {
 
-        // ボタンが無効化： "保存中..."と表示
+        // ボタンが無効化： "追加中..."と表示
         setSaving(true);
         try {
             // 現在のユーザーを取得
@@ -77,6 +82,8 @@ export const useBookLibrary = (bookInfo: BookDetailInfo) => {
             if (userBookError) throw userBookError;
 
             alert('ライブラリに追加しました！');
+            // 本の詳細ページに遷移
+            router.push("/profile");
         }
         catch (error) {
             console.error("Error saving book to library:", error);

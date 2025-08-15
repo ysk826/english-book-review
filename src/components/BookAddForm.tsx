@@ -2,8 +2,8 @@ import type { BookAddFormProps } from "@/types/props";
 
 /**
  * 本をマイライブラリに追加するためのフォームコンポーネント
- *
  * 読書ステータス、評価、レビューを入力し、マイライブラリに追加する機能を提供
+ * @usedBy src/app/books/[id]/[slug]/page.tsx
  */
 export default function BookAddForm({
     status,

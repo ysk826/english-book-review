@@ -1,4 +1,5 @@
 'use client';
+import { Suspense } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 import { notFound } from 'next/navigation';
@@ -7,19 +8,23 @@ import BookAddForm from '@/components/BookAddForm';
 import { useBookLibrary } from '@/hooks/useBookLibrary';
 import { useBookDetail } from '@/hooks/useBookDetail';
 
-/**
- * 本の詳細ページコンポーネント
- * @usedBy BookSearchResults.tsx
- * @description URLパラメータとクエリパラメータから本の情報を取得して表示
- */
-export default function BookDetailPage() {
+function BookDetailContent() {
     const { bookInfo, loading, displayImage } = useBookDetail();
-    console.log('BookDetailPage', { bookInfo, loading, displayImage });
-    // 本の情報が取得できない場合
-    if (!bookInfo) {
-        // 404ページを表示
-        notFound();
-    }
+
+    // bookInfoがnullの場合に備えて、デフォルト値を用意
+    const defaultBookInfo = {
+        id: '',
+        title: '',
+        authors: [],
+        publishedDate: '',
+        isbn10: null,
+        isbn13: null,
+        issn: null,
+        images: null,
+        description: null,
+        pageCount: null,
+        publisher: null,
+    };
 
     const {
         saving,
@@ -30,9 +35,8 @@ export default function BookDetailPage() {
         setRating,
         setReview,
         addBookToLibrary,
-    } = useBookLibrary(bookInfo);
+    } = useBookLibrary(bookInfo || defaultBookInfo);
 
-    // ローディング中の表示
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -42,6 +46,11 @@ export default function BookDetailPage() {
                 </div>
             </div>
         );
+    }
+
+    // ローディングが完了してもbookInfoがない場合のみ404
+    if (!bookInfo) {
+        notFound();
     }
 
     // メタデータ用の情報生成
@@ -132,5 +141,23 @@ export default function BookDetailPage() {
                 </div>
             </div>
         </>
+    );
+}
+
+// メインのページコンポーネント（Suspenseでラップ）
+export default function BookDetailPage() {
+    return (
+        <Suspense
+            fallback={
+                <div className="min-h-screen flex items-center justify-center">
+                    <div className="text-center">
+                        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto"></div>
+                        <p className="mt-4 text-gray-600">ページを読み込んでいます...</p>
+                    </div>
+                </div>
+            }
+        >
+            <BookDetailContent />
+        </Suspense>
     );
 }

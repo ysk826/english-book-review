@@ -3,6 +3,7 @@ import { BookSearchFormProps } from "@/types/props";
 
 /**
  * 本の検索フォーム（プレゼンテーショナルコンポーネント）
+ * @usedby app/profile/page.tsx
  */
 export default function BookSearchForm({
     titleQuery,

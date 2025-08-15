@@ -1,4 +1,4 @@
-import { Profile } from "./database";
+import { Profile, UserBookRecord } from "./database";
 import { SearchResultBook, BookDetailInfo } from "./book";
 
 /**
@@ -53,4 +53,13 @@ export interface UseBookDetailReturn {
     bookInfo: BookDetailInfo | null;
     loading: boolean;
     displayImage: string | null;
+}
+
+export interface UseSavedBookReturn {
+    savedBooks: UserBookRecord[];
+    loading: boolean;
+    error: string | null;
+    fetchSavedBooks: () => Promise<void>;
+    refreshSavedBooks: () => Promise<void>;
+    updateSavedBook: (updatedRecord: UserBookRecord) => void;
 }

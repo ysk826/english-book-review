@@ -1,5 +1,6 @@
 import { Profile } from '@/types/database'
 import { BookDetailInfo } from './book';
+import { UserBookRecord } from './database';
 
 export interface userProfileProps {
     /** ユーザープロフィールコンポーネントのプロパティ */
@@ -45,4 +46,16 @@ export interface BookAddFormProps {
     onRatingChange: (rating: number | null) => void;
     onReviewChange: (review: string) => void;
     onSubmit: () => void;
+}
+
+export interface SavedBooksListProps {
+    savedBooks: UserBookRecord[];
+    onEditBook: (book: UserBookRecord) => void;
+}
+
+export interface BookEditModalProps {
+    isOpen: boolean;
+    book: UserBookRecord | null;
+    onClose: () => void;
+    onSave: (updatedData: UserBookRecord) => Promise<void>;
 }

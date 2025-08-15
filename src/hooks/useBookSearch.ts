@@ -35,7 +35,7 @@ export const useBookSearch = (): useBookSearchReturn => {
             }
 
             // APIリクエストを送信
-            // '/api/books'エンドポイントを使用している
+            // '/api/books/route.tsのGETを使用している
             const { data } = await axios.get(`/api/books?q=${encodeURIComponent(query)}`);
 
             // エラーハンドリング

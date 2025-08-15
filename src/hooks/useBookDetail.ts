@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams, useParams, notFound } from 'next/navigation';
+import { useSearchParams, useParams } from 'next/navigation';
 import { isValidSlug } from '@/utils/slugify';
 import { BookDetailInfo } from '@/types/book';
 import { UseBookDetailReturn } from '@/types/hooks';
@@ -15,37 +15,37 @@ export const useBookDetail = (): UseBookDetailReturn => {
     const [bookInfo, setBookInfo] = useState<BookDetailInfo | null>(null);
     const [loading, setLoading] = useState(true);
 
-    console.log('params:', params); // { id: string, slug: string }
-    console.log('searchParams:', searchParams); // URLSearchParams
+    // useEffectの外で値を取得（ESLint警告を回避）
+    const bookId = params.id as string;
+    const urlSlug = params.slug as string;
+    const title = searchParams.get('title');
+    const authors = searchParams.get('authors');
+    const publishedDate = searchParams.get('publishedDate');
+    const isbn10 = searchParams.get('isbn10');
+    const isbn13 = searchParams.get('isbn13');
+    const issn = searchParams.get('issn');
+    const smallThumbnail = searchParams.get('smallThumbnail');
+    const thumbnail = searchParams.get('thumbnail');
 
     useEffect(() => {
 
-        // パラメータが存在しない場合は404エラー
+        // パラメータの存在チェック
         if (!params || !searchParams) {
-            console.log('パラメータが不足しています');
-            return notFound();
+            console.log('パラメータオブジェクトが利用できません');
+            return;
         }
-        // URLパラメータから情報を取得
-        const bookId = params.id as string;
-        const urlSlug = params.slug as string;
 
-        // クエリパラメータから本の詳細情報を取得
-        const title = searchParams.get('title');
-        const authors = searchParams.get('authors');
-        const publishedDate = searchParams.get('publishedDate');
-        const isbn10 = searchParams.get('isbn10');
-        const isbn13 = searchParams.get('isbn13');
-        const issn = searchParams.get('issn');
-        const smallThumbnail = searchParams.get('smallThumbnail');
-        const thumbnail = searchParams.get('thumbnail');
-
-        console.log('title:', title);
-        console.log('authors:', authors);
+        // 必須パラメータのチェック
+        if (!bookId || !urlSlug) {
+            console.error('URLパラメータが不足:', { bookId, urlSlug });
+            setLoading(false);
+            return;
+        }
 
         // 必須パラメータのチェック
         if (!title || !authors || !publishedDate) {
-            console.error('必須パラメータが不足しています');
-            notFound();
+            console.error('クエリパラメータが不足:', { title, authors, publishedDate });
+            setLoading(false);
             return;
         }
 
@@ -54,7 +54,7 @@ export const useBookDetail = (): UseBookDetailReturn => {
             console.warn('Slugがタイトルと一致しません:', { urlSlug, title });
         }
 
-        // 本の情報を設定
+        // 本の情報を作成
         const bookDetail: BookDetailInfo = {
             id: bookId,
             title,
@@ -75,7 +75,18 @@ export const useBookDetail = (): UseBookDetailReturn => {
         // 本の情報をステートに保存
         setBookInfo(bookDetail);
         setLoading(false);
-    }, [params?.id, params?.slug, searchParams]);
+    }, [bookId,
+        urlSlug,
+        title,
+        authors,
+        publishedDate,
+        isbn10,
+        isbn13,
+        issn,
+        smallThumbnail,
+        thumbnail,
+        params,
+        searchParams]);
 
     return {
         bookInfo,
