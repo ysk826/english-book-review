@@ -3,6 +3,10 @@ import { supabase } from '@/lib/supabase';
 import { UserBookRecord } from '@/types/database';
 import { UseSavedBookReturn } from '@/types/hooks';
 
+/**
+ * 読んだ本のリストを管理するカスタムフック
+ * @usedBy src/app/profile/page.tsx
+ */
 export const useSavedBook = (): UseSavedBookReturn => {
     const [savedBooks, setSavedBooks] = useState<UserBookRecord[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -37,6 +41,7 @@ export const useSavedBook = (): UseSavedBookReturn => {
         try {
             setLoading(true);
             setError(null);
+
             // Supabaseから現在のユーザー情報を取得
             const { data: { user }, error } = await supabase.auth.getUser();
             if (error || !user) {
@@ -83,6 +88,7 @@ export const useSavedBook = (): UseSavedBookReturn => {
     // コールバック関数: 更新された本の情報を親コンポーネントに通知する
     // この関数は、useBookEditフックから呼び出される
     const updateSavedBook = useCallback((updatedBook: UserBookRecord) => {
+
         // 更新された本の情報を状態に反映
         setSavedBooks(prevBooks =>
             prevBooks.map(book =>

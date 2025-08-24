@@ -2,17 +2,20 @@
 import { useState } from "react";
 import { UserBookRecord } from "@/types/database";
 import { supabase } from '@/lib/supabase';
+import { UseBookEditReturn } from "@/types/hooks";
 
-
-
-export const useBookEdit = (onBookUpdated?: (updatedBook: UserBookRecord) => void) => {
+/**
+ * 本の編集機能を提供するカスタムフック
+ * @usedBy src/app/profile/page.tsx
+ * @param onBookUpdated 本の更新後に呼び出されるコールバック関数
+ */
+export const useBookEdit = (onBookUpdated?: (updatedBook: UserBookRecord) => void): UseBookEditReturn => {
+    // 編集中の本の情報を管理
     const [editingBook, setEditingBook] = useState<UserBookRecord | null>(null);
     const [_loading, setLoading] = useState(true)
 
-
     // モーダルの表示状態を管理
     const [isBookEditModalOpen, setIsBookEditModalOpen] = useState(false);
-
 
     // 本の編集を開始する関数: 本の情報を持たせてモーダルを開く
     const openBookEditModal = (book: UserBookRecord) => {
@@ -20,8 +23,8 @@ export const useBookEdit = (onBookUpdated?: (updatedBook: UserBookRecord) => voi
         setIsBookEditModalOpen(true);
     }
 
+    // 本の編集モーダルを閉じる関数
     const closeBookEditModal = () => setIsBookEditModalOpen(false)
-
 
     // 本の編集を保存する関数
     const handleSaveBook = async (updatedData: UserBookRecord) => {
@@ -57,6 +60,7 @@ export const useBookEdit = (onBookUpdated?: (updatedBook: UserBookRecord) => voi
                 ...editingBook,  // 既存のデータを保持
                 ...updatedData,   // 更新したフィールドを上書き
             };
+            // 編集中の本を更新
             setEditingBook(updatedRecord);
 
             // コールバック関数で親に通知

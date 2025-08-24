@@ -9,17 +9,18 @@ import { useProfile } from '@/hooks/useProfile';
 import { useBookSearch } from '@/hooks/useBookSearch';
 import { useSavedBook } from '@/hooks/useSavedBook';
 import { useBookEdit } from '@/hooks/useBookEdit';
-import { Profile, UserBookRecord } from '@/types/database';
+import { Profile } from '@/types/database';
 import { supabase } from '@/lib/supabase';
 
 export default function ProfilePage() {
 
     // useProfileフックを使用して、現在のユーザープロフィールと編集モーダルの状態を取得
     const {
+        fetchProfile,
         profile,
-        isEditModalOpen,
-        openEditModal,
-        closeEditModal,
+        isProfileEditModalOpen,
+        openProfileEditModal,
+        closeProfileEditModal,
         handleSaveUserProfile
     } = useProfile();
 
@@ -33,12 +34,6 @@ export default function ProfilePage() {
         loading,
         handleSearchBook
     } = useBookSearch();
-
-    // プロフィール編集時のコールバック関数
-    const handleEditProfile = (_profile: Profile) => {
-        openEditModal();
-    }
-
 
     // useSavedBookフックを使用して、読んだ本のリストを取得
     const { savedBooks, updateSavedBook, loading: booksLoading, fetchSavedBooks } = useSavedBook();
@@ -124,17 +119,16 @@ export default function ProfilePage() {
             )}
             {/* ユーザープロフィール */}
             {profile && <UserProfile
-                profile={profile} onEditProfile={handleEditProfile} />}
+                profile={profile} onEditProfile={openProfileEditModal} />}
 
             {/* ユーザープロフィール編集モーダル */}
-            {isEditModalOpen && profile && (
-                <UserProfileEditModal
-                    profile={profile}
-                    onClose={closeEditModal}
-                    onSave={handleSaveUserProfile}
+            <UserProfileEditModal
+                isOpen={isProfileEditModalOpen}
+                profile={profile}
+                onClose={closeProfileEditModal}
+                onSave={handleSaveUserProfile}
+            />
 
-                />
-            )}
 
             {/* 読んだ本を追加するフォーム */}
             <BookSearchForm

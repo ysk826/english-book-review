@@ -11,11 +11,11 @@ export type UseProfileReturn = {
     /** プロフィールを取得する関数 */
     fetchProfile: () => Promise<void>;
     /** プロフィール編集モーダルの表示状態 */
-    isEditModalOpen: boolean;
+    isProfileEditModalOpen: boolean;
     /** プロフィール編集モーダルを開く関数 */
-    openEditModal: () => void;
+    openProfileEditModal: (profile: Profile) => void;
     /** プロフィール編集モーダルを閉じる関数 */
-    closeEditModal: () => void;
+    closeProfileEditModal: () => void;
     /** 編集内容を保存する関数 */
     handleSaveUserProfile: (updatedProfile: Profile) => void;
 };
@@ -62,4 +62,23 @@ export interface UseSavedBookReturn {
     fetchSavedBooks: () => Promise<void>;
     refreshSavedBooks: () => Promise<void>;
     updateSavedBook: (updatedRecord: UserBookRecord) => void;
+}
+
+/**
+ * useBookEditフックの戻り値の型定義
+ * @usedBy hooks/useBookEdit.tsx
+ */
+export interface UseBookEditReturn {
+    /** 編集中の本の情報 */
+    editingBook: UserBookRecord | null;
+    /** モーダルの表示状態 */
+    isBookEditModalOpen: boolean;
+    /** 本の編集モーダルを開く関数 */
+    openBookEditModal: (book: UserBookRecord) => void;
+    /** 本の編集モーダルを閉じる関数 */
+    closeBookEditModal: () => void;
+    /** 編集中の本を設定する関数 */
+    setEditingBook: (book: UserBookRecord | null) => void;
+    /** 本の編集を保存する関数 */
+    handleSaveBook: (updatedBook: UserBookRecord) => Promise<void>;
 }

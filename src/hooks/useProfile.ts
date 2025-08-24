@@ -5,6 +5,7 @@ import { UseProfileReturn } from '@/types/hooks';
 
 /**
  * ユーザープロフィールを管理するカスタムフック
+ * @usedBy src/app/profile/page.tsx
  */
 export const useProfile = (): UseProfileReturn => {
     // ユーザーのプロフィールを管理
@@ -12,7 +13,16 @@ export const useProfile = (): UseProfileReturn => {
     const [_loading, setLoading] = useState(true)
 
     // モーダルの表示状態を管理
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isProfileEditModalOpen, setIsProfileEditModalOpen] = useState(false);
+
+    // プロフィール編集モーダルを開く関数
+    const openProfileEditModal = (profile: Profile) => {
+        setProfile(profile);
+        setIsProfileEditModalOpen(true);
+    }
+
+    // プロフィール編集モーダルを閉じる関数
+    const closeProfileEditModal = () => setIsProfileEditModalOpen(false)
 
     // ユーザー情報をsupabaseから取得
     const fetchProfile = async () => {
@@ -60,14 +70,10 @@ export const useProfile = (): UseProfileReturn => {
             console.error('エラー:', error)
             return;
         }
-        // 更新成功時の処理
+        // 更新成功時にプロフィールを更新
         setProfile(updatedProfile)
         closeEditModal();
     }
-
-    // プロフィール編集モーダルを開く/閉じる関数
-    const openEditModal = () => setIsEditModalOpen(true)
-    const closeEditModal = () => setIsEditModalOpen(false)
 
     // コンポーネントがマウントされた時にプロフィールをフェッチ
     useEffect(() => {
@@ -77,9 +83,9 @@ export const useProfile = (): UseProfileReturn => {
     return {
         fetchProfile,
         profile,
-        isEditModalOpen,
-        openEditModal,
-        closeEditModal,
+        isProfileEditModalOpen,
+        openProfileEditModal,
+        closeProfileEditModal,
         handleSaveUserProfile
     }
 }

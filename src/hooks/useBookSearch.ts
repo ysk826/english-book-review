@@ -3,6 +3,10 @@ import { SearchResultBook } from "@/types/book";
 import { useBookSearchReturn } from "@/types/hooks";
 import axios from 'axios';
 
+/**
+ * 書籍検索を管理するカスタムフック
+ * @usedBy src/app/books/search/page.tsx
+ */
 export const useBookSearch = (): useBookSearchReturn => {
     // 検索条件を管理するステート
     const [titleQuery, setTitleQuery] = useState("");

@@ -7,17 +7,10 @@ export default function BookEditModal({ isOpen, book, onClose, onSave }: BookEdi
     const [editingRating, setEditingRating] = useState(book ? book.rating : 0);
     const [editingReview, setEditingReview] = useState(book ? book.review : "");
 
-    useEffect(() => {
-        if (book) {
-            setEditingStatus(book.status);
-            setEditingRating(book.rating);
-            setEditingReview(book.review);
-        }
-    }, [book]);
-
     // モーダルが開いていない場合は何も表示しない
     if (!isOpen || !book) return null;
 
+    // 背景クリックでモーダルを閉じる処理
     const handleBackdropClick = (e: React.MouseEvent) => {
         // 背景クリックでモーダルを閉じる
         if (e.target === e.currentTarget) {
@@ -25,6 +18,7 @@ export default function BookEditModal({ isOpen, book, onClose, onSave }: BookEdi
         }
     };
 
+    // 保存ボタン: 編集内容を保存し、モーダルを閉じる
     const handleSave = () => {
         const updatedData = {
             ...book,
@@ -34,7 +28,7 @@ export default function BookEditModal({ isOpen, book, onClose, onSave }: BookEdi
         };
         onSave(updatedData);
         onClose();
-    }
+    };
 
     return (
         <div
@@ -49,12 +43,6 @@ export default function BookEditModal({ isOpen, book, onClose, onSave }: BookEdi
                 {/* ヘッダー */}
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-bold">感想を編集</h3>
-                    <button
-                        onClick={onClose}
-                        className="text-gray-500 hover:text-gray-700 text-xl"
-                    >
-                        ×
-                    </button>
                 </div>
 
                 {/* 編集中の本の情報を表示 */}

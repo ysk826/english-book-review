@@ -4,11 +4,14 @@ import { useState } from "react";
 import { Profile } from "@/types/database";
 import { UserProfileEditModalProps } from "@/types/props"
 
-export default function UserProfileEditModal({ profile, onClose, onSave }: UserProfileEditModalProps) {
-    const [editingName, setEditingName] = useState(profile.name);
-    const [edittingBio, setEditingBio] = useState(profile.bio || "");
+export default function UserProfileEditModal({ isOpen, profile, onClose, onSave }: UserProfileEditModalProps) {
+    const [editingName, setEditingName] = useState(profile ? profile.name : "");
+    const [edittingBio, setEditingBio] = useState(profile ? profile.bio : "");
 
-    // 保存ボタンがクリックされたときの処理
+    // モーダルが開いていない場合は何も表示しない
+    if (!isOpen || !profile) return null;
+
+    // 保存ボタンをクリック: 編集内容を保存し、モーダルを閉じる
     const handleSaveClick = () => {
         const updatedProfile: Profile = {
             ...profile,
@@ -16,6 +19,7 @@ export default function UserProfileEditModal({ profile, onClose, onSave }: UserP
             bio: edittingBio
         };
         onSave(updatedProfile);
+        onClose();
     };
 
     return (
@@ -31,12 +35,6 @@ export default function UserProfileEditModal({ profile, onClose, onSave }: UserP
                 {/* ヘッダー */}
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-bold">プロフィール編集</h3>
-                    <button
-                        onClick={() => { }}
-                        className="text-gray-500 hover:text-gray-700 text-xl"
-                    >
-                        ×
-                    </button>
                 </div>
 
                 {/* ユーザープロフィール情報 */}

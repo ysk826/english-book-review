@@ -10,8 +10,10 @@ export interface userProfileProps {
 }
 
 export interface UserProfileEditModalProps {
+    //** ユーザープロフィール編集モーダルのプロパティ */
+    isOpen: boolean;
     /** ユーザープロフィール編集モーダルのプロパティ */
-    profile: Profile;
+    profile: Profile | null;
     /** モーダルを閉じる関数 */
     onClose: () => void;
     /** 編集内容を保存する関数 */
