@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { BookEditModalProps } from '@/types/props';
 import Image from 'next/image';
 export default function BookEditModal({ isOpen, book, onClose, onSave }: BookEditModalProps) {

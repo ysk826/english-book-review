@@ -10,6 +10,16 @@
 
 ### Phase 1
 
+### テスト整備
+
+- [x] `api/books/route.ts` の `formatApiBooks` / `formatDbBooks` / `extractValue` のユニットテストを書く
+- [x] `BookSearchForm` コンポーネントのテストを書く（入力・ボタン押下）
+- [x] `BookSearchResults` コンポーネントのテストを書く（一覧表示・クリック遷移）
+- [x] `BookAddForm` コンポーネントのテストを書く（フォームフィールド・送信）
+- [x] `useBookDetail` フックのテストを書く（URL パラメータから BookDetailInfo を構築）
+- [x] `useBookSearch` フックのテストを書く（axios モックで検索ロジックを確認）
+- [x] E2E テスト: ログイン → 書籍検索 → 登録フローを書く
+
 ---
 
 ## In Progress（作業中）

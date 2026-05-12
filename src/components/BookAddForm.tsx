@@ -18,10 +18,11 @@ export default function BookAddForm({
     return (
         <div className="space-y-4">
             <div>
-                <label className="block text-sm font-medium mb-2">
+                <label htmlFor="status" className="block text-sm font-medium mb-2">
                     読書ステータス
                 </label>
                 <select
+                    id="status"
                     value={status}
                     onChange={(e) => onStatusChange(e.target.value)}
                     className="w-full p-2 border rounded"
@@ -33,10 +34,11 @@ export default function BookAddForm({
             </div>
 
             <div>
-                <label className="block text-sm font-medium mb-2">
+                <label htmlFor="rating" className="block text-sm font-medium mb-2">
                     評価 (1-5)
                 </label>
                 <select
+                    id="rating"
                     value={rating || 0} // 0は評価なしを意味する
                     onChange={(e) => onRatingChange(Number(e.target.value))}
                     className="w-full p-2 border rounded"
@@ -51,10 +53,11 @@ export default function BookAddForm({
             </div>
 
             <div>
-                <label className="block text-sm font-medium mb-2">
+                <label htmlFor="review" className="block text-sm font-medium mb-2">
                     レビュー（任意）
                 </label>
                 <textarea
+                    id="review"
                     value={review}
                     onChange={(e) => onReviewChange(e.target.value)}
                     placeholder="この本の感想を書いてください..."

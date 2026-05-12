@@ -5,7 +5,7 @@ import { SearchResultBook } from '@/types/book';
 import { Book } from '@/types/database';
 
 // APIの検索結果をフォーマットする関数
-const formatApiBooks = (apiItems: GoogleBooksResponse): SearchResultBook[] => {
+export const formatApiBooks = (apiItems: GoogleBooksResponse): SearchResultBook[] => {
 
     // 言語フィルタリング: 英語の本のみを対象
     const filtered = apiItems.items!.filter((item: GoogleBooksItem) => {
@@ -29,7 +29,7 @@ const formatApiBooks = (apiItems: GoogleBooksResponse): SearchResultBook[] => {
 };
 
 // データベースの書籍情報をフォーマットする関数
-const formatDbBooks = (dbItems: Book[]): SearchResultBook[] => {
+export const formatDbBooks = (dbItems: Book[]): SearchResultBook[] => {
     return dbItems.map(item => ({
         isbn10: item.isbn10 || null,
         isbn13: item.isbn13 || null,
@@ -46,7 +46,7 @@ const formatDbBooks = (dbItems: Book[]): SearchResultBook[] => {
 };
 
 // クエリから特定のキーの値を抽出するヘルパー関数
-function extractValue(query: string, key: string): string | null {
+export function extractValue(query: string, key: string): string | null {
     const regex = new RegExp(`${key}:"([^"]+)"`);
     const match = query.match(regex);
     return match ? match[1] : null;

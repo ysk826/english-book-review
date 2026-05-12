@@ -21,10 +21,11 @@ export default function BookSearchForm({
 
                 {/* タイトル入力欄 */}
                 <div>
-                    <label className="block text-sm font-medium mb-1">
+                    <label htmlFor="book-title" className="block text-sm font-medium mb-1">
                         タイトル
                     </label>
                     <input
+                        id="book-title"
                         type="text"
                         placeholder="本のタイトルを入力"
                         value={titleQuery}
@@ -35,10 +36,11 @@ export default function BookSearchForm({
 
                 {/* 著者入力欄 */}
                 <div>
-                    <label className="block text-sm font-medium mb-1">
+                    <label htmlFor="book-author" className="block text-sm font-medium mb-1">
                         著者
                     </label>
                     <input
+                        id="book-author"
                         type="text"
                         placeholder="著者名を入力"
                         value={authorQuery}

@@ -45,15 +45,6 @@ export default function BookSearchResults({ books }: { books: SearchResultBook[]
         router.push(`${bookUrl}?${searchParams.toString()}`);
     };
 
-    /**
-     * キャンセルボタンの処理（検索結果を非表示にする）
-     */
-    const handleCancel = () => {
-        // 親コンポーネントに結果をクリアすることを通知
-        // 現在は空の処理だが、将来的にpropsで関数を受け取って実装
-        console.log("検索結果をキャンセル");
-    };
-
     return (
         <div className="max-w-4xl p-4 border rounded-lg mx-auto mb-8">
             <div>

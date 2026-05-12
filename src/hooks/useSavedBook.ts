@@ -13,7 +13,7 @@ export const useSavedBook = (): UseSavedBookReturn => {
     const [error, setError] = useState<string | null>(null);
 
     // JSONをパースする関数
-    const parseBookData = (record: any): UserBookRecord => {
+    const parseBookData = (record: UserBookRecord): UserBookRecord => {
         if (!record.books) {
             return {
                 ...record,

@@ -79,6 +79,7 @@ npm run test:e2e:ui   # Playwright UI モード（デバッグ用）
 ```
 
 ユニット/コンポーネントテストは `*.test.ts(x)` をソースと同階層に置く。E2E テストは `e2e/` 以下に置く。
+E2E 実行前に `npm run dev` で dev サーバーを起動しておくこと（Playwright が自動的に再利用する）。
 
 ## Architecture
 
