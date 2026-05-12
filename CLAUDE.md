@@ -14,7 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **バックエンド**: Next.js API Routes (`src/app/api/`)
 - **データベース**: Supabase (PostgreSQL)
 - **認証**: Supabase Auth (`@supabase/auth-helpers-nextjs`)
-- **テスト**: 未設定
+- **テスト**: Vitest + React Testing Library（ユニット/コンポーネント）、Playwright（E2E）
 - **Lint/Format**: ESLint (`eslint-config-next`)
 - **パッケージマネージャー**: npm
 
@@ -68,12 +68,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm run dev      # 開発サーバー起動 (Turbopack)
-npm run build    # プロダクションビルド
-npm run lint     # ESLint
+npm run dev           # 開発サーバー起動 (Turbopack)
+npm run build         # プロダクションビルド
+npm run lint          # ESLint
+
+npm run test          # Vitest ウォッチモード
+npm run test:run      # Vitest 1回実行（CI向け）
+npm run test:e2e      # Playwright E2E テスト実行
+npm run test:e2e:ui   # Playwright UI モード（デバッグ用）
 ```
 
-テストは未設定。
+ユニット/コンポーネントテストは `*.test.ts(x)` をソースと同階層に置く。E2E テストは `e2e/` 以下に置く。
 
 ## Architecture
 
