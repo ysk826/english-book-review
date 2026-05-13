@@ -72,7 +72,7 @@ export const useProfile = (): UseProfileReturn => {
         }
         // 更新成功時にプロフィールを更新
         setProfile(updatedProfile)
-        closeEditModal();
+        closeProfileEditModal();
     }
 
     // コンポーネントがマウントされた時にプロフィールをフェッチ

@@ -21,7 +21,7 @@
 
 ### Task 中
 
-- [ ] `closeEditModal()` バグを修正する（`useProfile.ts:75`、正しくは `closeProfileEditModal()`）
+- [x] `closeEditModal()` バグを修正する（`useProfile.ts:75`、正しくは `closeProfileEditModal()`）
 - [ ] 検索結果のキャンセルボタンを実装する（`BookSearchResults.tsx`、`onClick` が空関数）
 
 ### Task 低
@@ -55,6 +55,7 @@
 - [x] `<html lang="en">` を `"ja"` に修正する（`layout.tsx`、SEO・アクセシビリティに影響）
 - [x] `metadata` をデフォルトから修正する（`layout.tsx`、title が "Create Next App" のまま）
 - [x] デバッグ用コードを削除する（`profile/page.tsx` の `testFetchBooks` 関数とボタン）
+- [x] `closeEditModal()` バグを修正する（`useProfile.ts:75`、正しくは `closeProfileEditModal()`）
 
 ---
 
