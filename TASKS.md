@@ -26,7 +26,7 @@
 
 ### Task 低
 
-- [ ] `<html lang="en">` を `"ja"` に修正する（`layout.tsx`、SEO・アクセシビリティに影響）
+- [x] `<html lang="en">` を `"ja"` に修正する（`layout.tsx`、SEO・アクセシビリティに影響）
 - [ ] `metadata` をデフォルトから修正する（`layout.tsx`、title が "Create Next App" のまま）
 - [ ] デバッグ用コードを削除する（`profile/page.tsx` の `testFetchBooks` 関数とボタン）
 
@@ -52,6 +52,7 @@
 
 - [x] ログイン画面が質素なので、もう少し今風なデザインにする
 - [x] 新規登録ページのデザインをモダンに統一する（インラインスタイルをTailwind CSSに置き換え）
+- [x] `<html lang="en">` を `"ja"` に修正する（`layout.tsx`、SEO・アクセシビリティに影響）
 
 ---
 
