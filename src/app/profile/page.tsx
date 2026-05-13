@@ -17,7 +17,8 @@ export default function ProfilePage() {
         isProfileEditModalOpen,
         openProfileEditModal,
         closeProfileEditModal,
-        handleSaveUserProfile
+        handleSaveUserProfile,
+        handleLogout,
     } = useProfile();
 
     // useBookSearchフックを使用して、検索機能を取得
@@ -48,7 +49,10 @@ export default function ProfilePage() {
         <div className="p-8">
             {/* ユーザープロフィール */}
             {profile && <UserProfile
-                profile={profile} onEditProfile={openProfileEditModal} />}
+                profile={profile}
+                onEditProfile={openProfileEditModal}
+                onLogout={handleLogout}
+            />}
 
             {/* ユーザープロフィール編集モーダル */}
             <UserProfileEditModal
