@@ -28,7 +28,7 @@
 
 - [x] `<html lang="en">` を `"ja"` に修正する（`layout.tsx`、SEO・アクセシビリティに影響）
 - [x] `metadata` をデフォルトから修正する（`layout.tsx`、title が "Create Next App" のまま）
-- [ ] デバッグ用コードを削除する（`profile/page.tsx` の `testFetchBooks` 関数とボタン）
+- [x] デバッグ用コードを削除する（`profile/page.tsx` の `testFetchBooks` 関数とボタン）
 
 ### テスト整備
 
@@ -54,6 +54,7 @@
 - [x] 新規登録ページのデザインをモダンに統一する（インラインスタイルをTailwind CSSに置き換え）
 - [x] `<html lang="en">` を `"ja"` に修正する（`layout.tsx`、SEO・アクセシビリティに影響）
 - [x] `metadata` をデフォルトから修正する（`layout.tsx`、title が "Create Next App" のまま）
+- [x] デバッグ用コードを削除する（`profile/page.tsx` の `testFetchBooks` 関数とボタン）
 
 ---
 
