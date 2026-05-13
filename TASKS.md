@@ -23,12 +23,14 @@
 
 - [x] `closeEditModal()` バグを修正する（`useProfile.ts:75`、正しくは `closeProfileEditModal()`）
 - [ ] 検索結果のキャンセルボタンを実装する（`BookSearchResults.tsx`、`onClick` が空関数）
+- [ ] プロフィールのページで読んだ本のサムネイルが表示されない
 
 ### Task 低
 
 - [x] `<html lang="en">` を `"ja"` に修正する（`layout.tsx`、SEO・アクセシビリティに影響）
 - [x] `metadata` をデフォルトから修正する（`layout.tsx`、title が "Create Next App" のまま）
 - [x] デバッグ用コードを削除する（`profile/page.tsx` の `testFetchBooks` 関数とボタン）
+- [ ] UserProfile.tsのページとプロフィール編集モーダルのページをモダンに統一する
 
 ### テスト整備
 
