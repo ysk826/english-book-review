@@ -9,14 +9,12 @@ import { useProfile } from '@/hooks/useProfile';
 import { useBookSearch } from '@/hooks/useBookSearch';
 import { useSavedBook } from '@/hooks/useSavedBook';
 import { useBookEdit } from '@/hooks/useBookEdit';
-import { Profile } from '@/types/database';
 import { supabase } from '@/lib/supabase';
 
 export default function ProfilePage() {
 
     // useProfileフックを使用して、現在のユーザープロフィールと編集モーダルの状態を取得
     const {
-        fetchProfile,
         profile,
         isProfileEditModalOpen,
         openProfileEditModal,
@@ -36,7 +34,7 @@ export default function ProfilePage() {
     } = useBookSearch();
 
     // useSavedBookフックを使用して、読んだ本のリストを取得
-    const { savedBooks, updateSavedBook, loading: booksLoading, fetchSavedBooks } = useSavedBook();
+    const { savedBooks, updateSavedBook } = useSavedBook();
 
     // useBookEditフックを使用して、本の編集機能を取得
     const {
@@ -44,7 +42,6 @@ export default function ProfilePage() {
         isBookEditModalOpen,
         openBookEditModal,
         closeBookEditModal,
-        setEditingBook,
         handleSaveBook,
     } = useBookEdit(updateSavedBook);
 
@@ -64,7 +61,7 @@ export default function ProfilePage() {
             }
 
             // まずはシンプルなクエリでテスト
-            const { data: simpleData, error: simpleError } = await supabase
+            const { data: simpleData, error: _simpleError } = await supabase
                 .from('user_books')
                 .select('*')
                 .eq('user_id', userData.user.id);

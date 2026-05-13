@@ -10,6 +10,9 @@
 
 ### Phase 1
 
+- [ ] ログアウト機能を実装する（プロフィールページにボタンを追加）
+- [ ] パスワードリセット画面を実装する（`/reset-password`）
+
 ### テスト整備
 
 - [x] `api/books/route.ts` の `formatApiBooks` / `formatDbBooks` / `extractValue` のユニットテストを書く
@@ -29,6 +32,8 @@
 ---
 
 ## Done（完了）
+
+- [x] ログイン画面が質素なので、もう少し今風なデザインにする
 
 ---
 
