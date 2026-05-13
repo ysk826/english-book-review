@@ -29,7 +29,7 @@ export default function SavedBooksList({ savedBooks, onEditBook }: SavedBooksLis
                                     {/* 左側: 画像 */}
                                     {book.books && (book.books.thumbnail?.smallThumbnail || book.books.thumbnail?.thumbnail) && (
                                         <Image
-                                            src={book.books.thumbnail.smallThumbnail || book.books.thumbnail.thumbnail}
+                                            src={(book.books.thumbnail.smallThumbnail || book.books.thumbnail.thumbnail) as string}
                                             alt={book.books.title}
                                             width={400}
                                             height={600}
