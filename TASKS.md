@@ -24,6 +24,7 @@
 - [x] `closeEditModal()` バグを修正する（`useProfile.ts:75`、正しくは `closeProfileEditModal()`）
 - [ ] 検索結果のキャンセルボタンを実装する（`BookSearchResults.tsx`、`onClick` が空関数）
 - [x] プロフィールのページで読んだ本のサムネイルが表示されない
+- [ ] 読んだ本がプロフィールページでカウントされていない
 
 ### Task 低
 
