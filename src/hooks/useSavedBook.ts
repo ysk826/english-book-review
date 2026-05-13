@@ -30,7 +30,7 @@ export const useSavedBook = (): UseSavedBookReturn => {
                     : record.books.authors,
                 thumbnail: typeof record.books.thumbnail === 'string'
                     ? JSON.parse(record.books.thumbnail)
-                    : null
+                    : record.books.thumbnail
             }
         };
     };
@@ -74,7 +74,7 @@ export const useSavedBook = (): UseSavedBookReturn => {
                 throw new Error(booksError.message);
             }
             // 取得したデータをパースして状態に設定
-            const parsedBooks = savedBooksData.map(parseBookData);
+            const parsedBooks = (savedBooksData as unknown as UserBookRecord[]).map(parseBookData);
             setSavedBooks(parsedBooks);
         } catch (error) {
             console.error("読んだ本の取得エラー:", error);

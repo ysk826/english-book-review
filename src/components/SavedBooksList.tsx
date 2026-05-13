@@ -27,9 +27,9 @@ export default function SavedBooksList({ savedBooks, onEditBook }: SavedBooksLis
                                     className="flex gap-4 p-4 border rounded"
                                 >
                                     {/* 左側: 画像 */}
-                                    {book.books && (
+                                    {book.books && (book.books.thumbnail?.smallThumbnail || book.books.thumbnail?.thumbnail) && (
                                         <Image
-                                            src={book.books.thumbnail?.smallThumbnail || book.books.thumbnail?.thumbnail || '/placeholder.png'}
+                                            src={book.books.thumbnail.smallThumbnail || book.books.thumbnail.thumbnail}
                                             alt={book.books.title}
                                             width={400}
                                             height={600}
