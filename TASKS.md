@@ -13,6 +13,23 @@
 - [ ] ログアウト機能を実装する（プロフィールページにボタンを追加）
 - [ ] パスワードリセット画面を実装する（`/reset-password`）
 
+### Task 重
+
+- [ ] `middleware.ts` を実装してルート保護を追加する（未ログインで `/profile` 等に直接アクセスできる）
+- [x] 新規登録ページのデザインをモダンに統一する（インラインスタイルをTailwind CSSに置き換え）
+- [ ] `alert()` をトースト通知に置き換える（`register/page.tsx:67`）
+
+### Task 中
+
+- [ ] `closeEditModal()` バグを修正する（`useProfile.ts:75`、正しくは `closeProfileEditModal()`）
+- [ ] 検索結果のキャンセルボタンを実装する（`BookSearchResults.tsx`、`onClick` が空関数）
+
+### Task 低
+
+- [ ] `<html lang="en">` を `"ja"` に修正する（`layout.tsx`、SEO・アクセシビリティに影響）
+- [ ] `metadata` をデフォルトから修正する（`layout.tsx`、title が "Create Next App" のまま）
+- [ ] デバッグ用コードを削除する（`profile/page.tsx` の `testFetchBooks` 関数とボタン）
+
 ### テスト整備
 
 - [x] `api/books/route.ts` の `formatApiBooks` / `formatDbBooks` / `extractValue` のユニットテストを書く
@@ -34,6 +51,7 @@
 ## Done（完了）
 
 - [x] ログイン画面が質素なので、もう少し今風なデザインにする
+- [x] 新規登録ページのデザインをモダンに統一する（インラインスタイルをTailwind CSSに置き換え）
 
 ---
 

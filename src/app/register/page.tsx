@@ -4,19 +4,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-/**
- * 新規登録ページ
- */
 export default function RegisterPage() {
     const [errorMessage, setErrorMessage] = useState('');
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
-    /**
-     * ユーザー登録処理
-     */
     const handleRegister = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
-        // フォームが送信される時のデフォルトの動作（ページのリロード）を防ぐ
         event.preventDefault();
         setLoading(true);
         setErrorMessage('');
@@ -80,67 +73,94 @@ export default function RegisterPage() {
     };
 
     return (
-        <div style={{ maxWidth: '400px', margin: '0 auto', padding: '1rem' }}>
-            <h1>新規登録</h1>
-            <form onSubmit={handleRegister}>
-                <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="name" style={{ display: 'block', marginBottom: '0.5rem' }}>名前</label>
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        style={{ width: '100%', padding: '0.5rem', fontSize: '1rem' }}
-                        required
-                    />
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
+            <div className="w-full max-w-md">
+
+                {/* ロゴ・ブランディング */}
+                <div className="text-center mb-8">
+                    <div className="text-5xl mb-3">📚</div>
+                    <h1 className="text-2xl font-bold text-slate-800">English Book Review</h1>
+                    <p className="text-slate-500 mt-1 text-sm">洋書の記録をはじめよう。</p>
                 </div>
-                <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="email" style={{ display: 'block', marginBottom: '0.5rem' }}>メールアドレス</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        style={{ width: '100%', padding: '0.5rem', fontSize: '1rem' }}
-                        required
-                    />
+
+                {/* 登録カード */}
+                <div className="bg-white rounded-2xl shadow-lg p-8">
+                    <h2 className="text-xl font-semibold text-slate-700 mb-6">新規登録</h2>
+
+                    <form onSubmit={handleRegister} className="space-y-5">
+
+                        {/* 名前 */}
+                        <div>
+                            <label htmlFor="name" className="block text-sm font-medium text-slate-600 mb-1.5">
+                                名前
+                            </label>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                placeholder="山田 太郎"
+                                required
+                                className="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-slate-800 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                            />
+                        </div>
+
+                        {/* メールアドレス */}
+                        <div>
+                            <label htmlFor="email" className="block text-sm font-medium text-slate-600 mb-1.5">
+                                メールアドレス
+                            </label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="example@mail.com"
+                                required
+                                className="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-slate-800 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                            />
+                        </div>
+
+                        {/* パスワード */}
+                        <div>
+                            <label htmlFor="password" className="block text-sm font-medium text-slate-600 mb-1.5">
+                                パスワード（6文字以上）
+                            </label>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="••••••••"
+                                minLength={6}
+                                required
+                                className="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-slate-800 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                            />
+                        </div>
+
+                        {/* エラーメッセージ */}
+                        {errorMessage && (
+                            <p className="text-sm text-red-500 bg-red-50 px-4 py-2.5 rounded-lg">
+                                {errorMessage}
+                            </p>
+                        )}
+
+                        {/* 登録ボタン */}
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors"
+                        >
+                            {loading ? '登録中...' : '登録'}
+                        </button>
+                    </form>
+
+                    {/* ログインリンク */}
+                    <p className="text-center text-sm text-slate-500 mt-6">
+                        既にアカウントをお持ちですか？{' '}
+                        <Link href="/login" className="text-blue-600 hover:underline font-medium">
+                            ログインはこちら
+                        </Link>
+                    </p>
                 </div>
-                <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="password" style={{ display: 'block', marginBottom: '0.5rem' }}>パスワード（6文字以上）</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        minLength={6}
-                        style={{ width: '100%', padding: '0.5rem', fontSize: '1rem' }}
-                        required
-                    />
-                </div>
-                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                <button
-                    type="submit"
-                    disabled={loading}
-                    style={{
-                        width: '100%',
-                        padding: '0.75rem',
-                        fontSize: '1rem',
-                        backgroundColor: loading ? '#ccc' : '#0070f3',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: loading ? 'not-allowed' : 'pointer'
-                    }}
-                >
-                    {loading ? '登録中...' : '登録'}
-                </button>
-            </form>
-            <p style={{ marginTop: '1rem', textAlign: 'center' }}>
-                既にアカウントをお持ちですか？
-                <Link
-                    href="/login"
-                    style={{ color: '#0070f3', textDecoration: 'underline' }}
-                >
-                    ログインはこちら
-                </Link>
-            </p>
+            </div>
         </div>
     );
 }
