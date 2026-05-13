@@ -44,12 +44,20 @@ export default function ProfilePage() {
         handleSaveBook,
     } = useBookEdit(updateSavedBook);
 
+    // user_booksの実データからカウントを計算し、profilesテーブルの静的な値を上書き
+    const profileWithCounts = profile ? {
+        ...profile,
+        read_count: savedBooks.filter(b => b.status === 'read').length,
+        reading_count: savedBooks.filter(b => b.status === 'reading').length,
+        want_to_read_count: savedBooks.filter(b => b.status === 'want_to_read').length,
+    } : null;
+
     return (
 
         <div className="p-8">
             {/* ユーザープロフィール */}
-            {profile && <UserProfile
-                profile={profile}
+            {profileWithCounts && <UserProfile
+                profile={profileWithCounts}
                 onEditProfile={openProfileEditModal}
                 onLogout={handleLogout}
             />}
