@@ -3,6 +3,7 @@ import { supabase } from '../../lib/supabase';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 export default function RegisterPage() {
     const [errorMessage, setErrorMessage] = useState('');
@@ -60,7 +61,7 @@ export default function RegisterPage() {
                 setErrorMessage(`プロフィール保存エラー: ${profileError.message}`);
                 return;
             }
-            alert('登録が成功しました！');
+            toast.success('登録が成功しました！');
 
             router.push('/profile');
 

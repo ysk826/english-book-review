@@ -2,6 +2,7 @@ import { useState } from "react";
 import { SearchResultBook } from "@/types/book";
 import { useBookSearchReturn } from "@/types/hooks";
 import axios from 'axios';
+import { toast } from 'sonner';
 
 /**
  * 書籍検索を管理するカスタムフック
@@ -22,7 +23,7 @@ export const useBookSearch = (): useBookSearchReturn => {
 
         // タイトルまたは著者が入力されていない場合はアラートを表示
         if (!titleQuery.trim() && !authorQuery.trim()) {
-            alert("タイトルまたは著者を入力してください");
+            toast.warning("タイトルまたは著者を入力してください");
             return;
         }
 
@@ -44,7 +45,7 @@ export const useBookSearch = (): useBookSearchReturn => {
 
             // エラーハンドリング
             if (!data.items || data.items.length === 0) {
-                alert("検索結果が見つかりませんでした");
+                toast.info("検索結果が見つかりませんでした");
                 return;
             }
 
@@ -54,7 +55,7 @@ export const useBookSearch = (): useBookSearchReturn => {
             setShowResults(true);
         } catch (error) {
             console.error("エラー:", error);
-            alert("本の取得に失敗しました");
+            toast.error("本の取得に失敗しました");
         } finally {
             setLoading(false);
         }

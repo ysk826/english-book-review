@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { useRouter } from 'next/navigation';
 import { BookDetailInfo } from "@/types/book";
 import { supabase } from '@/lib/supabase';
+import { toast } from 'sonner';
 
 
 
@@ -30,7 +31,7 @@ export const useBookLibrary = (bookInfo: BookDetailInfo) => {
             const { data: { user }, error: authError } = await supabase.auth.getUser();
 
             if (authError || !user) {
-                alert('ログインが必要です');
+                toast.error('ログインが必要です');
                 router.push('/login');
                 return;
             }
@@ -81,14 +82,14 @@ export const useBookLibrary = (bookInfo: BookDetailInfo) => {
             // エラーハンドリング
             if (userBookError) throw userBookError;
 
-            alert('ライブラリに追加しました！');
+            toast.success('ライブラリに追加しました！');
             // 本の詳細ページに遷移
             router.push("/profile");
         }
         catch (error) {
             console.error("Error saving book to library:", error);
             const errorMessage = error instanceof Error ? error.message : "保存に失敗しました";
-            alert(errorMessage);
+            toast.error(errorMessage);
         } finally {
             setSaving(false);
         }
