@@ -17,7 +17,7 @@
 
 - [x] `middleware.ts` を実装してルート保護を追加する（未ログインで `/profile` 等に直接アクセスできる）
 - [x] 新規登録ページのデザインをモダンに統一する（インラインスタイルをTailwind CSSに置き換え）
-- [ ] `alert()` をトースト通知に置き換える（`register/page.tsx:67`）
+- [x] `alert()` をトースト通知に置き換える（`register/page.tsx:67`）
 
 ### Task 中
 
