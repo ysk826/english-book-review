@@ -10,6 +10,12 @@ import { UserBookRecord } from "@/types/database";
  * @param books - ユーザーが読んだ本のリスト
  * @param onEditBook - 本の感想を編集するためのコールバック関数
  */
+const STATUS_LABEL: Record<string, string> = {
+    read: '読了',
+    reading: '読書中',
+    want_to_read: '読みたい',
+};
+
 export default function SavedBooksList({ savedBooks, onEditBook }: SavedBooksListProps) {
 
     return (
@@ -50,7 +56,7 @@ export default function SavedBooksList({ savedBooks, onEditBook }: SavedBooksLis
                                         {/* ステータス表示 */}
                                         {book.status && (
                                             <p className="text-sm text-blue-600 mt-1">
-                                                ステータス: {book.status}
+                                                {STATUS_LABEL[book.status] ?? book.status}
                                             </p>
                                         )}
 
