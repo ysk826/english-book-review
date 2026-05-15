@@ -18,6 +18,9 @@
 - [x] `middleware.ts` を実装してルート保護を追加する（未ログインで `/profile` 等に直接アクセスできる）
 - [x] 新規登録ページのデザインをモダンに統一する（インラインスタイルをTailwind CSSに置き換え）
 - [x] `alert()` をトースト通知に置き換える（`register/page.tsx:67`）
+- [ ] Supabase RLS（Row Level Security）ポリシーを確認・設定する（`user_books` テーブルで他人のデータへのアクセスを防ぐ）
+- [ ] 書籍詳細ページの `next/head` を `generateMetadata` に移行する（`books/[id]/[slug]/page.tsx`、App Router では `next/head` が無視されSEOが機能していない）
+- [ ] ライブラリから本を削除できる機能を追加する（誤登録の取り消しができない）
 
 ### Task 中
 
@@ -25,6 +28,11 @@
 - [ ] 検索結果のキャンセルボタンを実装する（`BookSearchResults.tsx`、`onClick` が空関数）
 - [x] プロフィールのページで読んだ本のサムネイルが表示されない
 - [x] 読んだ本がプロフィールページでカウントされていない
+- [x] ステータス表示を日本語化する（`SavedBooksList.tsx`、`read` / `reading` / `want_to_read` がそのまま表示されていた）
+- [ ] ローディング中の表示を追加する（`useProfile` / `useSavedBook` の `loading` が UI に反映されていない）
+- [ ] 書籍編集・保存時のトースト通知を追加する（`useBookEdit` に成功・失敗のフィードバックがない）
+- [ ] `profiles` テーブルの `read_count` / `reading_count` / `want_to_read_count` 列を削除する（更新ロジックがなく常に初期値のままの死んだ列）
+- [ ] 書籍一覧にステータスフィルタ・ソート機能を追加する（本が増えると一覧が無秩序になる）
 
 ### Task 低
 
@@ -32,6 +40,13 @@
 - [x] `metadata` をデフォルトから修正する（`layout.tsx`、title が "Create Next App" のまま）
 - [x] デバッグ用コードを削除する（`profile/page.tsx` の `testFetchBooks` 関数とボタン）
 - [ ] UserProfile.tsのページとプロフィール編集モーダルのページをモダンに統一する
+- [ ] 書籍詳細ページのクエリパラメータ渡し設計を見直す（URL が長大になる・直リンク共有が壊れる可能性）
+- [ ] `useProfile` の未使用変数 `_loading` を整理する（`useProfile.ts:13`）
+- [ ] `SavedBooksList` の空状態にCTAを追加する（「まだ本が登録されていません」だけでは次のアクションが不明）
+
+### Phase 2
+
+- [ ] 書籍ページで他ユーザーのレビューを閲覧できる機能を追加する（SPEC.md SHOULD）
 
 ### テスト整備
 
@@ -42,6 +57,8 @@
 - [x] `useBookDetail` フックのテストを書く（URL パラメータから BookDetailInfo を構築）
 - [x] `useBookSearch` フックのテストを書く（axios モックで検索ロジックを確認）
 - [x] E2E テスト: ログイン → 書籍検索 → 登録フローを書く
+- [ ] `useBookLibrary` フックのテストを書く（本の追加・エラーハンドリング）
+- [ ] `BookEditModal` コンポーネントのテストを書く（編集・保存・キャンセル）
 
 ---
 
