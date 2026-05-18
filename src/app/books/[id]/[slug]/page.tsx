@@ -1,8 +1,8 @@
 'use client';
 import { Suspense } from 'react';
-import Link from 'next/link';
 import Head from 'next/head';
 import { notFound } from 'next/navigation';
+import Header from '@/components/Header';
 import BookInfoDisplay from '@/components/BookInfoDisplay';
 import BookAddForm from '@/components/BookAddForm';
 import { useBookLibrary } from '@/hooks/useBookLibrary';
@@ -103,20 +103,7 @@ function BookDetailContent() {
             </Head>
 
             <div className="min-h-screen bg-gray-50">
-                {/* ヘッダー・ナビゲーション */}
-                <div className="bg-white shadow-sm border-b">
-                    <div className="max-w-4xl mx-auto px-4 py-4">
-                        <Link
-                            href="/profile"
-                            className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors"
-                        >
-                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                            </svg>
-                            検索結果に戻る
-                        </Link>
-                    </div>
-                </div>
+                <Header />
 
                 {/* メインコンテンツ */}
                 <div className="max-w-4xl mx-auto">

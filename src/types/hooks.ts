@@ -18,8 +18,6 @@ export type UseProfileReturn = {
     closeProfileEditModal: () => void;
     /** 編集内容を保存する関数 */
     handleSaveUserProfile: (updatedProfile: Profile) => void;
-    /** ログアウトする関数 */
-    handleLogout: () => Promise<void>;
 };
 
 /**

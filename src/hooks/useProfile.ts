@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { Profile } from '@/types/database';
 import { supabase } from '@/lib/supabase';
 import { UseProfileReturn } from '@/types/hooks';
@@ -9,7 +8,6 @@ import { UseProfileReturn } from '@/types/hooks';
  * @usedBy src/app/profile/page.tsx
  */
 export const useProfile = (): UseProfileReturn => {
-    const router = useRouter();
     const [profile, setProfile] = useState<Profile | null>(null);
     const [_loading, setLoading] = useState(true)
 
@@ -76,11 +74,6 @@ export const useProfile = (): UseProfileReturn => {
         closeProfileEditModal();
     }
 
-    const handleLogout = async () => {
-        await supabase.auth.signOut()
-        router.push('/login')
-    }
-
     // コンポーネントがマウントされた時にプロフィールをフェッチ
     useEffect(() => {
         fetchProfile();
@@ -93,6 +86,5 @@ export const useProfile = (): UseProfileReturn => {
         openProfileEditModal,
         closeProfileEditModal,
         handleSaveUserProfile,
-        handleLogout,
     }
 }

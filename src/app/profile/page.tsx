@@ -1,4 +1,5 @@
 'use client'
+import Header from '@/components/Header';
 import UserProfile from '@/components/UserProfile';
 import UserProfileEditModal from '@/components/UserProfileEditModal';
 import BookSearchForm from '@/components/BookSearchForm';
@@ -18,7 +19,6 @@ export default function ProfilePage() {
         openProfileEditModal,
         closeProfileEditModal,
         handleSaveUserProfile,
-        handleLogout,
     } = useProfile();
 
     // useBookSearchフックを使用して、検索機能を取得
@@ -53,13 +53,13 @@ export default function ProfilePage() {
     } : null;
 
     return (
-
+        <div>
+            <Header />
         <div className="p-8">
             {/* ユーザープロフィール */}
             {profileWithCounts && <UserProfile
                 profile={profileWithCounts}
                 onEditProfile={openProfileEditModal}
-                onLogout={handleLogout}
             />}
 
             {/* ユーザープロフィール編集モーダル */}
@@ -92,6 +92,7 @@ export default function ProfilePage() {
                 onClose={closeBookEditModal}
                 onSave={handleSaveBook}
             />
+        </div>
         </div>
     );
 }

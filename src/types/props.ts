@@ -7,8 +7,6 @@ export interface userProfileProps {
     profile: Profile;
     /** プロフィール編集時のコールバック関数 */
     onEditProfile: (profile: Profile) => void;
-    /** ログアウト時のコールバック関数 */
-    onLogout: () => Promise<void>;
 }
 
 export interface UserProfileEditModalProps {

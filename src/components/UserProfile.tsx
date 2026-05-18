@@ -5,7 +5,7 @@ import { userProfileProps } from "@/types/props"
  * @param profile - ユーザープロフィールデータ
  * @param onEditProfile - プロフィール編集時のコールバック関数
  */
-export default function UserProfile({ profile, onEditProfile, onLogout }: userProfileProps) {
+export default function UserProfile({ profile, onEditProfile }: userProfileProps) {
     return (
         <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
             {/* プロフィール表示 */}
@@ -27,21 +27,13 @@ export default function UserProfile({ profile, onEditProfile, onLogout }: userPr
                     {profile?.bio || '自己紹介がまだ設定されていません'}
                 </p>
 
-                {/* 編集ボタン・ログアウトボタン */}
-                <div className="flex justify-center gap-3">
-                    <button
-                        onClick={() => onEditProfile(profile)}
-                        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors"
-                    >
-                        プロフィールを編集
-                    </button>
-                    <button
-                        onClick={onLogout}
-                        className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded transition-colors"
-                    >
-                        ログアウト
-                    </button>
-                </div>
+                {/* 編集ボタン */}
+                <button
+                    onClick={() => onEditProfile(profile)}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors"
+                >
+                    プロフィールを編集
+                </button>
             </div>
 
             {/* 統計情報 */}
