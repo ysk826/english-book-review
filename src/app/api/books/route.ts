@@ -70,37 +70,52 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }
 
     try {
-        // Supabaseクエリ構築
-        let dbQuery = supabase.from('books').select('*');
-
         // クエリからタイトルと著者を抽出
         const title = extractValue(query, "intitle");
         const author = extractValue(query, "inauthor");
 
+        let dbBooks: Book[] = [];
+
         // ケース1: 両方入力あり → AND検索
         if (title && author) {
-            dbQuery = dbQuery
+            const { data, error } = await supabase.from('books').select('*')
                 .ilike('title', `%${title}%`)
                 .ilike('authors', `%${author}%`);
+            if (error) throw error;
+            dbBooks = data || [];
         }
         // ケース2: タイトルのみ
         else if (title) {
-            dbQuery = dbQuery.ilike('title', `%${title}%`);
+            const { data, error } = await supabase.from('books').select('*')
+                .ilike('title', `%${title}%`);
+            if (error) throw error;
+            dbBooks = data || [];
         }
         // ケース3: 著者のみ
         else if (author) {
-            dbQuery = dbQuery.ilike('authors', `%${author}%`);
+            const { data, error } = await supabase.from('books').select('*')
+                .ilike('authors', `%${author}%`);
+            if (error) throw error;
+            dbBooks = data || [];
         }
-        // ケース4: プレーンクエリ（ヘッダー検索）→ タイトルまたは著者でOR検索
+        // ケース4: プレーンクエリ（ヘッダー検索）→ タイトル・著者を別々に検索してマージ
+        // .or()はスペースを含む値でパーサーが壊れるため2クエリに分割する
         else {
-            dbQuery = dbQuery.or(`title.ilike.%${query}%,authors.ilike.%${query}%`);
-        }
-
-        // Supabaseでの検索処理
-        const { data: dbBooks, error } = await dbQuery;
-
-        if (error) {
-            throw error;
+            const [{ data: byTitle, error: e1 }, { data: byAuthor, error: e2 }] = await Promise.all([
+                supabase.from('books').select('*').ilike('title', `%${query}%`),
+                supabase.from('books').select('*').ilike('authors', `%${query}%`),
+            ]);
+            if (e1) throw e1;
+            if (e2) throw e2;
+            // ISBNで重複除去してマージ
+            const seen = new Set<string>();
+            for (const book of [...(byTitle || []), ...(byAuthor || [])]) {
+                const key = book.isbn13 || book.isbn10 || book.issn || book.id;
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    dbBooks.push(book);
+                }
+            }
         }
 
         // Google Books API呼び出し（既存コードと同様）
@@ -139,7 +154,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
 
                 // DBに同じISBNの本が存在しないかチェック
-                return !(dbIsbnSet.has(apiIsbn13) || dbIsbnSet.has(apiIsbn10) || dbIsbnSet.has(apiIssn));
+                return !(dbIsbnSet.has(apiIsbn13 ?? null) || dbIsbnSet.has(apiIsbn10 ?? null) || dbIsbnSet.has(apiIssn ?? null));
             }) || []
         };
 
