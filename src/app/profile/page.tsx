@@ -17,7 +17,7 @@ export default function ProfilePage() {
         handleSaveUserProfile,
     } = useProfile();
 
-    const { savedBooks, updateSavedBook } = useSavedBook();
+    const { savedBooks, loading: booksLoading, updateSavedBook } = useSavedBook();
 
     const {
         editingBook,
@@ -53,7 +53,7 @@ export default function ProfilePage() {
                     onSave={handleSaveUserProfile}
                 />
 
-                <SavedBooksList savedBooks={savedBooks} onEditBook={openBookEditModal} />
+                <SavedBooksList savedBooks={savedBooks} loading={booksLoading} onEditBook={openBookEditModal} />
 
                 <BookEditModal
                     isOpen={isBookEditModalOpen}

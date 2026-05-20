@@ -52,6 +52,7 @@ export interface BookAddFormProps {
 
 export interface SavedBooksListProps {
     savedBooks: UserBookRecord[];
+    loading: boolean;
     onEditBook: (book: UserBookRecord) => void;
 }
 

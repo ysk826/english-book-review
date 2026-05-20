@@ -98,24 +98,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             if (error) throw error;
             dbBooks = data || [];
         }
-        // ケース4: プレーンクエリ（ヘッダー検索）→ タイトル・著者を別々に検索してマージ
-        // .or()はスペースを含む値でパーサーが壊れるため2クエリに分割する
+        // ケース4: プレーンクエリ（ヘッダー検索）→ タイトルのみDB検索
+        // authorsはtext[]型のためilike不可。著者検索はGoogle Books APIに委ねる
         else {
-            const [{ data: byTitle, error: e1 }, { data: byAuthor, error: e2 }] = await Promise.all([
-                supabase.from('books').select('*').ilike('title', `%${query}%`),
-                supabase.from('books').select('*').ilike('authors', `%${query}%`),
-            ]);
+            const { data, error: e1 } = await supabase.from('books').select('*').ilike('title', `%${query}%`);
             if (e1) throw e1;
-            if (e2) throw e2;
-            // ISBNで重複除去してマージ
-            const seen = new Set<string>();
-            for (const book of [...(byTitle || []), ...(byAuthor || [])]) {
-                const key = book.isbn13 || book.isbn10 || book.issn || book.id;
-                if (!seen.has(key)) {
-                    seen.add(key);
-                    dbBooks.push(book);
-                }
-            }
+            dbBooks = data || [];
         }
 
         // Google Books API呼び出し（既存コードと同様）

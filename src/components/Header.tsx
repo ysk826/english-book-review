@@ -12,7 +12,7 @@ export default function Header() {
     const [userName, setUserName] = useState<string | null>(null);
     const router = useRouter();
     const searchRef = useRef<HTMLDivElement>(null);
-    const { query, setQuery, results, loading, handleSearch, clearResults } = useHeaderSearch();
+    const { query, setQuery, results, loading, clearResults } = useHeaderSearch();
 
     useEffect(() => {
         const fetchUserName = async () => {
@@ -46,7 +46,9 @@ export default function Header() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        handleSearch(query);
+        if (!query.trim()) return;
+        clearResults();
+        router.push(`/search?q=${encodeURIComponent(query.trim())}`);
     };
 
     const handleBookClick = (book: SearchResultBook) => {

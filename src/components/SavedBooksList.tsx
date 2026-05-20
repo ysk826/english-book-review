@@ -16,13 +16,13 @@ const STATUS_LABEL: Record<string, string> = {
     want_to_read: '読みたい',
 };
 
-export default function SavedBooksList({ savedBooks, onEditBook }: SavedBooksListProps) {
+export default function SavedBooksList({ savedBooks, loading, onEditBook }: SavedBooksListProps) {
 
     return (
         <div>
             <div className="max-w-4xl mx-auto">
-                <h2 className="text-lg mb-4">読んだ本</h2>
-                {savedBooks.length === 0 ? (
+                {loading ? null : <h2 className="text-lg mb-4">読んだ本</h2>}
+                {loading ? null : savedBooks.length === 0 ? (
                     <p>まだ本が登録されていません</p>
                 ) : (
                     <div className="grid gap-4">

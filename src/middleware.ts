@@ -2,7 +2,7 @@ import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const PROTECTED_ROUTES = ['/profile', '/books']
+const PROTECTED_ROUTES = ['/profile', '/books', '/search']
 const AUTH_ROUTES = ['/login', '/register']
 
 export async function middleware(req: NextRequest) {
@@ -33,5 +33,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/profile/:path*', '/books/:path*', '/login', '/register'],
+    matcher: ['/profile/:path*', '/books/:path*', '/search/:path*', '/search', '/login', '/register'],
 }
