@@ -91,6 +91,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         else if (author) {
             dbQuery = dbQuery.ilike('authors', `%${author}%`);
         }
+        // ケース4: プレーンクエリ（ヘッダー検索）→ タイトルまたは著者でOR検索
+        else {
+            dbQuery = dbQuery.or(`title.ilike.%${query}%,authors.ilike.%${query}%`);
+        }
 
         // Supabaseでの検索処理
         const { data: dbBooks, error } = await dbQuery;
