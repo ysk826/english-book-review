@@ -122,7 +122,7 @@ export default function Header() {
                                         <button
                                             key={book.isbn13 || book.isbn10 || book.issn || index}
                                             onClick={() => handleBookClick(book)}
-                                            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors text-left border-b border-slate-100 last:border-0"
+                                            className="group w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors text-left border-b border-slate-100 last:border-0"
                                         >
                                             {imageUrl ? (
                                                 <Image
@@ -138,8 +138,8 @@ export default function Header() {
                                                 </div>
                                             )}
                                             <div className="min-w-0">
-                                                <p className="text-sm font-medium text-slate-800 truncate">{book.title}</p>
-                                                <p className="text-xs text-slate-500 truncate">{book.authors.join(', ')}</p>
+                                                <p className="text-sm font-medium text-slate-800 group-hover:text-blue-600 group-hover:font-bold truncate transition-colors">{book.title}</p>
+                                                <p className="text-xs text-slate-500 group-hover:text-blue-500 group-hover:font-bold truncate transition-colors">{book.authors.join(', ')}</p>
                                                 <p className="text-xs text-slate-400">{book.publishedDate}</p>
                                             </div>
                                         </button>
