@@ -98,9 +98,12 @@ export default function Header() {
                                     ✕
                                 </button>
                             ) : (
-                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
+                                <button
+                                    type="submit"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-sm"
+                                >
                                     🔍
-                                </span>
+                                </button>
                             )}
                         </div>
                     </form>
