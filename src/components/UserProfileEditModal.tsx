@@ -7,7 +7,7 @@ import { supabase } from "@/lib/supabase";
 
 export default function UserProfileEditModal({ isOpen, profile, onClose, onSave }: UserProfileEditModalProps) {
     const [editingName, setEditingName] = useState(profile ? profile.name : "");
-    const [edittingBio, setEditingBio] = useState(profile ? profile.bio : "");
+    const [edittingBio, setEditingBio] = useState(profile?.bio ?? "");
     const [avatarUrl, setAvatarUrl] = useState(profile?.avatar ?? null);
     const [uploading, setUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -133,7 +133,7 @@ export default function UserProfileEditModal({ isOpen, profile, onClose, onSave 
                         <input
                             ref={fileInputRef}
                             type="file"
-                            accept="image/jpeg,image/png,image/webp,image/gif"
+                            accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
                             onChange={handleAvatarChange}
                             className="hidden"
                         />
