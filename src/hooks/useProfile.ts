@@ -62,6 +62,7 @@ export const useProfile = (): UseProfileReturn => {
             .update({
                 name: updatedProfile.name,
                 bio: updatedProfile.bio,
+                avatar: updatedProfile.avatar,
             })
             .eq('user_id', updatedProfile.user_id)
 

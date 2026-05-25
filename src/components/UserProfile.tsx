@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { userProfileProps } from "@/types/props"
 
 /**
@@ -10,12 +11,22 @@ export default function UserProfile({ profile, onEditProfile }: userProfileProps
         <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
             {/* プロフィール表示 */}
             <div className="text-center mb-6">
-                {/* アバター（プレースホルダー） */}
-                <div className="w-24 h-24 bg-gray-300 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <span className="text-gray-600 text-2xl">
-                        {profile?.name.charAt(0).toUpperCase()}
-                    </span>
-                </div>
+                {/* アバター */}
+                {profile?.avatar ? (
+                    <Image
+                        src={profile.avatar}
+                        alt={profile.name}
+                        width={96}
+                        height={96}
+                        className="w-24 h-24 rounded-full object-cover mx-auto mb-4"
+                    />
+                ) : (
+                    <div className="w-24 h-24 bg-gray-300 rounded-full mx-auto mb-4 flex items-center justify-center">
+                        <span className="text-gray-600 text-2xl">
+                            {profile?.name.charAt(0).toUpperCase()}
+                        </span>
+                    </div>
+                )}
 
                 {/* 名前 + 編集ボタン */}
                 <div className="flex items-center justify-center gap-2 mb-2">

@@ -15,6 +15,12 @@ const nextConfig: NextConfig = {
         hostname: 'books.google.com',
         port: '',
         pathname: '/books/content/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'astyvfkqgzqfopoxtmsn.supabase.co',
+        port: '',
+        pathname: '/storage/v1/object/public/**',
       }
     ],
   },
