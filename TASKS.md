@@ -30,6 +30,7 @@
 - [x] 読んだ本がプロフィールページでカウントされていない
 - [x] ステータス表示を日本語化する（`SavedBooksList.tsx`、`read` / `reading` / `want_to_read` がそのまま表示されていた）
 - [ ] ローディング中の表示を追加する（`useProfile` / `useSavedBook` の `loading` が UI に反映されていない）
+- [ ] プロフィールのアバター画像を変更できるようにする（現状はイニシャルのプレースホルダーのみ。画像アップロード or URL 入力で `profiles.avatar` に保存）
 - [ ] 書籍編集・保存時のトースト通知を追加する（`useBookEdit` に成功・失敗のフィードバックがない）
 - [ ] `profiles` テーブルの `read_count` / `reading_count` / `want_to_read_count` 列を削除する（更新ロジックがなく常に初期値のままの死んだ列）
 - [ ] 書籍一覧にステータスフィルタ・ソート機能を追加する（本が増えると一覧が無秩序になる）

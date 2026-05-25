@@ -153,9 +153,9 @@ export default function Header() {
                 {/* ユーザー情報 */}
                 <div className="flex items-center gap-4 shrink-0">
                     {userName && (
-                        <span className="text-sm text-slate-600 hidden sm:inline">
+                        <Link href="/profile" className="text-sm text-slate-600 hover:text-blue-600 transition-colors hidden sm:inline">
                             {userName} さん
-                        </span>
+                        </Link>
                     )}
                     <button
                         onClick={handleLogout}
