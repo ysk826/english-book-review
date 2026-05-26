@@ -8,11 +8,16 @@ import { useHeaderSearch } from '@/hooks/useHeaderSearch';
 import { generateBookUrl } from '@/utils/slugify';
 import { SearchResultBook } from '@/types/book';
 
+const DROPDOWN_PAGE = 8;
+
 export default function Header() {
     const [userName, setUserName] = useState<string | null>(null);
     const router = useRouter();
     const searchRef = useRef<HTMLDivElement>(null);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const sentinelRef = useRef<HTMLDivElement>(null);
     const { query, setQuery, results, loading, clearResults } = useHeaderSearch();
+    const [visibleCount, setVisibleCount] = useState(DROPDOWN_PAGE);
 
     useEffect(() => {
         const fetchUserName = async () => {
@@ -27,6 +32,28 @@ export default function Header() {
         };
         fetchUserName();
     }, []);
+
+    // 新しい検索結果が来たら表示数をリセット
+    useEffect(() => {
+        setVisibleCount(DROPDOWN_PAGE);
+    }, [results]);
+
+    // ドロップダウン末尾まで来たら追加表示
+    useEffect(() => {
+        const sentinel = sentinelRef.current;
+        const container = dropdownRef.current;
+        if (!sentinel || !container) return;
+        const io = new IntersectionObserver(
+            ([e]) => {
+                if (e.isIntersecting) {
+                    setVisibleCount(prev => Math.min(prev + DROPDOWN_PAGE, results.length));
+                }
+            },
+            { root: container, threshold: 0.1 }
+        );
+        io.observe(sentinel);
+        return () => io.disconnect();
+    }, [results]);
 
     // ドロップダウン外クリックで閉じる
     useEffect(() => {
@@ -67,6 +94,8 @@ export default function Header() {
         clearResults();
         router.push(`${bookUrl}?${searchParams.toString()}`);
     };
+
+    const visibleResults = results.slice(0, visibleCount);
 
     return (
         <header className="bg-white border-b shadow-sm relative z-40">
@@ -112,39 +141,46 @@ export default function Header() {
 
                     {/* ドロップダウン */}
                     {(results.length > 0 || loading) && (
-                        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden max-h-96 overflow-y-auto">
+                        <div
+                            ref={dropdownRef}
+                            className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden max-h-96 overflow-y-auto"
+                        >
                             {loading ? (
                                 <div className="p-4 text-center text-sm text-slate-500">検索中...</div>
                             ) : (
-                                results.map((book, index) => {
-                                    const imageUrl = book.images.smallThumbnail || book.images.thumbnail;
-                                    return (
-                                        <button
-                                            key={book.isbn13 || book.isbn10 || book.issn || index}
-                                            onClick={() => handleBookClick(book)}
-                                            className="group w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors text-left border-b border-slate-100 last:border-0"
-                                        >
-                                            {imageUrl ? (
-                                                <Image
-                                                    src={imageUrl}
-                                                    alt={book.title}
-                                                    width={40}
-                                                    height={56}
-                                                    className="w-10 h-14 object-cover rounded shrink-0"
-                                                />
-                                            ) : (
-                                                <div className="w-10 h-14 bg-slate-100 rounded shrink-0 flex items-center justify-center text-slate-400 text-xs">
-                                                    📖
+                                <>
+                                    {visibleResults.map((book, index) => {
+                                        const imageUrl = book.images.smallThumbnail || book.images.thumbnail;
+                                        return (
+                                            <button
+                                                key={book.isbn13 || book.isbn10 || book.issn || index}
+                                                onClick={() => handleBookClick(book)}
+                                                className="group w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors text-left border-b border-slate-100 last:border-0"
+                                            >
+                                                {imageUrl ? (
+                                                    <Image
+                                                        src={imageUrl}
+                                                        alt={book.title}
+                                                        width={40}
+                                                        height={56}
+                                                        className="w-10 h-14 object-cover rounded shrink-0"
+                                                    />
+                                                ) : (
+                                                    <div className="w-10 h-14 bg-slate-100 rounded shrink-0 flex items-center justify-center text-slate-400 text-xs">
+                                                        📖
+                                                    </div>
+                                                )}
+                                                <div className="min-w-0">
+                                                    <p className="text-sm font-medium text-slate-800 group-hover:text-blue-600 group-hover:font-bold truncate transition-colors">{book.title}</p>
+                                                    <p className="text-xs text-slate-500 group-hover:text-blue-500 group-hover:font-bold truncate transition-colors">{book.authors.join(', ')}</p>
+                                                    <p className="text-xs text-slate-400">{book.publishedDate}</p>
                                                 </div>
-                                            )}
-                                            <div className="min-w-0">
-                                                <p className="text-sm font-medium text-slate-800 group-hover:text-blue-600 group-hover:font-bold truncate transition-colors">{book.title}</p>
-                                                <p className="text-xs text-slate-500 group-hover:text-blue-500 group-hover:font-bold truncate transition-colors">{book.authors.join(', ')}</p>
-                                                <p className="text-xs text-slate-400">{book.publishedDate}</p>
-                                            </div>
-                                        </button>
-                                    );
-                                })
+                                            </button>
+                                        );
+                                    })}
+                                    {/* 末尾まで来たら次の8件を表示するセンチネル */}
+                                    <div ref={sentinelRef} className="h-1" />
+                                </>
                             )}
                         </div>
                     )}

@@ -4,6 +4,8 @@ import { GoogleBooksResponse, GoogleBooksItem } from '@/types/googleBooks';
 import { SearchResultBook } from '@/types/book';
 import { Book } from '@/types/database';
 
+const PAGE_SIZE = 20;
+
 // APIの検索結果をフォーマットする関数
 export const formatApiBooks = (apiItems: GoogleBooksResponse): SearchResultBook[] => {
 
@@ -69,8 +71,26 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         return NextResponse.json({ error: "クエリが必要です" }, { status: 400 });
     }
 
+    const startIndex = parseInt(searchParams.get("startIndex") || "0", 10);
+    const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
+    const fields = "items(id,volumeInfo(title,authors,imageLinks,publishedDate,language,industryIdentifiers))";
+
     try {
-        // クエリからタイトルと著者を抽出
+        // 2ページ目以降: Supabase をスキップして Google Books のみ取得
+        if (startIndex > 0) {
+            const res = await fetch(
+                `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&langRestrict=en&startIndex=${startIndex}&maxResults=${PAGE_SIZE}&fields=${fields}&key=${apiKey}`
+            );
+            if (!res.ok) throw new Error("API error");
+            const data: GoogleBooksResponse = await res.json();
+            const rawCount = data.items?.length ?? 0;
+            return NextResponse.json({
+                items: formatApiBooks({ ...data, items: data.items || [] }),
+                hasMore: rawCount >= PAGE_SIZE,
+            });
+        }
+
+        // 1ページ目: Supabase + Google Books ハイブリッド検索
         const title = extractValue(query, "intitle");
         const author = extractValue(query, "inauthor");
 
@@ -107,11 +127,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         }
 
         // Google Books API呼び出し
-        const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
-        const fields = "items(id,volumeInfo(title,authors,imageLinks,publishedDate,language,industryIdentifiers))";
         const isPlainQuery = !title && !author;
 
         let apiData: GoogleBooksResponse;
+        let rawApiCount = 0;
 
         if (isPlainQuery) {
             // プレーンクエリは著者名として検索した結果もマージする（例: "J.K. Rowling" → Harry Potterシリーズ）
@@ -127,6 +146,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
             // 著者検索結果を先にマージし、ISBNで重複除去
             const allItems = [...(authorData.items || []), ...(plainData.items || [])];
+            rawApiCount = allItems.length;
             const seenIsbns = new Set<string>();
             const mergedItems = allItems.filter(item => {
                 const isbn = item.volumeInfo.industryIdentifiers?.find(id => id.type === "ISBN_13")?.identifier
@@ -146,6 +166,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                 throw new Error("API error");
             }
             apiData = await response.json();
+            rawApiCount = apiData.items?.length ?? 0;
         }
 
         // DBのISBNをセットに変換
@@ -172,6 +193,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         // 結果をマージして返す
         return NextResponse.json({
             items: [...formatDbBooks(dbBooks || []), ...(formatApiBooks(filteredApiData) || [])],
+            hasMore: rawApiCount >= PAGE_SIZE,
             source: 'supabase_hybrid'
         });
 
