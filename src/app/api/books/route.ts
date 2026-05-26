@@ -79,7 +79,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         // 2ページ目以降: Supabase をスキップして Google Books のみ取得
         if (startIndex > 0) {
             const res = await fetch(
-                `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&langRestrict=en&startIndex=${startIndex}&maxResults=${PAGE_SIZE}&fields=${fields}&key=${apiKey}`
+                `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&startIndex=${startIndex}&maxResults=${PAGE_SIZE}&fields=${fields}&key=${apiKey}`
             );
             if (!res.ok) throw new Error("API error");
             const data: GoogleBooksResponse = await res.json();
@@ -133,21 +133,30 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         let rawApiCount = 0;
 
         if (isPlainQuery) {
-            // プレーンクエリは著者名としても検索してマージする（例: "J.K. Rowling" → Harry Potterシリーズ）
-            // 苗字（末尾の単語）で inauthor: 検索することで "J. K. Rowling" 等の表記ゆれにも対応
+            // langRestrict=en は Google Books API で機能しないため、言語フィルタはコード側で行う。
+            // 著者名検索: Google Books は日本語版を startIndex=0 付近に優先表示するため、
+            // startIndex=0 と startIndex=40 の 2 ページを並行取得して英語書籍を確保する。
             const lastName = query.trim().split(/\s+/).pop() ?? query;
-            const [plainRes, authorRes] = await Promise.all([
-                fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&langRestrict=en&maxResults=20&fields=${fields}&key=${apiKey}`),
-                fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(`inauthor:${lastName}`)}&langRestrict=en&maxResults=40&fields=${fields}&key=${apiKey}`)
+            const authorBase = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(`inauthor:${lastName}`)}&maxResults=40&fields=${fields}&key=${apiKey}`;
+            const [plainRes, authorRes0, authorRes1] = await Promise.all([
+                fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=20&fields=${fields}&key=${apiKey}`),
+                fetch(`${authorBase}&startIndex=0`),
+                fetch(`${authorBase}&startIndex=40`),
             ]);
-            if (!plainRes.ok || !authorRes.ok) {
-                console.error("APIリクエスト失敗:", plainRes.status, authorRes.status);
+            if (!plainRes.ok || !authorRes0.ok || !authorRes1.ok) {
+                console.error("APIリクエスト失敗:", plainRes.status, authorRes0.status, authorRes1.status);
                 throw new Error("API error");
             }
-            const [plainData, authorData]: GoogleBooksResponse[] = await Promise.all([plainRes.json(), authorRes.json()]);
+            const [plainData, authorData0, authorData1]: GoogleBooksResponse[] = await Promise.all([
+                plainRes.json(), authorRes0.json(), authorRes1.json()
+            ]);
 
-            // 著者検索結果を先にマージし、ISBNで重複除去
-            const allItems = [...(authorData.items || []), ...(plainData.items || [])];
+            // 著者検索2ページ分を先に、プレーン検索を後ろにマージしてISBNで重複除去
+            const allItems = [
+                ...(authorData0.items || []),
+                ...(authorData1.items || []),
+                ...(plainData.items || []),
+            ];
             rawApiCount = allItems.length;
             const seenIsbns = new Set<string>();
             const mergedItems = allItems.filter(item => {
@@ -161,7 +170,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             apiData = { ...plainData, items: mergedItems };
         } else {
             const response = await fetch(
-                `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&langRestrict=en&maxResults=40&fields=${fields}&key=${apiKey}`
+                `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=40&fields=${fields}&key=${apiKey}`
             );
             if (!response.ok) {
                 console.error("APIリクエスト失敗:", response.status, response.statusText);
