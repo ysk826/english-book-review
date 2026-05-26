@@ -133,32 +133,32 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         let rawApiCount = 0;
 
         if (isPlainQuery) {
-            // langRestrict=en は Google Books API で機能しないため、言語フィルタはコード側で行う。
-            // タイトル検索: intitle: で直接タイトルに絞る（"Harry Potter..." → HP シリーズが上位）
-            // 著者名検索: Google Books は日本語版を startIndex=0 に優先するため、
-            //   英語書籍が集まる startIndex=40 のみ使う（"J.K. Rowling" → HP 英語版）
+            // "J.K." "J.R.R." のようなイニシャルを含むクエリのみ著者名検索と判定。
+            // それ以外はタイトル検索として扱い、inauthor: は呼ばない
+            // （例: "Harry Potter" → inauthor:Potter が Beatrix Potter を返してしまうため）。
+            const isAuthorQuery = /\b[A-Z]\.\s*[A-Z]?\.?\s/.test(query);
             const lastName = query.trim().split(/\s+/).pop() ?? query;
-            const [plainRes, titleRes, authorRes] = await Promise.all([
-                fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=20&fields=${fields}&key=${apiKey}`),
-                fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(`intitle:${query}`)}&maxResults=40&fields=${fields}&key=${apiKey}`),
-                fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(`inauthor:${lastName}`)}&maxResults=40&startIndex=40&fields=${fields}&key=${apiKey}`),
-            ]);
-            if (!plainRes.ok || !titleRes.ok || !authorRes.ok) {
-                console.error("APIリクエスト失敗:", plainRes.status, titleRes.status, authorRes.status);
+
+            const plainRes = fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=20&fields=${fields}&key=${apiKey}`);
+            const titleRes = fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(`intitle:${query}`)}&maxResults=40&fields=${fields}&key=${apiKey}`);
+            const authorRes = isAuthorQuery
+                ? fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(`inauthor:${lastName}`)}&maxResults=40&startIndex=40&fields=${fields}&key=${apiKey}`)
+                : null;
+
+            const [plainResponse, titleResponse, authorResponse] = await Promise.all([plainRes, titleRes, authorRes]);
+            if (!plainResponse.ok || !titleResponse.ok || (authorResponse && !authorResponse.ok)) {
+                console.error("APIリクエスト失敗:", plainResponse.status, titleResponse.status, authorResponse?.status);
                 throw new Error("API error");
             }
             const [plainData, titleData, authorData]: GoogleBooksResponse[] = await Promise.all([
-                plainRes.json(), titleRes.json(), authorRes.json()
+                plainResponse.json(),
+                titleResponse.json(),
+                authorResponse ? authorResponse.json() : Promise.resolve({ items: [] }),
             ]);
 
-            // "J.K." "J.R.R." のようなイニシャルを含むクエリは著者名検索と判定し
-            // inauthor 結果を先頭にする（著者の作品が上位に並ぶ）。
-            // それ以外はタイトル検索として plain 結果を先頭にする
-            // （例: "Harry Potter and the Deathly Hallows" → plain の1位が HP 本）。
-            const isAuthorQuery = /\b[A-Z]\.\s*[A-Z]?\.?\s/.test(query);
             const allItems = isAuthorQuery
                 ? [...(authorData.items || []), ...(plainData.items || []), ...(titleData.items || [])]
-                : [...(titleData.items || []), ...(authorData.items || []), ...(plainData.items || [])];
+                : [...(titleData.items || []), ...(plainData.items || [])];
             rawApiCount = allItems.length;
             const seenIsbns = new Set<string>();
             const mergedItems = allItems.filter(item => {
