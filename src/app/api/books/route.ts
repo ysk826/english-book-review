@@ -7,10 +7,10 @@ import { Book } from '@/types/database';
 // APIの検索結果をフォーマットする関数
 export const formatApiBooks = (apiItems: GoogleBooksResponse): SearchResultBook[] => {
 
-    // 言語フィルタリング: 英語の本のみを対象
+    // 言語フィルタリング: langRestrict=en で取得済みのため、language が未設定の書籍も英語として扱う
     const filtered = apiItems.items!.filter((item: GoogleBooksItem) => {
         const lang = item.volumeInfo.language;
-        return lang === "en" || lang === "en-US" || lang === "en-GB";
+        return !lang || lang.startsWith("en");
     });
 
     // フォーマットされた書籍情報を返す
@@ -117,7 +117,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             // プレーンクエリは著者名として検索した結果もマージする（例: "J.K. Rowling" → Harry Potterシリーズ）
             const [plainRes, authorRes] = await Promise.all([
                 fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&langRestrict=en&maxResults=20&fields=${fields}&key=${apiKey}`),
-                fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(`inauthor:"${query}"`)}&langRestrict=en&maxResults=20&fields=${fields}&key=${apiKey}`)
+                fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(`inauthor:"${query}"`)}&langRestrict=en&maxResults=40&fields=${fields}&key=${apiKey}`)
             ]);
             if (!plainRes.ok || !authorRes.ok) {
                 console.error("APIリクエスト失敗:", plainRes.status, authorRes.status);
