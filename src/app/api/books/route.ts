@@ -133,10 +133,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         let rawApiCount = 0;
 
         if (isPlainQuery) {
-            // プレーンクエリは著者名として検索した結果もマージする（例: "J.K. Rowling" → Harry Potterシリーズ）
+            // プレーンクエリは著者名としても検索してマージする（例: "J.K. Rowling" → Harry Potterシリーズ）
+            // 苗字（末尾の単語）で inauthor: 検索することで "J. K. Rowling" 等の表記ゆれにも対応
+            const lastName = query.trim().split(/\s+/).pop() ?? query;
             const [plainRes, authorRes] = await Promise.all([
                 fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&langRestrict=en&maxResults=20&fields=${fields}&key=${apiKey}`),
-                fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(`inauthor:"${query}"`)}&langRestrict=en&maxResults=40&fields=${fields}&key=${apiKey}`)
+                fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(`inauthor:${lastName}`)}&langRestrict=en&maxResults=40&fields=${fields}&key=${apiKey}`)
             ]);
             if (!plainRes.ok || !authorRes.ok) {
                 console.error("APIリクエスト失敗:", plainRes.status, authorRes.status);
