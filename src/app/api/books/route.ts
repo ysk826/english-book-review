@@ -106,24 +106,47 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             dbBooks = data || [];
         }
 
-        // Google Books API呼び出し（既存コードと同様）
+        // Google Books API呼び出し
         const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
         const fields = "items(id,volumeInfo(title,authors,imageLinks,publishedDate,language,industryIdentifiers))";
-        const maxResults = 40;
-        const response = await fetch(
-            `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
-                query
-            )}&langRestrict=en&maxResults=${maxResults}&fields=${fields}&key=${apiKey}`
-        );
+        const isPlainQuery = !title && !author;
 
-        // エラーハンドリング: レスポンスが成功でない場合はエラーを投げる
-        if (!response.ok) {
-            console.error("APIリクエスト失敗:", response.status, response.statusText);
-            throw new Error("API error");
+        let apiData: GoogleBooksResponse;
+
+        if (isPlainQuery) {
+            // プレーンクエリは著者名として検索した結果もマージする（例: "J.K. Rowling" → Harry Potterシリーズ）
+            const [plainRes, authorRes] = await Promise.all([
+                fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&langRestrict=en&maxResults=20&fields=${fields}&key=${apiKey}`),
+                fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(`inauthor:"${query}"`)}&langRestrict=en&maxResults=20&fields=${fields}&key=${apiKey}`)
+            ]);
+            if (!plainRes.ok || !authorRes.ok) {
+                console.error("APIリクエスト失敗:", plainRes.status, authorRes.status);
+                throw new Error("API error");
+            }
+            const [plainData, authorData]: GoogleBooksResponse[] = await Promise.all([plainRes.json(), authorRes.json()]);
+
+            // 著者検索結果を先にマージし、ISBNで重複除去
+            const allItems = [...(authorData.items || []), ...(plainData.items || [])];
+            const seenIsbns = new Set<string>();
+            const mergedItems = allItems.filter(item => {
+                const isbn = item.volumeInfo.industryIdentifiers?.find(id => id.type === "ISBN_13")?.identifier
+                    ?? item.volumeInfo.industryIdentifiers?.find(id => id.type === "ISBN_10")?.identifier;
+                if (!isbn) return true;
+                if (seenIsbns.has(isbn)) return false;
+                seenIsbns.add(isbn);
+                return true;
+            });
+            apiData = { ...plainData, items: mergedItems };
+        } else {
+            const response = await fetch(
+                `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&langRestrict=en&maxResults=40&fields=${fields}&key=${apiKey}`
+            );
+            if (!response.ok) {
+                console.error("APIリクエスト失敗:", response.status, response.statusText);
+                throw new Error("API error");
+            }
+            apiData = await response.json();
         }
-
-        // レスポンスをJSON形式で取得
-        const apiData: GoogleBooksResponse = await response.json();
 
         // DBのISBNをセットに変換
         const dbIsbnSet = new Set(dbBooks?.map(book => book.isbn13 || book.isbn10 || book.issn).filter(Boolean));
