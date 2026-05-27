@@ -65,7 +65,7 @@ export default function SavedBooksList({ savedBooks, loading, onEditBook }: Save
                                 </div>
 
                                 {/* カード本文 */}
-                                <div className="flex flex-col p-3 gap-1.5 h-36 overflow-hidden">
+                                <div className="flex flex-col flex-1 p-3 gap-1.5">
                                     {/* ステータスバッジ */}
                                     {book.status && (
                                         <span className={`self-start text-xs font-medium px-2 py-0.5 rounded-full ${STATUS_COLOR[book.status] ?? 'bg-gray-100 text-gray-600'}`}>
@@ -86,13 +86,6 @@ export default function SavedBooksList({ savedBooks, loading, onEditBook }: Save
                                     {/* 星評価 */}
                                     {book.rating && (
                                         <StarRating rating={book.rating} />
-                                    )}
-
-                                    {/* レビューテキスト */}
-                                    {book.review && (
-                                        <p className="text-xs text-gray-600 leading-relaxed line-clamp-3 mt-0.5">
-                                            {book.review}
-                                        </p>
                                     )}
 
                                     {/* 読了日 + 編集ボタン */}
