@@ -65,7 +65,7 @@ export default function SavedBooksList({ savedBooks, loading, onEditBook }: Save
                                 </div>
 
                                 {/* カード本文 */}
-                                <div className="flex flex-col flex-1 p-3 gap-1.5">
+                                <div className="flex flex-col p-3 gap-1.5 h-36 overflow-hidden">
                                     {/* ステータスバッジ */}
                                     {book.status && (
                                         <span className={`self-start text-xs font-medium px-2 py-0.5 rounded-full ${STATUS_COLOR[book.status] ?? 'bg-gray-100 text-gray-600'}`}>
