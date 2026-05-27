@@ -64,7 +64,10 @@ export const useSavedBook = (): UseSavedBookReturn => {
                         title,
                         authors,
                         thumbnail,
-                        published_date
+                        published_date,
+                        isbn10,
+                        isbn13,
+                        issn
                     )
                 `)
                 .eq('user_id', user.id)

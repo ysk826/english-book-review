@@ -54,5 +54,8 @@ export interface UserBookRecord {
         authors: string[];
         thumbnail: BookImages | null;
         published_date: string | null;
+        isbn10: string | null;
+        isbn13: string | null;
+        issn: string | null;
     } | null;
 }

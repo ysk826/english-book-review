@@ -1,7 +1,9 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import { SavedBooksListProps } from "@/types/props";
 import { UserBookRecord } from "@/types/database";
+import { generateBookUrl } from "@/utils/slugify";
 
 const STATUS_LABEL: Record<string, string> = {
     read: '読了',
@@ -43,6 +45,9 @@ export default function SavedBooksList({ savedBooks, loading, onEditBook }: Save
                             book.books?.thumbnail?.smallThumbnail ||
                             book.books?.thumbnail?.thumbnail;
 
+                        const bookId = book.books?.isbn13 || book.books?.isbn10 || book.books?.issn || 'unknown';
+                        const bookUrl = book.books ? generateBookUrl(bookId, book.books.title) : null;
+
                         return (
                             <div
                                 key={book.book_id}
@@ -51,12 +56,23 @@ export default function SavedBooksList({ savedBooks, loading, onEditBook }: Save
                                 {/* 書影 */}
                                 <div className="relative w-full aspect-[2/3] bg-gray-100">
                                     {thumbnailUrl ? (
-                                        <Image
-                                            src={thumbnailUrl}
-                                            alt={book.books?.title ?? ''}
-                                            fill
-                                            className="object-cover"
-                                        />
+                                        bookUrl ? (
+                                            <Link href={bookUrl} className="absolute inset-0">
+                                                <Image
+                                                    src={thumbnailUrl}
+                                                    alt={book.books?.title ?? ''}
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                            </Link>
+                                        ) : (
+                                            <Image
+                                                src={thumbnailUrl}
+                                                alt={book.books?.title ?? ''}
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        )
                                     ) : (
                                         <div className="absolute inset-0 flex items-center justify-center text-gray-300 text-xs">
                                             No Image
@@ -74,9 +90,15 @@ export default function SavedBooksList({ savedBooks, loading, onEditBook }: Save
                                     )}
 
                                     {/* タイトル */}
-                                    <p className="text-sm font-semibold leading-snug line-clamp-2">
-                                        {book.books?.title}
-                                    </p>
+                                    {bookUrl ? (
+                                        <Link href={bookUrl} className="text-sm font-semibold leading-snug line-clamp-2 hover:underline">
+                                            {book.books?.title}
+                                        </Link>
+                                    ) : (
+                                        <p className="text-sm font-semibold leading-snug line-clamp-2">
+                                            {book.books?.title}
+                                        </p>
+                                    )}
 
                                     {/* 著者 */}
                                     <p className="text-xs text-gray-500 line-clamp-1">
