@@ -86,8 +86,13 @@ function SearchContent() {
     }, [fetchBooks]);
 
     const handleBookClick = (book: SearchResultBook) => {
-        const bookId = book.isbn13 || book.isbn10 || book.issn || 'unknown';
-        const bookUrl = generateBookUrl(bookId, book.title);
+        const bookUrl = generateBookUrl(book.dbId ?? (book.isbn13 || book.isbn10 || book.issn || 'unknown'), book.title);
+
+        if (book.dbId) {
+            router.push(bookUrl);
+            return;
+        }
+
         const params = new URLSearchParams({
             title: book.title,
             authors: book.authors.join(','),
