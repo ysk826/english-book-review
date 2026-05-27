@@ -101,7 +101,7 @@ export default function SavedBooksList({ savedBooks, loading, onEditBook }: Save
                                             onClick={() => onEditBook(book)}
                                             className="text-xs text-blue-500 hover:text-blue-700 hover:underline"
                                         >
-                                            編集
+                                            Review
                                         </button>
                                     </div>
                                 </div>
