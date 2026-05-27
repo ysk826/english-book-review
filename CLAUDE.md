@@ -63,7 +63,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 2. いきなり実装せず、まず Planning モードで方針を提示する。
 3. ユーザーの承認後、実装を開始する。
 4. 実装後は必ず `pnpm test` と `pnpm lint` を実行し、全てパスすることを確認する。
-5. 作業が完了したら @TASKS.md の該当タスクを Done セクションに移動させる。
+5. lint・テストがパスしたら、変更内容を日本語で要約した git commit を作成する。
+6. 作業が完了したら @TASKS.md の該当タスクを Done セクションに移動させる。
 
 ## Commands
 
