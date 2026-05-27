@@ -37,7 +37,7 @@ export default function SavedBooksList({ savedBooks, loading, onEditBook }: Save
             {savedBooks.length === 0 ? (
                 <p className="text-gray-500 text-sm">まだ本が登録されていません</p>
             ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
                     {savedBooks.map((book: UserBookRecord) => {
                         const thumbnailUrl =
                             book.books?.thumbnail?.smallThumbnail ||
