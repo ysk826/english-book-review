@@ -35,12 +35,13 @@ export const useBookLibrary = (bookInfo: BookDetailInfo) => {
                 router.push('/login');
                 return;
             }
-            // 1. 本の存在確認
-            let { data: book } = await supabase
+            // 1. 本の存在確認（版に関わらずタイトルで同一書籍とみなす）
+            const { data: existingBooks } = await supabase
                 .from('books')
                 .select('id')
-                .eq('isbn13', bookInfo.isbn13) // todo: ISBN13がnullの時の処理はどうするか？
-                .maybeSingle();
+                .ilike('title', bookInfo.title)
+                .limit(1);
+            let book = existingBooks?.[0] ?? null;
 
             // 2. 本が存在しない場合のみ作成
             if (!book) {

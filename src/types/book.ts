@@ -11,6 +11,7 @@ export interface BookImages {
  * 検索結果の書籍情報を表すインターフェース
  */
 export interface SearchResultBook {
+    dbId: string | null;  // DBに存在する場合のUUID。API専用書籍はnull
     isbn10: string | null;
     isbn13: string | null;
     issn: string | null;

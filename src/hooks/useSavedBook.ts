@@ -64,11 +64,14 @@ export const useSavedBook = (): UseSavedBookReturn => {
                         title,
                         authors,
                         thumbnail,
-                        published_date
+                        published_date,
+                        isbn10,
+                        isbn13,
+                        issn
                     )
                 `)
                 .eq('user_id', user.id)
-                .order('finished_reading_at', { ascending: true }) // todo: 昇順、降順の選択肢を追加する
+                .order('created_at', { ascending: false })
 
             if (booksError || !savedBooksData) {
                 throw new Error(booksError.message);

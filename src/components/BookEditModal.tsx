@@ -1,11 +1,19 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BookEditModalProps } from '@/types/props';
 import Image from 'next/image';
 export default function BookEditModal({ isOpen, book, onClose, onSave }: BookEditModalProps) {
     const [editingStatus, setEditingStatus] = useState(book ? book.status : "read");
     const [editingRating, setEditingRating] = useState(book ? book.rating : 0);
     const [editingReview, setEditingReview] = useState(book ? book.review : "");
+
+    useEffect(() => {
+        if (book) {
+            setEditingStatus(book.status);
+            setEditingRating(book.rating ?? 0);
+            setEditingReview(book.review ?? "");
+        }
+    }, [book]);
 
     // モーダルが開いていない場合は何も表示しない
     if (!isOpen || !book) return null;

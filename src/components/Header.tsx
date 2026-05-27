@@ -79,8 +79,14 @@ export default function Header() {
     };
 
     const handleBookClick = (book: SearchResultBook) => {
-        const bookId = book.isbn13 || book.isbn10 || book.issn || 'unknown';
-        const bookUrl = generateBookUrl(bookId, book.title);
+        const bookUrl = generateBookUrl(book.dbId ?? (book.isbn13 || book.isbn10 || book.issn || 'unknown'), book.title);
+        clearResults();
+
+        if (book.dbId) {
+            router.push(bookUrl);
+            return;
+        }
+
         const searchParams = new URLSearchParams({
             title: book.title,
             authors: book.authors.join(','),
@@ -91,7 +97,6 @@ export default function Header() {
             ...(book.isbn13 && { isbn13: book.isbn13 }),
             ...(book.issn && { issn: book.issn }),
         });
-        clearResults();
         router.push(`${bookUrl}?${searchParams.toString()}`);
     };
 

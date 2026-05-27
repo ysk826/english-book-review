@@ -1,113 +1,139 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import { SavedBooksListProps } from "@/types/props";
 import { UserBookRecord } from "@/types/database";
+import { generateBookUrl } from "@/utils/slugify";
 
-/**
- * 読んだ本のリストを表示するコンポーネント
- * ユーザーが読んだ本の情報を一覧表示し、感想の編集機能を提供する
- * @usetdBy profile/page.tsx
- * @param books - ユーザーが読んだ本のリスト
- * @param onEditBook - 本の感想を編集するためのコールバック関数
- */
 const STATUS_LABEL: Record<string, string> = {
     read: '読了',
     reading: '読書中',
     want_to_read: '読みたい',
 };
 
+const STATUS_COLOR: Record<string, string> = {
+    read: 'bg-emerald-100 text-emerald-700',
+    reading: 'bg-blue-100 text-blue-700',
+    want_to_read: 'bg-amber-100 text-amber-700',
+};
+
+function StarRating({ rating }: { rating: number }) {
+    return (
+        <div className="flex gap-0.5">
+            {[1, 2, 3, 4, 5].map((n) => (
+                <span key={n} className={n <= rating ? 'text-yellow-400' : 'text-gray-200'}>
+                    ★
+                </span>
+            ))}
+        </div>
+    );
+}
+
 export default function SavedBooksList({ savedBooks, loading, onEditBook }: SavedBooksListProps) {
+    if (loading) return null;
 
     return (
-        <div>
-            <div className="max-w-4xl mx-auto">
-                {loading ? null : <h2 className="text-lg mb-4">読んだ本</h2>}
-                {loading ? null : savedBooks.length === 0 ? (
-                    <p>まだ本が登録されていません</p>
-                ) : (
-                    <div className="grid gap-4">
-                        {savedBooks.map((book: UserBookRecord) => {
-                            return (
-                                <div
-                                    key={book.book_id}
-                                    className="flex gap-4 p-4 border rounded"
-                                >
-                                    {/* 左側: 画像 */}
-                                    {book.books && (book.books.thumbnail?.smallThumbnail || book.books.thumbnail?.thumbnail) && (
-                                        <Image
-                                            src={(book.books.thumbnail.smallThumbnail || book.books.thumbnail.thumbnail) as string}
-                                            alt={book.books.title}
-                                            width={400}
-                                            height={600}
-                                            className="w-20 h-28 object-cover flex-shrink-0"
-                                        />
+        <div className="max-w-4xl mx-auto">
+            <h2 className="text-lg font-semibold mb-5">読んだ本</h2>
+
+            {savedBooks.length === 0 ? (
+                <p className="text-gray-500 text-sm">まだ本が登録されていません</p>
+            ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                    {savedBooks.map((book: UserBookRecord) => {
+                        const thumbnailUrl =
+                            book.books?.thumbnail?.smallThumbnail ||
+                            book.books?.thumbnail?.thumbnail;
+
+                        // 保存済み書籍は必ずDBにあるのでUUIDを使用（クエリパラメータ不要）
+                        const bookUrl = book.books
+                            ? generateBookUrl(book.books.id, book.books.title)
+                            : null;
+
+                        return (
+                            <div
+                                key={book.book_id}
+                                className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col"
+                            >
+                                {/* 書影 */}
+                                <div className="relative w-full aspect-[2/3] bg-gray-100">
+                                    {thumbnailUrl ? (
+                                        bookUrl ? (
+                                            <Link href={bookUrl} className="absolute inset-0">
+                                                <Image
+                                                    src={thumbnailUrl}
+                                                    alt={book.books?.title ?? ''}
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                            </Link>
+                                        ) : (
+                                            <Image
+                                                src={thumbnailUrl}
+                                                alt={book.books?.title ?? ''}
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        )
+                                    ) : (
+                                        <div className="absolute inset-0 flex items-center justify-center text-gray-300 text-xs">
+                                            No Image
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* カード本文 */}
+                                <div className="flex flex-col flex-1 p-3 gap-1.5">
+                                    {/* ステータスバッジ */}
+                                    {book.status && (
+                                        <span className={`self-start text-xs font-medium px-2 py-0.5 rounded-full ${STATUS_COLOR[book.status] ?? 'bg-gray-100 text-gray-600'}`}>
+                                            {STATUS_LABEL[book.status] ?? book.status}
+                                        </span>
                                     )}
 
-                                    {/* 中央: 本の基本情報 */}
-                                    <div className="flex-1 min-w-0">
-                                        <h3 className="font-bold">{book.books?.title}</h3>
-                                        <p className="text-gray-600">
-                                            {book.books?.authors.join(", ")}
+                                    {/* タイトル */}
+                                    {bookUrl ? (
+                                        <Link href={bookUrl} className="text-sm font-semibold leading-snug line-clamp-2 hover:underline">
+                                            {book.books?.title}
+                                        </Link>
+                                    ) : (
+                                        <p className="text-sm font-semibold leading-snug line-clamp-2">
+                                            {book.books?.title}
                                         </p>
-                                        <p className="text-sm text-gray-500">
-                                            {book.books?.published_date}
-                                        </p>
+                                    )}
 
-                                        {/* ステータス表示 */}
-                                        {book.status && (
-                                            <p className="text-sm text-blue-600 mt-1">
-                                                {STATUS_LABEL[book.status] ?? book.status}
-                                            </p>
-                                        )}
+                                    {/* 著者 */}
+                                    <p className="text-xs text-gray-500 line-clamp-1">
+                                        {book.books?.authors.join(", ")}
+                                    </p>
 
-                                        {/* 評価表示 */}
-                                        {book.rating && (
-                                            <p className="text-sm text-yellow-600 mt-1">
-                                                評価: {"⭐".repeat(book.rating)} ({book.rating}/5)
-                                            </p>
-                                        )}
+                                    {/* 星評価 */}
+                                    {book.rating && (
+                                        <StarRating rating={book.rating} />
+                                    )}
 
-                                        {/* 読了日表示 */}
-                                        {book.finished_reading_at && (
-                                            <p className="text-xs text-gray-400 mt-2">
-                                                読了日: {new Date(book.finished_reading_at).toLocaleDateString('ja-JP')}
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    {/* 右側: レビューと編集ボタン */}
-                                    <div className="w-80 p-3 bg-gray-50 rounded">
-                                        {book.review ? (
-                                            // 感想がある場合
-                                            <div>
-                                                <p className="text-sm text-gray-600 leading-relaxed mb-2">
-                                                    {book.review}
-                                                </p>
-                                                <button
-                                                    onClick={() => onEditBook(book)}
-                                                    className="text-xs text-blue-500 hover:text-blue-700 hover:underline"
-                                                >
-                                                    編集
-                                                </button>
-                                            </div>
+                                    {/* 読了日 + 編集ボタン */}
+                                    <div className="flex items-end justify-between mt-auto pt-2">
+                                        {book.finished_reading_at ? (
+                                            <span className="text-xs text-gray-400">
+                                                {new Date(book.finished_reading_at).toLocaleDateString('ja-JP')}
+                                            </span>
                                         ) : (
-                                            // 感想がない場合
-                                            <div>
-                                                <button
-                                                    onClick={() => onEditBook(book)}
-                                                    className="text-sm text-blue-500 hover:text-blue-700 hover:underline border border-blue-300 px-3 py-1 rounded"
-                                                >
-                                                    編集
-                                                </button>
-                                            </div>
+                                            <span />
                                         )}
+                                        <button
+                                            onClick={() => onEditBook(book)}
+                                            className="text-xs text-blue-500 hover:text-blue-700 hover:underline"
+                                        >
+                                            Review
+                                        </button>
                                     </div>
                                 </div>
-                            );
-                        })}
-                    </div>
-                )}
-            </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
         </div>
     );
 }

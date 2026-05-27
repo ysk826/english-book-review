@@ -3,6 +3,9 @@ import { useSearchParams, useParams } from 'next/navigation';
 import { isValidSlug } from '@/utils/slugify';
 import { BookDetailInfo } from '@/types/book';
 import { UseBookDetailReturn } from '@/types/hooks';
+import { supabase } from '@/lib/supabase';
+
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /**
  * 本の詳細情報を取得するカスタムフック
@@ -28,52 +31,70 @@ export const useBookDetail = (): UseBookDetailReturn => {
     const thumbnail = searchParams.get('thumbnail');
 
     useEffect(() => {
-
-        // パラメータの存在チェック
-        if (!params || !searchParams) {
-            console.log('パラメータオブジェクトが利用できません');
-            return;
-        }
-
-        // 必須パラメータのチェック
         if (!bookId || !urlSlug) {
-            console.error('URLパラメータが不足:', { bookId, urlSlug });
             setLoading(false);
             return;
         }
 
-        // 必須パラメータのチェック
-        if (!title || !authors || !publishedDate) {
-            console.error('クエリパラメータが不足:', { title, authors, publishedDate });
+        // UUIDならDBから取得、それ以外はクエリパラメータから構築
+        if (UUID_REGEX.test(bookId)) {
+            supabase
+                .from('books')
+                .select('*')
+                .eq('id', bookId)
+                .single()
+                .then(({ data, error }) => {
+                    if (error || !data) {
+                        setLoading(false);
+                        return;
+                    }
+                    const authors = typeof data.authors === 'string'
+                        ? JSON.parse(data.authors)
+                        : data.authors;
+                    const images = typeof data.thumbnail === 'string'
+                        ? JSON.parse(data.thumbnail)
+                        : data.thumbnail;
+                    setBookInfo({
+                        id: data.id,
+                        title: data.title,
+                        authors,
+                        publishedDate: data.published_date ?? '',
+                        isbn10: data.isbn10,
+                        isbn13: data.isbn13,
+                        issn: data.issn,
+                        images: images ?? { smallThumbnail: null, thumbnail: null },
+                        description: null,
+                        pageCount: null,
+                        publisher: null,
+                    });
+                    setLoading(false);
+                });
+            return;
+        }
+
+        // クエリパラメータから構築（API専用書籍）
+        if (!title || !authors) {
             setLoading(false);
             return;
         }
 
-        // slugの正当性チェック
         if (!isValidSlug(urlSlug, title)) {
             console.warn('Slugがタイトルと一致しません:', { urlSlug, title });
         }
 
-        // 本の情報を作成
-        const bookDetail: BookDetailInfo = {
+        setBookInfo({
             id: bookId,
             title,
             authors: authors.split(','),
-            publishedDate,
-            isbn10: isbn10,
-            isbn13: isbn13,
-            issn: issn,
-            images: {
-                thumbnail: thumbnail,
-                smallThumbnail: smallThumbnail
-            },
-            description: null,    // 明示的に null
-            pageCount: null,      // 明示的に null
-            publisher: null,      // 明示的に null
-        };
-
-        // 本の情報をステートに保存
-        setBookInfo(bookDetail);
+            publishedDate: publishedDate ?? '',
+            isbn10,
+            isbn13,
+            issn,
+            images: { thumbnail, smallThumbnail },
+            description: null,
+            pageCount: null,
+            publisher: null,
+        });
         setLoading(false);
     }, [bookId,
         urlSlug,
@@ -84,9 +105,7 @@ export const useBookDetail = (): UseBookDetailReturn => {
         isbn13,
         issn,
         smallThumbnail,
-        thumbnail,
-        params,
-        searchParams]);
+        thumbnail]);
 
     return {
         bookInfo,
