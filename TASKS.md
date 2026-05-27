@@ -47,6 +47,7 @@
 - [x] デバッグ用コードを削除する（`profile/page.tsx` の `testFetchBooks` 関数とボタン）
 - [ ] UserProfile.tsのページとプロフィール編集モーダルのページをモダンに統一する
 - [ ] 書籍詳細ページのクエリパラメータ渡し設計を見直す（URL が長大になる・直リンク共有が壊れる可能性）
+- [ ] `published_date` が null の書籍をクリックすると詳細ページが表示されない（`useBookDetail.ts:46` の必須チェックが空文字を弾く）
 - [ ] `useProfile` の未使用変数 `_loading` を整理する（`useProfile.ts:13`）
 - [ ] `SavedBooksList` の空状態にCTAを追加する（「まだ本が登録されていません」だけでは次のアクションが不明）
 
