@@ -45,20 +45,10 @@ export default function SavedBooksList({ savedBooks, loading, onEditBook }: Save
                             book.books?.thumbnail?.smallThumbnail ||
                             book.books?.thumbnail?.thumbnail;
 
-                        const bookId = book.books?.isbn13 || book.books?.isbn10 || book.books?.issn || 'unknown';
-                        const bookUrl = book.books ? (() => {
-                            const params = new URLSearchParams({
-                                title: book.books!.title,
-                                authors: book.books!.authors.join(','),
-                                publishedDate: book.books!.published_date ?? '',
-                                ...(book.books!.thumbnail?.smallThumbnail && { smallThumbnail: book.books!.thumbnail.smallThumbnail }),
-                                ...(book.books!.thumbnail?.thumbnail && { thumbnail: book.books!.thumbnail.thumbnail }),
-                                ...(book.books!.isbn10 && { isbn10: book.books!.isbn10 }),
-                                ...(book.books!.isbn13 && { isbn13: book.books!.isbn13 }),
-                                ...(book.books!.issn && { issn: book.books!.issn }),
-                            });
-                            return `${generateBookUrl(bookId, book.books!.title)}?${params.toString()}`;
-                        })() : null;
+                        // 保存済み書籍は必ずDBにあるのでUUIDを使用（クエリパラメータ不要）
+                        const bookUrl = book.books
+                            ? generateBookUrl(book.books.id, book.books.title)
+                            : null;
 
                         return (
                             <div

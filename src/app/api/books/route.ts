@@ -17,6 +17,7 @@ export const formatApiBooks = (apiItems: GoogleBooksResponse): SearchResultBook[
 
     // フォーマットされた書籍情報を返す
     return filtered.map((item: GoogleBooksItem) => ({
+        dbId: null,
         isbn10: item.volumeInfo.industryIdentifiers?.find(id => id.type === "ISBN_10")?.identifier || null,
         isbn13: item.volumeInfo.industryIdentifiers?.find(id => id.type === "ISBN_13")?.identifier || null,
         issn: item.volumeInfo.industryIdentifiers?.find(id => id.type === "ISSN")?.identifier || null,
@@ -33,6 +34,7 @@ export const formatApiBooks = (apiItems: GoogleBooksResponse): SearchResultBook[
 // データベースの書籍情報をフォーマットする関数
 export const formatDbBooks = (dbItems: Book[]): SearchResultBook[] => {
     return dbItems.map(item => ({
+        dbId: item.id,
         isbn10: item.isbn10 || null,
         isbn13: item.isbn13 || null,
         issn: item.issn || null,

@@ -23,13 +23,14 @@ export default function BookSearchResults({ books }: { books: SearchResultBook[]
      * 本の詳細ページに遷移し、URLパラメータで基本情報を渡す
      */
     const handleBookClick = (book: SearchResultBook) => {
-        // 識別子の優先順位: ISBN13 > ISBN10 > ISSN > 'unknown'
-        const bookId = book.isbn13 || book.isbn10 || book.issn || 'unknown';
+        const bookUrl = generateBookUrl(book.dbId ?? (book.isbn13 || book.isbn10 || book.issn || 'unknown'), book.title);
 
-        // SEO対応のURLを生成
-        const bookUrl = generateBookUrl(bookId, book.title);
+        // DBに存在する本はUUIDでクエリパラメータなし、API専用の本は従来通り
+        if (book.dbId) {
+            router.push(bookUrl);
+            return;
+        }
 
-        // クエリパラメータで本の基本情報を渡す
         const searchParams = new URLSearchParams({
             title: book.title,
             authors: book.authors.join(','),
@@ -40,8 +41,6 @@ export default function BookSearchResults({ books }: { books: SearchResultBook[]
             ...(book.isbn13 && { isbn13: book.isbn13 }),
             ...(book.issn && { issn: book.issn })
         });
-
-        // books/{bookId}/{slug}形式のURLに遷移
         router.push(`${bookUrl}?${searchParams.toString()}`);
     };
 
