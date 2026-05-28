@@ -26,13 +26,13 @@ body {
 }
 
 @keyframes slide-in-right {
-    from { transform: translateX(calc(100% + 1rem)); opacity: 0; }
+    from { transform: translateX(calc(-100% - 1rem)); opacity: 0; }
     to   { transform: translateX(0); opacity: 1; }
 }
 
 @keyframes slide-out-right {
     from { transform: translateX(0); opacity: 1; }
-    to   { transform: translateX(calc(100% + 1rem)); opacity: 0; }
+    to   { transform: translateX(calc(-100% - 1rem)); opacity: 0; }
 }
 
 @keyframes progress-drain {
