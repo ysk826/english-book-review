@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import type { BookAddFormProps } from "@/types/props";
 
-function RatingToast({ onDone }: { onDone: () => void }) {
+function RatingToast({ selected, onDone }: { selected: number; onDone: () => void }) {
     const [leaving, setLeaving] = useState(false);
     const timerRef = useRef<ReturnType<typeof setTimeout>>();
     const onDoneRef = useRef(onDone);
@@ -31,7 +31,7 @@ function RatingToast({ onDone }: { onDone: () => void }) {
             }`}
         >
             <div className="flex items-center justify-between px-3 pt-2.5 pb-2">
-                <span className="text-sm font-medium text-gray-800">評価しました。</span>
+                <span className="text-sm font-medium text-gray-800">★{selected} を選択中</span>
                 <button
                     onClick={handleClose}
                     className="text-gray-400 hover:text-gray-600 ml-2 flex-shrink-0 leading-none"
@@ -58,10 +58,17 @@ export default function BookAddForm({
     onSubmit
 }: BookAddFormProps) {
     const [toastKey, setToastKey] = useState<number | null>(null);
+    const [selectedRating, setSelectedRating] = useState(0);
 
     const handleStarClick = (n: number) => {
-        onRatingChange(n === rating ? 0 : n);
-        setToastKey(Date.now());
+        const next = n === rating ? 0 : n;
+        onRatingChange(next);
+        if (next > 0) {
+            setSelectedRating(next);
+            setToastKey(Date.now());
+        } else {
+            setToastKey(null);
+        }
     };
 
     return (
@@ -95,7 +102,7 @@ export default function BookAddForm({
                     ))}
                 </div>
                 {toastKey !== null && (
-                    <RatingToast key={toastKey} onDone={() => setToastKey(null)} />
+                    <RatingToast key={toastKey} selected={selectedRating} onDone={() => setToastKey(null)} />
                 )}
             </div>
 
