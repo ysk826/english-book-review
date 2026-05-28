@@ -9,12 +9,14 @@ export default function UserProfileEditModal({ isOpen, profile, onClose, onSave 
     const [editingName, setEditingName] = useState(profile ? profile.name : "");
     const [edittingBio, setEditingBio] = useState(profile?.bio ?? "");
     const [avatarUrl, setAvatarUrl] = useState(profile?.avatar ?? null);
+    const [nameError, setNameError] = useState("");
 
     useEffect(() => {
         if (profile) {
             setEditingName(profile.name);
             setEditingBio(profile.bio ?? "");
             setAvatarUrl(profile.avatar ?? null);
+            setNameError("");
         }
     }, [profile]);
     const [uploading, setUploading] = useState(false);
@@ -80,6 +82,11 @@ export default function UserProfileEditModal({ isOpen, profile, onClose, onSave 
     };
 
     const handleSaveClick = () => {
+        if (!editingName.trim()) {
+            setNameError('名前を入力してください');
+            return;
+        }
+        setNameError("");
         const updatedProfile: Profile = {
             ...profile,
             name: editingName,
@@ -157,10 +164,16 @@ export default function UserProfileEditModal({ isOpen, profile, onClose, onSave 
                         <input
                             type="text"
                             value={editingName}
-                            onChange={(e) => setEditingName(e.target.value)}
+                            onChange={(e) => {
+                                setEditingName(e.target.value);
+                                if (e.target.value.trim()) setNameError("");
+                            }}
                             placeholder="名前を入力"
-                            className="w-full p-2 border rounded"
+                            className={`w-full p-2 border rounded ${nameError ? 'border-red-400' : ''}`}
                         />
+                        {nameError && (
+                            <p className="text-xs text-red-500 mt-1">{nameError}</p>
+                        )}
                     </div>
 
                     <div>

@@ -56,6 +56,10 @@ export const useProfile = (): UseProfileReturn => {
     const handleSaveUserProfile = async (updatedProfile: Profile) => {
         if (!profile) return;
 
+        if (!updatedProfile.name.trim()) {
+            throw new Error('名前を入力してください');
+        }
+
         // プロフィール情報を更新
         const { error } = await supabase
             .from('profiles')
