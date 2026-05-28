@@ -4,6 +4,15 @@ import { useBookSearch } from './useBookSearch'
 import axios from 'axios'
 
 vi.mock('axios')
+vi.mock('sonner', () => ({
+    toast: {
+        warning: vi.fn(),
+        info: vi.fn(),
+        error: vi.fn(),
+    },
+}))
+
+import { toast } from 'sonner'
 
 const mockBooks = [
     {
@@ -27,7 +36,6 @@ const getDecodedUrl = () => {
 describe('useBookSearch', () => {
     beforeEach(() => {
         vi.clearAllMocks()
-        vi.spyOn(window, 'alert').mockImplementation(() => { })
     })
 
     it('初期状態では searchResults が空で loading が false', () => {
@@ -89,16 +97,16 @@ describe('useBookSearch', () => {
         expect(result.current.searchResults).toEqual(mockBooks)
     })
 
-    it('入力なしで検索するとアラートが出て API は呼ばれない', async () => {
+    it('入力なしで検索するとトーストが出て API は呼ばれない', async () => {
         const { result } = renderHook(() => useBookSearch())
 
         await act(async () => { await result.current.handleSearchBook() })
 
-        expect(window.alert).toHaveBeenCalledWith('タイトルまたは著者を入力してください')
+        expect(toast.warning).toHaveBeenCalledWith('タイトルまたは著者を入力してください')
         expect(axios.get).not.toHaveBeenCalled()
     })
 
-    it('検索結果が空のときアラートが出る', async () => {
+    it('検索結果が空のときトーストが出る', async () => {
         vi.mocked(axios.get).mockResolvedValue({ data: { items: [] } })
 
         const { result } = renderHook(() => useBookSearch())
@@ -106,10 +114,10 @@ describe('useBookSearch', () => {
 
         await act(async () => { await result.current.handleSearchBook() })
 
-        expect(window.alert).toHaveBeenCalledWith('検索結果が見つかりませんでした')
+        expect(toast.info).toHaveBeenCalledWith('検索結果が見つかりませんでした')
     })
 
-    it('API エラー時にアラートが出る', async () => {
+    it('API エラー時にトーストが出る', async () => {
         vi.mocked(axios.get).mockRejectedValue(new Error('Network error'))
 
         const { result } = renderHook(() => useBookSearch())
@@ -117,6 +125,6 @@ describe('useBookSearch', () => {
 
         await act(async () => { await result.current.handleSearchBook() })
 
-        expect(window.alert).toHaveBeenCalledWith('本の取得に失敗しました')
+        expect(toast.error).toHaveBeenCalledWith('本の取得に失敗しました')
     })
 })

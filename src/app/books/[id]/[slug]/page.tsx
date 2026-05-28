@@ -1,6 +1,6 @@
 'use client';
 import { Suspense } from 'react';
-import Head from 'next/head';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
 import BookInfoDisplay from '@/components/BookInfoDisplay';
@@ -11,7 +11,6 @@ import { useBookDetail } from '@/hooks/useBookDetail';
 function BookDetailContent() {
     const { bookInfo, loading, displayImage } = useBookDetail();
 
-    // bookInfoがnullの場合に備えて、デフォルト値を用意
     const defaultBookInfo = {
         id: '',
         title: '',
@@ -41,106 +40,69 @@ function BookDetailContent() {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto"></div>
-                    <p className="mt-4 text-gray-600">本の情報を読み込んでいます...</p>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+                    <p className="mt-4 text-gray-500 text-sm">読み込み中...</p>
                 </div>
             </div>
         );
     }
 
-    // ローディングが完了してもbookInfoがない場合のみ404
     if (!bookInfo) {
         notFound();
     }
 
-    // メタデータ用の情報生成
-    const pageTitle = `${bookInfo.title} - Book Review`;
-    const pageDescription = `Read reviews and details for "${bookInfo.title}" by ${bookInfo.authors.join(', ')}. Published in ${bookInfo.publishedDate}.`;
-    const pageUrl = typeof window !== 'undefined' ? window.location.href : '';
-
-    // 構造化データ（JSON-LD）
-    const structuredData = {
-        "@context": "https://schema.org",
-        "@type": "Book",
-        "name": bookInfo.title,
-        "author": bookInfo.authors.map(author => ({
-            "@type": "Person",
-            "name": author.trim()
-        })),
-        "datePublished": bookInfo.publishedDate,
-        ...(bookInfo.isbn13 && { "isbn": bookInfo.isbn13 }),
-        ...(displayImage && { "image": displayImage }),
-        "url": pageUrl
-    };
-
     return (
-        <>
-            {/* SEO メタデータ */}
-            <Head>
-                <title>{pageTitle}</title>
-                <meta name="description" content={pageDescription} />
-                <meta name="keywords" content={`${bookInfo.title}, ${bookInfo.authors.join(', ')}, book review, ${bookInfo.publishedDate}`} />
+        <div className="min-h-screen bg-gray-50">
+            <Header />
 
-                {/* Open Graph (Facebook, LinkedIn等) */}
-                <meta property="og:title" content={pageTitle} />
-                <meta property="og:description" content={pageDescription} />
-                <meta property="og:type" content="book" />
-                <meta property="og:url" content={pageUrl} />
-                {displayImage && <meta property="og:image" content={displayImage} />}
-                <meta property="og:site_name" content="Book Review" />
-
-                {/* Twitter Card */}
-                <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content={pageTitle} />
-                <meta name="twitter:description" content={pageDescription} />
-                {displayImage && <meta name="twitter:image" content={displayImage} />}
-
-                {/* 構造化データ */}
-                <script
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-                />
-            </Head>
-
-            <div className="min-h-screen bg-gray-50">
-                <Header />
-
-                {/* メインコンテンツ */}
-                <div className="max-w-4xl mx-auto">
-                    <div className="bg-white rounded-lg shadow-sm border p-6">
-                        {/* 本の基本情報表示 */}
-                        <BookInfoDisplay book={bookInfo} />
-
-                        {/* フォーム部分 */}
-                        <div className="mt-8">
-                            <BookAddForm
-                                status={status}
-                                rating={rating}
-                                review={review}
-                                saving={saving}
-                                onStatusChange={setStatus}
-                                onRatingChange={setRating}
-                                onReviewChange={setReview}
-                                onSubmit={addBookToLibrary}
-                            />
+            <div className="max-w-5xl mx-auto px-4 py-8">
+                <div className="flex flex-col md:flex-row gap-8">
+                    {/* 左サイドバー: 書影 + ライブラリ追加フォーム */}
+                    <aside className="flex-shrink-0 md:w-48 lg:w-52 md:sticky md:top-4 md:self-start">
+                        <div className="w-36 md:w-full mx-auto mb-6">
+                            {displayImage ? (
+                                <Image
+                                    src={displayImage}
+                                    alt={bookInfo.title}
+                                    width={208}
+                                    height={312}
+                                    className="w-full rounded-lg shadow-md"
+                                />
+                            ) : (
+                                <div className="w-full aspect-[2/3] bg-gray-200 rounded-lg flex items-center justify-center">
+                                    <span className="text-gray-400 text-xs">No Image</span>
+                                </div>
+                            )}
                         </div>
-                    </div>
+
+                        <BookAddForm
+                            status={status}
+                            rating={rating}
+                            review={review}
+                            saving={saving}
+                            onStatusChange={setStatus}
+                            onRatingChange={setRating}
+                            onReviewChange={setReview}
+                            onSubmit={addBookToLibrary}
+                        />
+                    </aside>
+
+                    {/* 右メイン: タイトル・著者・あらすじ */}
+                    <main className="flex-1 min-w-0">
+                        <BookInfoDisplay book={bookInfo} />
+                    </main>
                 </div>
             </div>
-        </>
+        </div>
     );
 }
 
-// メインのページコンポーネント（Suspenseでラップ）
 export default function BookDetailPage() {
     return (
         <Suspense
             fallback={
                 <div className="min-h-screen flex items-center justify-center">
-                    <div className="text-center">
-                        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto"></div>
-                        <p className="mt-4 text-gray-600">ページを読み込んでいます...</p>
-                    </div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
                 </div>
             }
         >

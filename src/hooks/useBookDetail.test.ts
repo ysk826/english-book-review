@@ -8,6 +8,18 @@ vi.mock('next/navigation', () => ({
     useSearchParams: vi.fn(),
 }))
 
+vi.mock('@/lib/supabase', () => ({
+    supabase: {
+        from: vi.fn().mockReturnValue({
+            select: vi.fn().mockReturnValue({
+                eq: vi.fn().mockReturnValue({
+                    single: vi.fn().mockResolvedValue({ data: null, error: new Error('not found') }),
+                }),
+            }),
+        }),
+    },
+}))
+
 // useParams のモックをセットアップするヘルパー
 const mockParams = (id: string, slug: string) => {
     vi.mocked(useParams).mockReturnValue({ id, slug })
