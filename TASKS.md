@@ -18,6 +18,7 @@
 - [x] `middleware.ts` を実装してルート保護を追加する（未ログインで `/profile` 等に直接アクセスできる）
 - [x] 新規登録ページのデザインをモダンに統一する（インラインスタイルをTailwind CSSに置き換え）
 - [x] `alert()` をトースト通知に置き換える（`register/page.tsx:67`）
+- [ ] 書籍詳細ページのデザインを変更する（`books/[id]/[slug]/page.tsx`）
 - [ ] Supabase RLS（Row Level Security）ポリシーを確認・設定する（`user_books` テーブルで他人のデータへのアクセスを防ぐ）
 - [ ] 書籍詳細ページの `next/head` を `generateMetadata` に移行する（`books/[id]/[slug]/page.tsx`、App Router では `next/head` が無視されSEOが機能していない）
 - [ ] ライブラリから本を削除できる機能を追加する（誤登録の取り消しができない）
