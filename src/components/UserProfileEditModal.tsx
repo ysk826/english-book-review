@@ -1,6 +1,6 @@
 "use client"
 import Image from "next/image";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Profile } from "@/types/database";
 import { UserProfileEditModalProps } from "@/types/props"
 import { supabase } from "@/lib/supabase";
@@ -9,6 +9,14 @@ export default function UserProfileEditModal({ isOpen, profile, onClose, onSave 
     const [editingName, setEditingName] = useState(profile ? profile.name : "");
     const [edittingBio, setEditingBio] = useState(profile?.bio ?? "");
     const [avatarUrl, setAvatarUrl] = useState(profile?.avatar ?? null);
+
+    useEffect(() => {
+        if (profile) {
+            setEditingName(profile.name);
+            setEditingBio(profile.bio ?? "");
+            setAvatarUrl(profile.avatar ?? null);
+        }
+    }, [profile]);
     const [uploading, setUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
