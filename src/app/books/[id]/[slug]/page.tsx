@@ -1,43 +1,18 @@
 'use client';
 import { Suspense } from 'react';
 import Image from 'next/image';
-import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import { notFound, useParams } from 'next/navigation';
 import Header from '@/components/Header';
 import BookInfoDisplay from '@/components/BookInfoDisplay';
-import BookAddForm from '@/components/BookAddForm';
 import UserReviewDisplay from '@/components/UserReviewDisplay';
-import { useBookLibrary } from '@/hooks/useBookLibrary';
 import { useBookDetail } from '@/hooks/useBookDetail';
 import { useUserBookEntry } from '@/hooks/useUserBookEntry';
 
 function BookDetailContent() {
+    const params = useParams();
     const { bookInfo, loading, displayImage } = useBookDetail();
     const { userBook, loading: userBookLoading } = useUserBookEntry(bookInfo?.id ?? '');
-
-    const defaultBookInfo = {
-        id: '',
-        title: '',
-        authors: [],
-        publishedDate: '',
-        isbn10: null,
-        isbn13: null,
-        issn: null,
-        images: null,
-        description: null,
-        pageCount: null,
-        publisher: null,
-    };
-
-    const {
-        saving,
-        status,
-        rating,
-        review,
-        setStatus,
-        setRating,
-        setReview,
-        addBookToLibrary,
-    } = useBookLibrary(bookInfo || defaultBookInfo);
 
     if (loading) {
         return (
@@ -54,13 +29,15 @@ function BookDetailContent() {
         notFound();
     }
 
+    const reviewPath = `/books/${params.id}/${params.slug}/review`;
+
     return (
         <div className="min-h-screen bg-gray-50">
             <Header />
 
             <div className="max-w-5xl mx-auto px-4 py-8">
                 <div className="flex flex-col md:flex-row gap-8">
-                    {/* 左サイドバー: 書影 + ライブラリ追加フォーム */}
+                    {/* 左サイドバー: 書影 + 感想ボタン */}
                     <aside className="flex-shrink-0 md:w-48 lg:w-52 md:sticky md:top-4 md:self-start">
                         <div className="w-36 md:w-full mx-auto mb-6">
                             {displayImage ? (
@@ -78,16 +55,12 @@ function BookDetailContent() {
                             )}
                         </div>
 
-                        <BookAddForm
-                            status={status}
-                            rating={rating}
-                            review={review}
-                            saving={saving}
-                            onStatusChange={setStatus}
-                            onRatingChange={setRating}
-                            onReviewChange={setReview}
-                            onSubmit={addBookToLibrary}
-                        />
+                        <Link
+                            href={reviewPath}
+                            className="block w-full py-2.5 text-center rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors"
+                        >
+                            {userBook ? '感想を編集する' : '感想を書く'}
+                        </Link>
                     </aside>
 
                     {/* 右メイン: タイトル・著者・あらすじ・感想 */}
