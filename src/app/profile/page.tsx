@@ -53,7 +53,34 @@ export default function ProfilePage() {
                     onSave={handleSaveUserProfile}
                 />
 
-                <SavedBooksList savedBooks={savedBooks} loading={booksLoading} onEditBook={openBookEditModal} />
+                {booksLoading ? null : (
+                    <div className="space-y-10">
+                        {savedBooks.filter(b => b.status === 'read').length > 0 && (
+                            <SavedBooksList
+                                title="読んだ本"
+                                savedBooks={savedBooks.filter(b => b.status === 'read')}
+                                loading={false}
+                                onEditBook={openBookEditModal}
+                            />
+                        )}
+                        {savedBooks.filter(b => b.status === 'reading').length > 0 && (
+                            <SavedBooksList
+                                title="読んでいる本"
+                                savedBooks={savedBooks.filter(b => b.status === 'reading')}
+                                loading={false}
+                                onEditBook={openBookEditModal}
+                            />
+                        )}
+                        {savedBooks.filter(b => b.status === 'want_to_read').length > 0 && (
+                            <SavedBooksList
+                                title="読みたい本"
+                                savedBooks={savedBooks.filter(b => b.status === 'want_to_read')}
+                                loading={false}
+                                onEditBook={openBookEditModal}
+                            />
+                        )}
+                    </div>
+                )}
 
                 <BookEditModal
                     isOpen={isBookEditModalOpen}

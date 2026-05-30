@@ -29,12 +29,12 @@ function StarRating({ rating }: { rating: number }) {
     );
 }
 
-export default function SavedBooksList({ savedBooks, loading, onEditBook }: SavedBooksListProps) {
+export default function SavedBooksList({ title, savedBooks, loading, onEditBook }: SavedBooksListProps) {
     if (loading) return null;
 
     return (
         <div className="max-w-4xl mx-auto">
-            <h2 className="text-lg font-semibold mb-5">読んだ本</h2>
+            <h2 className="text-lg font-semibold mb-5">{title}</h2>
 
             {savedBooks.length === 0 ? (
                 <p className="text-gray-500 text-sm">まだ本が登録されていません</p>
