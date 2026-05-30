@@ -80,7 +80,16 @@ function BookDetailContent() {
                                 disabled={adding}
                                 className="flex items-center justify-center gap-1.5 w-full mt-2 py-2.5 rounded-lg bg-gray-100 border border-gray-300 text-gray-600 text-sm font-medium hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                {adding ? '追加中...' : '読みたい本に追加'}
+                                {adding ? '追加中...' : (
+                                    <>
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <circle cx="12" cy="12" r="10"/>
+                                            <line x1="12" y1="8" x2="12" y2="16"/>
+                                            <line x1="8" y1="12" x2="16" y2="12"/>
+                                        </svg>
+                                        読みたい本に追加
+                                    </>
+                                )}
                             </button>
                         )}
                     </aside>
