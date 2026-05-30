@@ -169,11 +169,19 @@ export default function UserProfileEditModal({ isOpen, profile, onClose, onSave 
                                 if (e.target.value.trim()) setNameError("");
                             }}
                             placeholder="名前を入力"
+                            maxLength={30}
                             className={`w-full p-2 border rounded ${nameError ? 'border-red-400' : ''}`}
                         />
-                        {nameError && (
-                            <p className="text-xs text-red-500 mt-1">{nameError}</p>
-                        )}
+                        <div className="flex justify-between mt-1">
+                            {nameError ? (
+                                <p className="text-xs text-red-500">{nameError}</p>
+                            ) : (
+                                <span />
+                            )}
+                            <p className={`text-xs ${editingName.length >= 30 ? 'text-red-500' : 'text-gray-400'}`}>
+                                {editingName.length}/30
+                            </p>
+                        </div>
                     </div>
 
                     <div>

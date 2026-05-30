@@ -30,7 +30,7 @@ export default function UserProfile({ profile, onEditProfile }: userProfileProps
 
                 {/* 名前 + 編集ボタン */}
                 <div className="flex items-center justify-center gap-2 mb-2">
-                    <h2 className="text-2xl font-bold text-gray-800">
+                    <h2 className="text-2xl font-bold text-gray-800 truncate max-w-[260px]">
                         {profile?.name}
                     </h2>
                     <button
@@ -46,7 +46,7 @@ export default function UserProfile({ profile, onEditProfile }: userProfileProps
                 </div>
 
                 {/* 自己紹介 */}
-                <p className="text-gray-600 mb-4">
+                <p className="text-gray-600 mb-4 line-clamp-3 break-words">
                     {profile?.bio || '自己紹介がまだ設定されていません'}
                 </p>
             </div>
