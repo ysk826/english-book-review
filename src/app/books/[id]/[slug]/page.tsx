@@ -5,11 +5,14 @@ import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
 import BookInfoDisplay from '@/components/BookInfoDisplay';
 import BookAddForm from '@/components/BookAddForm';
+import UserReviewDisplay from '@/components/UserReviewDisplay';
 import { useBookLibrary } from '@/hooks/useBookLibrary';
 import { useBookDetail } from '@/hooks/useBookDetail';
+import { useUserBookEntry } from '@/hooks/useUserBookEntry';
 
 function BookDetailContent() {
     const { bookInfo, loading, displayImage } = useBookDetail();
+    const { userBook, loading: userBookLoading } = useUserBookEntry(bookInfo?.id ?? '');
 
     const defaultBookInfo = {
         id: '',
@@ -87,9 +90,10 @@ function BookDetailContent() {
                         />
                     </aside>
 
-                    {/* 右メイン: タイトル・著者・あらすじ */}
+                    {/* 右メイン: タイトル・著者・あらすじ・感想 */}
                     <main className="flex-1 min-w-0">
                         <BookInfoDisplay book={bookInfo} />
+                        <UserReviewDisplay userBook={userBook} loading={userBookLoading} />
                     </main>
                 </div>
             </div>
