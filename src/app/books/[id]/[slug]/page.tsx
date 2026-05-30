@@ -8,11 +8,13 @@ import BookInfoDisplay from '@/components/BookInfoDisplay';
 import UserReviewDisplay from '@/components/UserReviewDisplay';
 import { useBookDetail } from '@/hooks/useBookDetail';
 import { useUserBookEntry } from '@/hooks/useUserBookEntry';
+import { useWantToRead } from '@/hooks/useWantToRead';
 
 function BookDetailContent() {
     const params = useParams();
     const { bookInfo, loading, displayImage } = useBookDetail();
-    const { userBook, loading: userBookLoading } = useUserBookEntry(bookInfo?.id ?? '');
+    const { userBook, loading: userBookLoading, refetch } = useUserBookEntry(bookInfo?.id ?? '');
+    const { adding, addToWantToRead } = useWantToRead(bookInfo ?? null, refetch);
 
     if (loading) {
         return (
@@ -64,6 +66,23 @@ function BookDetailContent() {
                             </svg>
                             Review
                         </Link>
+
+                        {userBook?.status === 'want_to_read' ? (
+                            <button
+                                disabled
+                                className="flex items-center justify-center gap-1.5 w-full mt-2 py-2.5 rounded-lg bg-gray-50 border border-gray-200 text-gray-400 text-sm font-medium cursor-default"
+                            >
+                                読みたい本に追加済み
+                            </button>
+                        ) : (
+                            <button
+                                onClick={addToWantToRead}
+                                disabled={adding}
+                                className="flex items-center justify-center gap-1.5 w-full mt-2 py-2.5 rounded-lg bg-gray-100 border border-gray-300 text-gray-600 text-sm font-medium hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {adding ? '追加中...' : '読みたい本に追加'}
+                            </button>
+                        )}
                     </aside>
 
                     {/* 右メイン: タイトル・著者・あらすじ・感想 */}

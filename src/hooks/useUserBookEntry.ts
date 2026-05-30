@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { UserBook } from '@/types/database';
 
@@ -12,7 +12,7 @@ export const useUserBookEntry = (bookId: string) => {
     const [userBook, setUserBook] = useState<UserBook | null>(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
+    const fetchEntry = useCallback(() => {
         if (!bookId || !UUID_REGEX.test(bookId)) {
             setLoading(false);
             return;
@@ -36,5 +36,9 @@ export const useUserBookEntry = (bookId: string) => {
         });
     }, [bookId]);
 
-    return { userBook, loading };
+    useEffect(() => {
+        fetchEntry();
+    }, [fetchEntry]);
+
+    return { userBook, loading, refetch: fetchEntry };
 };
