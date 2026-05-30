@@ -31,37 +31,43 @@ export default function UserReviewDisplay({ userBook, loading }: UserReviewDispl
     if (loading) {
         return (
             <div className="mt-8 pt-6 border-t border-gray-100">
-                <div className="h-4 bg-gray-100 rounded w-24 animate-pulse mb-4" />
-                <div className="h-3 bg-gray-100 rounded w-40 animate-pulse" />
+                <div className="h-4 bg-gray-100 rounded w-24 animate-pulse mb-3" />
+                <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm space-y-3">
+                    <div className="h-5 bg-gray-100 rounded w-16 animate-pulse" />
+                    <div className="h-4 bg-gray-100 rounded w-28 animate-pulse" />
+                    <div className="h-3 bg-gray-100 rounded w-full animate-pulse" />
+                </div>
             </div>
         );
     }
 
     return (
         <div className="mt-8 pt-6 border-t border-gray-100">
-            <h2 className="text-base font-semibold text-gray-800 mb-4">あなたの感想</h2>
+            <h2 className="text-base font-semibold text-gray-800 mb-3">あなたの感想</h2>
 
-            {!userBook ? (
-                <p className="text-sm text-gray-400">まだ感想がありません</p>
-            ) : (
-                <div className="space-y-3">
-                    <span className={`inline-block text-xs font-medium px-2.5 py-1 rounded-full ${STATUS_COLOR[userBook.status] ?? 'bg-gray-100 text-gray-600'}`}>
-                        {STATUS_LABEL[userBook.status] ?? userBook.status}
-                    </span>
+            <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+                {!userBook ? (
+                    <p className="text-sm text-gray-400">まだ感想がありません</p>
+                ) : (
+                    <div className="space-y-3">
+                        <span className={`inline-block text-xs font-medium px-2.5 py-1 rounded-full ${STATUS_COLOR[userBook.status] ?? 'bg-gray-100 text-gray-600'}`}>
+                            {STATUS_LABEL[userBook.status] ?? userBook.status}
+                        </span>
 
-                    {userBook.rating ? (
-                        <StarRow rating={userBook.rating} />
-                    ) : (
-                        <p className="text-sm text-gray-400">評価なし</p>
-                    )}
+                        {userBook.rating ? (
+                            <StarRow rating={userBook.rating} />
+                        ) : (
+                            <p className="text-sm text-gray-400">評価なし</p>
+                        )}
 
-                    {userBook.review ? (
-                        <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">{userBook.review}</p>
-                    ) : (
-                        <p className="text-sm text-gray-400">感想テキストなし</p>
-                    )}
-                </div>
-            )}
+                        {userBook.review ? (
+                            <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">{userBook.review}</p>
+                        ) : (
+                            <p className="text-sm text-gray-400">感想テキストなし</p>
+                        )}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
