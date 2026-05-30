@@ -1,0 +1,149 @@
+'use client';
+import { Suspense } from 'react';
+import Link from 'next/link';
+import { notFound, useParams } from 'next/navigation';
+import Header from '@/components/Header';
+import { useBookDetail } from '@/hooks/useBookDetail';
+import { useUserBookEntry } from '@/hooks/useUserBookEntry';
+import { useReviewForm } from '@/hooks/useReviewForm';
+
+const STATUS_OPTIONS = [
+    { value: 'read', label: '読了' },
+    { value: 'reading', label: '読書中' },
+    { value: 'want_to_read', label: '読みたい' },
+];
+
+function StarSelector({ rating, onChange }: { rating: number; onChange: (n: number) => void }) {
+    return (
+        <div className="flex gap-1">
+            {[1, 2, 3, 4, 5].map((n) => (
+                <button
+                    key={n}
+                    type="button"
+                    onClick={() => onChange(n === rating ? 0 : n)}
+                    className="text-3xl leading-none focus:outline-none transition-colors"
+                >
+                    <span className={n <= rating ? 'text-yellow-400' : 'text-gray-200'}>★</span>
+                </button>
+            ))}
+        </div>
+    );
+}
+
+function ReviewFormContent() {
+    const params = useParams();
+    const backUrl = `/books/${params.id}/${params.slug}`;
+
+    const { bookInfo, loading: bookLoading } = useBookDetail();
+    const { userBook, loading: entryLoading } = useUserBookEntry(bookInfo?.id ?? '');
+    const { status, rating, review, saving, setStatus, setRating, setReview, save } =
+        useReviewForm(bookInfo, userBook);
+
+    if (bookLoading || entryLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500" />
+            </div>
+        );
+    }
+
+    if (!bookInfo) notFound();
+
+    return (
+        <div className="min-h-screen bg-gray-50">
+            <Header />
+
+            <div className="max-w-2xl mx-auto px-4 py-8">
+                {/* 本のコンテキスト */}
+                <div className="mb-6">
+                    <Link href={backUrl} className="text-sm text-blue-500 hover:underline">
+                        ← {bookInfo.title} に戻る
+                    </Link>
+                    <h1 className="text-xl font-bold text-gray-900 mt-2">{bookInfo.title}</h1>
+                    <p className="text-sm text-gray-500">{bookInfo.authors.join(', ')}</p>
+                </div>
+
+                {/* フォームカード */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6">
+                    {/* ステータス */}
+                    <div>
+                        <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-2">
+                            読書ステータス
+                        </label>
+                        <select
+                            id="status"
+                            value={status}
+                            onChange={(e) => setStatus(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            {STATUS_OPTIONS.map((opt) => (
+                                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* 星評価 */}
+                    <div>
+                        <p className="text-sm font-medium text-gray-700 mb-2">評価</p>
+                        <StarSelector rating={rating} onChange={setRating} />
+                        {rating > 0 && (
+                            <button
+                                type="button"
+                                onClick={() => setRating(0)}
+                                className="mt-1 text-xs text-gray-400 hover:text-gray-600"
+                            >
+                                評価をクリア
+                            </button>
+                        )}
+                    </div>
+
+                    {/* 感想テキスト */}
+                    <div>
+                        <label htmlFor="review" className="block text-sm font-medium text-gray-700 mb-2">
+                            感想
+                        </label>
+                        <textarea
+                            id="review"
+                            value={review}
+                            onChange={(e) => setReview(e.target.value)}
+                            placeholder="この本の感想を書いてください..."
+                            rows={6}
+                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                    </div>
+
+                    {/* ボタン */}
+                    <div className="flex gap-3 justify-end pt-2">
+                        <Link
+                            href={backUrl}
+                            className="px-4 py-2 text-sm text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                        >
+                            キャンセル
+                        </Link>
+                        <button
+                            onClick={save}
+                            disabled={saving}
+                            className="px-6 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                        >
+                            {saving ? '保存中...' : '保存する'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default function ReviewPage() {
+    return (
+        <Suspense
+            fallback={
+                <div className="min-h-screen flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500" />
+                </div>
+            }
+        >
+            <ReviewFormContent />
+        </Suspense>
+    );
+}

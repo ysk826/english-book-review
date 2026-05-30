@@ -5,7 +5,7 @@ import BookAddForm from './BookAddForm'
 
 const defaultProps = {
     status: 'read',
-    rating: null,
+    rating: 0,
     review: '',
     saving: false,
     onStatusChange: vi.fn(),
@@ -19,7 +19,8 @@ describe('BookAddForm', () => {
         render(<BookAddForm {...defaultProps} />)
 
         expect(screen.getByLabelText('読書ステータス')).toBeInTheDocument()
-        expect(screen.getByLabelText('評価 (1-5)')).toBeInTheDocument()
+        // 星ボタンが5個表示される
+        expect(screen.getAllByRole('button').filter(b => b.textContent?.includes('★'))).toHaveLength(5)
         expect(screen.getByLabelText('レビュー（任意）')).toBeInTheDocument()
         expect(screen.getByRole('button', { name: 'マイライブラリに追加' })).toBeInTheDocument()
     })
@@ -33,11 +34,12 @@ describe('BookAddForm', () => {
         expect(onStatusChange).toHaveBeenCalledWith('reading')
     })
 
-    it('評価を変更すると onRatingChange が数値で呼ばれる', async () => {
+    it('星をクリックすると onRatingChange が数値で呼ばれる', async () => {
         const onRatingChange = vi.fn()
         render(<BookAddForm {...defaultProps} onRatingChange={onRatingChange} />)
 
-        await userEvent.selectOptions(screen.getByLabelText('評価 (1-5)'), '3')
+        const starButtons = screen.getAllByRole('button').filter(b => b.textContent?.includes('★'))
+        await userEvent.click(starButtons[2]) // 3つ目の星 → rating 3
 
         expect(onRatingChange).toHaveBeenCalledWith(3)
     })

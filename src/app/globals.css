@@ -24,3 +24,18 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes slide-in-right {
+    from { transform: translateX(calc(-100% - 1rem)); opacity: 0; }
+    to   { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slide-out-right {
+    from { transform: translateX(0); opacity: 1; }
+    to   { transform: translateX(calc(-100% - 1rem)); opacity: 0; }
+}
+
+@keyframes progress-drain {
+    from { width: 100%; }
+    to   { width: 0%; }
+}

@@ -76,7 +76,7 @@ export const useBookLibrary = (bookInfo: BookDetailInfo) => {
                     review: review,
                     started_reading_at: null, // todo: 必要に応じて設定
                     finished_reading_at: null, // todo: 必要に応じて設定
-                })
+                }, { onConflict: 'user_id,book_id' })
                 .select()
                 .single();
 

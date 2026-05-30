@@ -1,146 +1,88 @@
 'use client';
 import { Suspense } from 'react';
-import Head from 'next/head';
-import { notFound } from 'next/navigation';
+import Image from 'next/image';
+import Link from 'next/link';
+import { notFound, useParams } from 'next/navigation';
 import Header from '@/components/Header';
 import BookInfoDisplay from '@/components/BookInfoDisplay';
-import BookAddForm from '@/components/BookAddForm';
-import { useBookLibrary } from '@/hooks/useBookLibrary';
+import UserReviewDisplay from '@/components/UserReviewDisplay';
 import { useBookDetail } from '@/hooks/useBookDetail';
+import { useUserBookEntry } from '@/hooks/useUserBookEntry';
 
 function BookDetailContent() {
+    const params = useParams();
     const { bookInfo, loading, displayImage } = useBookDetail();
-
-    // bookInfoがnullの場合に備えて、デフォルト値を用意
-    const defaultBookInfo = {
-        id: '',
-        title: '',
-        authors: [],
-        publishedDate: '',
-        isbn10: null,
-        isbn13: null,
-        issn: null,
-        images: null,
-        description: null,
-        pageCount: null,
-        publisher: null,
-    };
-
-    const {
-        saving,
-        status,
-        rating,
-        review,
-        setStatus,
-        setRating,
-        setReview,
-        addBookToLibrary,
-    } = useBookLibrary(bookInfo || defaultBookInfo);
+    const { userBook, loading: userBookLoading } = useUserBookEntry(bookInfo?.id ?? '');
 
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto"></div>
-                    <p className="mt-4 text-gray-600">本の情報を読み込んでいます...</p>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+                    <p className="mt-4 text-gray-500 text-sm">読み込み中...</p>
                 </div>
             </div>
         );
     }
 
-    // ローディングが完了してもbookInfoがない場合のみ404
     if (!bookInfo) {
         notFound();
     }
 
-    // メタデータ用の情報生成
-    const pageTitle = `${bookInfo.title} - Book Review`;
-    const pageDescription = `Read reviews and details for "${bookInfo.title}" by ${bookInfo.authors.join(', ')}. Published in ${bookInfo.publishedDate}.`;
-    const pageUrl = typeof window !== 'undefined' ? window.location.href : '';
-
-    // 構造化データ（JSON-LD）
-    const structuredData = {
-        "@context": "https://schema.org",
-        "@type": "Book",
-        "name": bookInfo.title,
-        "author": bookInfo.authors.map(author => ({
-            "@type": "Person",
-            "name": author.trim()
-        })),
-        "datePublished": bookInfo.publishedDate,
-        ...(bookInfo.isbn13 && { "isbn": bookInfo.isbn13 }),
-        ...(displayImage && { "image": displayImage }),
-        "url": pageUrl
-    };
+    const reviewPath = `/books/${params.id}/${params.slug}/review`;
 
     return (
-        <>
-            {/* SEO メタデータ */}
-            <Head>
-                <title>{pageTitle}</title>
-                <meta name="description" content={pageDescription} />
-                <meta name="keywords" content={`${bookInfo.title}, ${bookInfo.authors.join(', ')}, book review, ${bookInfo.publishedDate}`} />
+        <div className="min-h-screen bg-gray-50">
+            <Header />
 
-                {/* Open Graph (Facebook, LinkedIn等) */}
-                <meta property="og:title" content={pageTitle} />
-                <meta property="og:description" content={pageDescription} />
-                <meta property="og:type" content="book" />
-                <meta property="og:url" content={pageUrl} />
-                {displayImage && <meta property="og:image" content={displayImage} />}
-                <meta property="og:site_name" content="Book Review" />
-
-                {/* Twitter Card */}
-                <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content={pageTitle} />
-                <meta name="twitter:description" content={pageDescription} />
-                {displayImage && <meta name="twitter:image" content={displayImage} />}
-
-                {/* 構造化データ */}
-                <script
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-                />
-            </Head>
-
-            <div className="min-h-screen bg-gray-50">
-                <Header />
-
-                {/* メインコンテンツ */}
-                <div className="max-w-4xl mx-auto">
-                    <div className="bg-white rounded-lg shadow-sm border p-6">
-                        {/* 本の基本情報表示 */}
-                        <BookInfoDisplay book={bookInfo} />
-
-                        {/* フォーム部分 */}
-                        <div className="mt-8">
-                            <BookAddForm
-                                status={status}
-                                rating={rating}
-                                review={review}
-                                saving={saving}
-                                onStatusChange={setStatus}
-                                onRatingChange={setRating}
-                                onReviewChange={setReview}
-                                onSubmit={addBookToLibrary}
-                            />
+            <div className="max-w-5xl mx-auto px-4 py-8">
+                <div className="flex flex-col md:flex-row gap-8">
+                    {/* 左サイドバー: 書影 + 感想ボタン */}
+                    <aside className="flex-shrink-0 md:w-48 lg:w-52 md:sticky md:top-4 md:self-start">
+                        <div className="w-36 md:w-full mx-auto mb-6">
+                            {displayImage ? (
+                                <Image
+                                    src={displayImage}
+                                    alt={bookInfo.title}
+                                    width={208}
+                                    height={312}
+                                    className="w-full rounded-lg shadow-md"
+                                />
+                            ) : (
+                                <div className="w-full aspect-[2/3] bg-gray-200 rounded-lg flex items-center justify-center">
+                                    <span className="text-gray-400 text-xs">No Image</span>
+                                </div>
+                            )}
                         </div>
-                    </div>
+
+                        <Link
+                            href={reviewPath}
+                            className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-lg bg-gray-100 border border-gray-300 text-gray-600 text-sm font-medium hover:bg-gray-200 transition-colors"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+                            </svg>
+                            Review
+                        </Link>
+                    </aside>
+
+                    {/* 右メイン: タイトル・著者・あらすじ・感想 */}
+                    <main className="flex-1 min-w-0">
+                        <BookInfoDisplay book={bookInfo} />
+                        <UserReviewDisplay userBook={userBook} loading={userBookLoading} />
+                    </main>
                 </div>
             </div>
-        </>
+        </div>
     );
 }
 
-// メインのページコンポーネント（Suspenseでラップ）
 export default function BookDetailPage() {
     return (
         <Suspense
             fallback={
                 <div className="min-h-screen flex items-center justify-center">
-                    <div className="text-center">
-                        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto"></div>
-                        <p className="mt-4 text-gray-600">ページを読み込んでいます...</p>
-                    </div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
                 </div>
             }
         >
