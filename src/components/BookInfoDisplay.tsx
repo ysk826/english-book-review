@@ -8,9 +8,7 @@ export default function BookInfoDisplay({ book }: BookInfoDisplayProps) {
 
             <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-gray-400 mb-8">
                 {book.publisher && <span>{book.publisher}</span>}
-                {book.publisher && (book.publishedDate || book.pageCount) && <span>·</span>}
-                {book.publishedDate && <span>{book.publishedDate}</span>}
-                {book.publishedDate && book.pageCount && <span>·</span>}
+                {book.publisher && book.pageCount && <span>·</span>}
                 {book.pageCount && <span>{book.pageCount} pages</span>}
             </div>
 
