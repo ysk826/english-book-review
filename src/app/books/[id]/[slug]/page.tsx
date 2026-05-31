@@ -2,7 +2,7 @@
 import { Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { notFound, useParams } from 'next/navigation';
+import { notFound, useParams, useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import BookInfoDisplay from '@/components/BookInfoDisplay';
 import UserReviewDisplay from '@/components/UserReviewDisplay';
@@ -12,6 +12,7 @@ import { useWantToRead } from '@/hooks/useWantToRead';
 
 function BookDetailContent() {
     const params = useParams();
+    const searchParams = useSearchParams();
     const { bookInfo, loading, displayImage } = useBookDetail();
     const { userBook, loading: userBookLoading, refetch } = useUserBookEntry(bookInfo?.id ?? '');
     const { adding, addToWantToRead } = useWantToRead(bookInfo ?? null, refetch);
@@ -31,7 +32,8 @@ function BookDetailContent() {
         notFound();
     }
 
-    const reviewPath = `/books/${params.id}/${params.slug}/review`;
+    const qs = searchParams.toString();
+    const reviewPath = `/books/${params.id}/${params.slug}/review${qs ? `?${qs}` : ''}`;
 
     return (
         <div className="min-h-screen bg-gray-50">

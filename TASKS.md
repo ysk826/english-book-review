@@ -50,6 +50,7 @@
 - [x] `<html lang="en">` を `"ja"` に修正する（`layout.tsx`、SEO・アクセシビリティに影響）
 - [x] `metadata` をデフォルトから修正する（`layout.tsx`、title が "Create Next App" のまま）
 - [x] デバッグ用コードを削除する（`profile/page.tsx` の `testFetchBooks` 関数とボタン）
+- [ ] プロフィールページのデザインを改善する（`/profile`、全体的なレイアウト・見た目をモダンに統一する）
 - [ ] UserProfile.tsのページとプロフィール編集モーダルのページをモダンに統一する
 - [x] 書籍詳細ページのクエリパラメータ渡し設計を見直す（UUID + DBフェッチに移行、DB登録済み書籍はクリーンなURLに）
 - [x] `published_date` が null の書籍をクリックすると詳細ページが表示されない（UUID経由はDBから取得するため解消）
