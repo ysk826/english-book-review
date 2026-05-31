@@ -1,7 +1,7 @@
 'use client';
 import { Suspense } from 'react';
 import Link from 'next/link';
-import { notFound, useParams } from 'next/navigation';
+import { notFound, useParams, useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import { useBookDetail } from '@/hooks/useBookDetail';
 import { useUserBookEntry } from '@/hooks/useUserBookEntry';
@@ -32,7 +32,9 @@ function StarSelector({ rating, onChange }: { rating: number; onChange: (n: numb
 
 function ReviewFormContent() {
     const params = useParams();
-    const backUrl = `/books/${params.id}/${params.slug}`;
+    const searchParams = useSearchParams();
+    const qs = searchParams.toString();
+    const backUrl = `/books/${params.id}/${params.slug}${qs ? `?${qs}` : ''}`;
 
     const { bookInfo, loading: bookLoading } = useBookDetail();
     const { userBook, loading: entryLoading } = useUserBookEntry(bookInfo?.id ?? '');
