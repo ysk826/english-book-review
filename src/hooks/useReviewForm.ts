@@ -69,6 +69,11 @@ export const useReviewForm = (bookInfo: BookDetailInfo | null, existingEntry: Us
                 }
             }
 
+            const alreadyRead = existingEntry?.status === 'read';
+            const finishedReadingAt = status === 'read'
+                ? (alreadyRead ? existingEntry.finished_reading_at : new Date().toISOString())
+                : null;
+
             const { error: upsertError } = await supabase
                 .from('user_books')
                 .upsert({
@@ -77,6 +82,7 @@ export const useReviewForm = (bookInfo: BookDetailInfo | null, existingEntry: Us
                     status,
                     rating: rating || null,
                     review: review.trim() || null,
+                    finished_reading_at: finishedReadingAt,
                 }, { onConflict: 'user_id,book_id' });
 
             if (upsertError) throw upsertError;
@@ -89,7 +95,7 @@ export const useReviewForm = (bookInfo: BookDetailInfo | null, existingEntry: Us
         } finally {
             setSaving(false);
         }
-    }, [bookInfo, router, status, rating, review]);
+    }, [bookInfo, router, status, rating, review, existingEntry]);
 
     return { status, rating, review, saving, setStatus, setRating, setReview, save };
 };
