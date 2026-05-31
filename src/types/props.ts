@@ -7,6 +7,8 @@ export interface userProfileProps {
     profile: Profile;
     /** プロフィール編集時のコールバック関数 */
     onEditProfile: (profile: Profile) => void;
+    /** 今年読んだ本の冊数 */
+    readThisYearCount: number;
 }
 
 export interface UserProfileEditModalProps {

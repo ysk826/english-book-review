@@ -28,6 +28,13 @@ export default function ProfilePage() {
     } = useBookEdit(updateSavedBook);
 
     // user_booksの実データからカウントを計算し、profilesテーブルの静的な値を上書き
+    const currentYear = new Date().getFullYear();
+    const readThisYearCount = savedBooks.filter(b =>
+        b.status === 'read' &&
+        b.finished_reading_at !== null &&
+        new Date(b.finished_reading_at).getFullYear() === currentYear
+    ).length;
+
     const profileWithCounts = profile ? {
         ...profile,
         read_count: savedBooks.filter(b => b.status === 'read').length,
@@ -43,6 +50,7 @@ export default function ProfilePage() {
                     <UserProfile
                         profile={profileWithCounts}
                         onEditProfile={openProfileEditModal}
+                        readThisYearCount={readThisYearCount}
                     />
                 )}
 
@@ -54,7 +62,7 @@ export default function ProfilePage() {
                 />
 
                 {booksLoading ? null : (
-                    <div className="space-y-10">
+                    <div className="space-y-10 mt-10">
                         {savedBooks.filter(b => b.status === 'read').length > 0 && (
                             <SavedBooksList
                                 title="読んだ本"
