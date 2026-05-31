@@ -141,8 +141,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             const isAuthorQuery = /\b[A-Z]\.\s*[A-Z]?\.?\s/.test(query);
             const lastName = query.trim().split(/\s+/).pop() ?? query;
 
-            const plainRes = fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=20&fields=${fields}&key=${apiKey}`);
-            const titleRes = fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(`intitle:${query}`)}&maxResults=40&fields=${fields}&key=${apiKey}`);
+            const plainRes = fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(`"${query}"`)}&maxResults=20&fields=${fields}&key=${apiKey}`);
+            const titleRes = fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(`intitle:"${query}"`)}&maxResults=40&fields=${fields}&key=${apiKey}`);
             const authorRes = isAuthorQuery
                 ? fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(`inauthor:${lastName}`)}&maxResults=40&startIndex=40&fields=${fields}&key=${apiKey}`)
                 : null;
