@@ -97,5 +97,29 @@ export const useReviewForm = (bookInfo: BookDetailInfo | null, existingEntry: Us
         }
     }, [bookInfo, router, status, rating, review, existingEntry]);
 
-    return { status, rating, review, saving, setStatus, setRating, setReview, save };
+    const deleteEntry = useCallback(async () => {
+        if (!existingEntry) return;
+        setSaving(true);
+        try {
+            const { data: { user }, error: authError } = await supabase.auth.getUser();
+            if (authError || !user) return;
+
+            const { error } = await supabase
+                .from('user_books')
+                .delete()
+                .eq('user_id', user.id)
+                .eq('book_id', existingEntry.book_id);
+
+            if (error) throw error;
+            toast.success('ライブラリから削除しました');
+            router.push('/profile');
+        } catch (error) {
+            console.error(error);
+            toast.error('削除に失敗しました');
+        } finally {
+            setSaving(false);
+        }
+    }, [existingEntry, router]);
+
+    return { status, rating, review, saving, setStatus, setRating, setReview, save, deleteEntry };
 };

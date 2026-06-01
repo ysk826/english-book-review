@@ -21,7 +21,7 @@
 - [x] 書籍詳細ページのデザインを変更する（`books/[id]/[slug]/page.tsx`）
 - [x] Supabase RLS（Row Level Security）ポリシーを確認・設定する（`user_books` テーブルで他人のデータへのアクセスを防ぐ）
 - [x] 書籍詳細ページの `next/head` を `generateMetadata` に移行する（`books/[id]/[slug]/page.tsx`、App Router では `next/head` が無視されSEOが機能していない）
-- [ ] ライブラリから本を削除できる機能を追加する（誤登録の取り消しができない）
+- [x] ライブラリから本を削除できる機能を追加する（誤登録の取り消しができない）
 - [ ] 書籍詳細ページのライブラリ追加フォームを改善する（すでにライブラリにある本でも「マイライブラリに追加」が表示される。ページ表示時に user_books を確認し、未登録なら追加フォーム・登録済みなら現在の値で初期化した編集フォームを表示する）
 - [x] 書籍詳細ページの右カラムに自分のレビューを表示する（現状は何も表示されていない。user_books を取得してステータス・星評価・感想テキストを表示。未登録なら「まだ感想がありません」を表示）
 - [x] 書籍詳細ページの左サイドバーのフォームを「感想を書く」ボタンに置き換える（BookAddForm を除去し、ボタンクリックで感想入力画面へ遷移）
@@ -97,6 +97,7 @@
 - [x] `closeEditModal()` バグを修正する（`useProfile.ts:75`、正しくは `closeProfileEditModal()`）
 - [x] Supabase RLS（Row Level Security）ポリシーを確認・設定する（`user_books` / `profiles` / `books` テーブル。`supabase/rls.sql` を Dashboard で実行）
 - [x] 書籍詳細ページの `next/head` を `generateMetadata` に移行する（`page.tsx` を Server Component 化し `book-detail-content.tsx` を分離。スラグから title を復元）
+- [x] ライブラリから本を削除できる機能を追加する（Review ページの一番左に削除ボタン、確認モーダル経由で `user_books` を削除）
 
 ---
 

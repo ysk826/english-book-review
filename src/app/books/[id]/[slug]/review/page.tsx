@@ -2,6 +2,7 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import { notFound, useParams, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 import Header from '@/components/Header';
 import { useBookDetail } from '@/hooks/useBookDetail';
 import { useUserBookEntry } from '@/hooks/useUserBookEntry';
@@ -38,8 +39,9 @@ function ReviewFormContent() {
 
     const { bookInfo, loading: bookLoading } = useBookDetail();
     const { userBook, loading: entryLoading } = useUserBookEntry(bookInfo?.id ?? '');
-    const { status, rating, review, saving, setStatus, setRating, setReview, save } =
+    const { status, rating, review, saving, setStatus, setRating, setReview, save, deleteEntry } =
         useReviewForm(bookInfo, userBook);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     if (bookLoading || entryLoading) {
         return (
@@ -52,6 +54,7 @@ function ReviewFormContent() {
     if (!bookInfo) notFound();
 
     return (
+        <>
         <div className="min-h-screen bg-gray-50">
             <Header />
 
@@ -115,24 +118,64 @@ function ReviewFormContent() {
                     </div>
 
                     {/* ボタン */}
-                    <div className="flex gap-3 justify-end pt-2">
-                        <Link
-                            href={backUrl}
-                            className="px-4 py-2 text-sm text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-                        >
-                            キャンセル
-                        </Link>
-                        <button
-                            onClick={save}
-                            disabled={saving}
-                            className="px-6 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
-                        >
-                            {saving ? '保存中...' : '保存する'}
-                        </button>
+                    <div className="flex items-center pt-2">
+                        {userBook && (
+                            <button
+                                type="button"
+                                onClick={() => setShowDeleteModal(true)}
+                                disabled={saving}
+                                className="px-4 py-2 text-sm text-red-500 border border-red-200 rounded-lg hover:bg-red-50 disabled:opacity-50 transition-colors"
+                            >
+                                削除する
+                            </button>
+                        )}
+                        <div className="flex gap-3 ml-auto">
+                            <Link
+                                href={backUrl}
+                                className="px-4 py-2 text-sm text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                            >
+                                キャンセル
+                            </Link>
+                            <button
+                                onClick={save}
+                                disabled={saving}
+                                className="px-6 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                            >
+                                {saving ? '保存中...' : '保存する'}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+            {/* 削除確認モーダル */}
+            {showDeleteModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+                    <div className="bg-white rounded-xl shadow-lg p-6 w-80">
+                        <p className="text-gray-800 font-medium mb-1">本当に削除しますか？</p>
+                        <p className="text-sm text-gray-500 mb-6">この本の読書記録がライブラリから削除されます。</p>
+                        <div className="flex gap-3 justify-end">
+                            <button
+                                type="button"
+                                onClick={() => setShowDeleteModal(false)}
+                                className="px-4 py-2 text-sm text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                            >
+                                いいえ
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => { setShowDeleteModal(false); deleteEntry(); }}
+                                disabled={saving}
+                                className="px-4 py-2 text-sm font-medium bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-50 transition-colors"
+                            >
+                                はい
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
     );
 }
 
