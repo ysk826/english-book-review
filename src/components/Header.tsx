@@ -12,6 +12,7 @@ const DROPDOWN_PAGE = 8;
 
 export default function Header() {
     const [userName, setUserName] = useState<string | null>(null);
+    const [userAvatar, setUserAvatar] = useState<string | null>(null);
     const router = useRouter();
     const searchRef = useRef<HTMLDivElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -25,10 +26,13 @@ export default function Header() {
             if (!user) return;
             const { data } = await supabase
                 .from('profiles')
-                .select('name')
+                .select('*')
                 .eq('user_id', user.id)
                 .single();
-            if (data) setUserName(data.name);
+            if (data) {
+                setUserName(data.name);
+                setUserAvatar(data.avatar ?? null);
+            }
         };
         fetchUserName();
     }, []);
@@ -194,8 +198,20 @@ export default function Header() {
                 {/* ユーザー情報 */}
                 <div className="flex items-center gap-4 shrink-0">
                     {userName && (
-                        <Link href="/profile" className="text-sm text-slate-600 hover:text-blue-600 transition-colors hidden sm:inline">
-                            {userName} さん
+                        <Link href="/profile" title={`${userName} のプロフィール`} className="shrink-0">
+                            {userAvatar ? (
+                                <Image
+                                    src={userAvatar}
+                                    alt={userName}
+                                    width={32}
+                                    height={32}
+                                    className="w-8 h-8 rounded-full object-cover hover:ring-2 hover:ring-blue-400 transition"
+                                />
+                            ) : (
+                                <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center hover:ring-2 hover:ring-blue-400 transition">
+                                    <span className="text-gray-600 text-sm font-medium">{userName.charAt(0).toUpperCase()}</span>
+                                </div>
+                            )}
                         </Link>
                     )}
                     <button
