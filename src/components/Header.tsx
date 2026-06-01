@@ -103,7 +103,7 @@ export default function Header() {
     const visibleResults = results.slice(0, visibleCount);
 
     return (
-        <header className="bg-white border-b shadow-sm relative z-40">
+        <header className="bg-white border-b border-slate-200 shadow-sm relative z-40" style={{boxShadow: '0 1px 4px rgba(0,0,0,0.06)'}}>
             <div className="max-w-4xl mx-auto px-4 py-3 flex items-center gap-4">
                 {/* ロゴ */}
                 <Link
