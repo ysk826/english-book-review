@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { extractValue, formatApiBooks, formatDbBooks } from './route'
+import { extractValue, formatApiBooks, formatDbBooks } from './utils'
 
 // route.ts は supabase をインポートしているのでモジュールレベルでモックする
 vi.mock('@/lib/supabase', () => ({

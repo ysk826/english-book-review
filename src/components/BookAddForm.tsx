@@ -4,7 +4,7 @@ import type { BookAddFormProps } from "@/types/props";
 
 function RatingToast({ selected, onDone }: { selected: number; onDone: () => void }) {
     const [leaving, setLeaving] = useState(false);
-    const timerRef = useRef<ReturnType<typeof setTimeout>>();
+    const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
     const onDoneRef = useRef(onDone);
     onDoneRef.current = onDone;
 
@@ -97,7 +97,7 @@ export default function BookAddForm({
                             onClick={() => handleStarClick(n)}
                             className="text-2xl leading-none focus:outline-none transition-colors"
                         >
-                            <span className={n <= rating ? 'text-yellow-400' : 'text-gray-200'}>★</span>
+                            <span className={rating != null && n <= rating ? 'text-yellow-400' : 'text-gray-200'}>★</span>
                         </button>
                     ))}
                 </div>
