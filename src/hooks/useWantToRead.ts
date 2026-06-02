@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { BookDetailInfo } from '@/types/book';
+import { generateBookUrl } from '@/utils/slugify';
 import { toast } from 'sonner';
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -65,6 +66,8 @@ export const useWantToRead = (bookInfo: BookDetailInfo | null, refetch: () => vo
             if (upsertError) throw upsertError;
 
             toast.success('読みたい本に追加しました');
+            // ISBN book の場合、UUID ベースの URL に差し替えて useUserBookEntry が正しく動作するようにする
+            router.replace(generateBookUrl(bookId, bookInfo.title));
             refetch();
         } catch (error) {
             console.error(error);
