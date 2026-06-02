@@ -68,14 +68,7 @@ export default function BookDetailContent() {
                             Review
                         </Link>
 
-                        {userBook?.status === 'want_to_read' ? (
-                            <button
-                                disabled
-                                className="flex items-center justify-center gap-1.5 w-full mt-2 py-2.5 rounded-lg bg-gray-50 border border-gray-200 text-gray-400 text-sm font-medium cursor-default"
-                            >
-                                読みたい本に追加済み
-                            </button>
-                        ) : (
+                        {!userBook ? (
                             <button
                                 onClick={addToWantToRead}
                                 disabled={adding}
@@ -92,6 +85,21 @@ export default function BookDetailContent() {
                                     </>
                                 )}
                             </button>
+                        ) : userBook.status === 'want_to_read' ? (
+                            <button
+                                disabled
+                                className="flex items-center justify-center gap-1.5 w-full mt-2 py-2.5 rounded-lg bg-gray-50 border border-gray-200 text-gray-400 text-sm font-medium cursor-default"
+                            >
+                                読みたい本に追加済み
+                            </button>
+                        ) : (
+                            <div className={`w-full mt-2 py-2 text-center text-sm font-medium rounded-lg border ${
+                                userBook.status === 'read'
+                                    ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
+                                    : 'bg-blue-50 border-blue-200 text-blue-700'
+                            }`}>
+                                {userBook.status === 'read' ? '読了' : '読書中'}
+                            </div>
                         )}
                     </aside>
 
