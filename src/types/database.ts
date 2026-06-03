@@ -6,9 +6,6 @@ export interface Profile {
     name: string;
     avatar: string | null;
     bio: string | null;
-    read_count: number;
-    reading_count: number;
-    want_to_read_count: number;
     created_at: string;
     updated_at: string;
 }

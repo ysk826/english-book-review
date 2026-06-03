@@ -36,12 +36,9 @@ export default function ProfilePage() {
         new Date(b.finished_reading_at).getFullYear() === currentYear
     ).length;
 
-    const profileWithCounts = profile ? {
-        ...profile,
-        read_count: savedBooks.filter(b => b.status === 'read').length,
-        reading_count: savedBooks.filter(b => b.status === 'reading').length,
-        want_to_read_count: savedBooks.filter(b => b.status === 'want_to_read').length,
-    } : null;
+    const readCount = savedBooks.filter(b => b.status === 'read').length;
+    const readingCount = savedBooks.filter(b => b.status === 'reading').length;
+    const wantToReadCount = savedBooks.filter(b => b.status === 'want_to_read').length;
 
     return (
         <div>
@@ -72,11 +69,14 @@ export default function ProfilePage() {
                             </div>
                         </div>
                     </div>
-                ) : profileWithCounts ? (
+                ) : profile ? (
                     <UserProfile
-                        profile={profileWithCounts}
+                        profile={profile}
                         onEditProfile={openProfileEditModal}
                         readThisYearCount={readThisYearCount}
+                        readCount={readCount}
+                        readingCount={readingCount}
+                        wantToReadCount={wantToReadCount}
                     />
                 ) : null}
 

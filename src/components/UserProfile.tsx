@@ -6,7 +6,7 @@ import { userProfileProps } from "@/types/props"
  * @param profile - ユーザープロフィールデータ
  * @param onEditProfile - プロフィール編集時のコールバック関数
  */
-export default function UserProfile({ profile, onEditProfile, readThisYearCount }: userProfileProps) {
+export default function UserProfile({ profile, onEditProfile, readThisYearCount, readCount, readingCount, wantToReadCount }: userProfileProps) {
     return (
         <div className="flex flex-col md:flex-row gap-4 max-w-3xl mx-auto">
             {/* 左: プロフィールカード */}
@@ -57,15 +57,15 @@ export default function UserProfile({ profile, onEditProfile, readThisYearCount 
                 {/* 統計情報 */}
                 <div className="grid grid-cols-3 gap-4 text-center border-t pt-4">
                     <div>
-                        <div className="text-2xl font-bold text-blue-600">{profile?.read_count}</div>
+                        <div className="text-2xl font-bold text-blue-600">{readCount}</div>
                         <div className="text-sm text-gray-600">読んだ本</div>
                     </div>
                     <div>
-                        <div className="text-2xl font-bold text-green-600">{profile?.reading_count}</div>
+                        <div className="text-2xl font-bold text-green-600">{readingCount}</div>
                         <div className="text-sm text-gray-600">読書中</div>
                     </div>
                     <div>
-                        <div className="text-2xl font-bold text-orange-600">{profile?.want_to_read_count}</div>
+                        <div className="text-2xl font-bold text-orange-600">{wantToReadCount}</div>
                         <div className="text-sm text-gray-600">読みたい本</div>
                     </div>
                 </div>

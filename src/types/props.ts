@@ -9,6 +9,9 @@ export interface userProfileProps {
     onEditProfile: (profile: Profile) => void;
     /** 今年読んだ本の冊数 */
     readThisYearCount: number;
+    readCount: number;
+    readingCount: number;
+    wantToReadCount: number;
 }
 
 export interface UserProfileEditModalProps {
