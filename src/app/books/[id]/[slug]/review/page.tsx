@@ -71,18 +71,11 @@ function ReviewFormContent() {
                 {/* フォームカード */}
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-6">
                     {/* ステータス */}
-                    <div>
-                        <div className="flex items-center gap-8 mb-2">
-                            <label htmlFor="status" className="text-sm font-medium text-gray-700">
+                    <div className="flex items-end gap-48 flex-wrap">
+                        <div>
+                            <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-2">
                                 読書ステータス
                             </label>
-                            {status === 'read' && (
-                                <label htmlFor="finishedAt" className="text-sm font-medium text-gray-700">
-                                    読み終わった日
-                                </label>
-                            )}
-                        </div>
-                        <div className="flex items-center gap-4 flex-wrap">
                             <select
                                 id="status"
                                 value={status}
@@ -93,7 +86,12 @@ function ReviewFormContent() {
                                     <option key={opt.value} value={opt.value}>{opt.label}</option>
                                 ))}
                             </select>
-                            {status === 'read' && (
+                        </div>
+                        {status === 'read' && (
+                            <div>
+                                <label htmlFor="finishedAt" className="block text-sm font-medium text-gray-700 mb-2">
+                                    読み終わった日
+                                </label>
                                 <input
                                     id="finishedAt"
                                     type="date"
@@ -101,8 +99,8 @@ function ReviewFormContent() {
                                     onChange={(e) => setFinishedAt(e.target.value)}
                                     className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
-                            )}
-                        </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* 星評価 */}
