@@ -87,8 +87,8 @@ function ReviewFormContent() {
                                 ))}
                             </select>
                             {status === 'read' && (
-                                <div className="flex items-center gap-2">
-                                    <label htmlFor="finishedAt" className="text-sm text-gray-600 whitespace-nowrap">
+                                <div className="flex flex-col gap-2">
+                                    <label htmlFor="finishedAt" className="text-sm text-gray-600">
                                         読み終わった日
                                     </label>
                                     <input
