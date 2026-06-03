@@ -8,6 +8,8 @@ import { SearchResultBook, BookDetailInfo } from "./book";
 export type UseProfileReturn = {
     /** 現在ログイン中のユーザー情報。未ログイン時はnull */
     profile: Profile | null;
+    /** プロフィール取得中かどうか */
+    loading: boolean;
     /** プロフィールを取得する関数 */
     fetchProfile: () => Promise<void>;
     /** プロフィール編集モーダルの表示状態 */

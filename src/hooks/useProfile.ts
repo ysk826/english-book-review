@@ -9,7 +9,7 @@ import { UseProfileReturn } from '@/types/hooks';
  */
 export const useProfile = (): UseProfileReturn => {
     const [profile, setProfile] = useState<Profile | null>(null);
-    const [_loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(true)
 
     // モーダルの表示状態を管理
     const [isProfileEditModalOpen, setIsProfileEditModalOpen] = useState(false);
@@ -87,6 +87,7 @@ export const useProfile = (): UseProfileReturn => {
     return {
         fetchProfile,
         profile,
+        loading,
         isProfileEditModalOpen,
         openProfileEditModal,
         closeProfileEditModal,
