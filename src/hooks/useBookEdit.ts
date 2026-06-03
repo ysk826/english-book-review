@@ -3,6 +3,7 @@ import { useState } from "react";
 import { UserBookRecord } from "@/types/database";
 import { supabase } from '@/lib/supabase';
 import { UseBookEditReturn } from "@/types/hooks";
+import { toast } from 'sonner';
 
 /**
  * 本の編集機能を提供するカスタムフック
@@ -52,21 +53,20 @@ export const useBookEdit = (onBookUpdated?: (updatedBook: UserBookRecord) => voi
 
             if (error) {
                 console.error('エラー:', error);
+                toast.error('保存に失敗しました');
                 return;
             }
 
-            // ローカルステートを更新
             const updatedRecord = {
-                ...editingBook,  // 既存のデータを保持
-                ...updatedData,   // 更新したフィールドを上書き
+                ...editingBook,
+                ...updatedData,
             };
-            // 編集中の本を更新
             setEditingBook(updatedRecord);
-
-            // コールバック関数で親に通知
             onBookUpdated?.(updatedRecord);
+            toast.success('保存しました');
         } catch (error) {
             console.error('エラー:', error);
+            toast.error('保存に失敗しました');
         } finally {
             // 編集モードを終了
             setLoading(false);
