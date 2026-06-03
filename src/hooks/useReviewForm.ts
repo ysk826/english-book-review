@@ -12,11 +12,14 @@ const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
  * 感想入力ページのフォーム状態と保存ロジックを管理するフック
  * @usedBy books/[id]/[slug]/review/page.tsx
  */
+const todayStr = () => new Date().toISOString().split('T')[0];
+
 export const useReviewForm = (bookInfo: BookDetailInfo | null, existingEntry: UserBook | null) => {
     const router = useRouter();
     const [status, setStatus] = useState<string>('read');
     const [rating, setRating] = useState<number>(0);
     const [review, setReview] = useState<string>('');
+    const [finishedAt, setFinishedAt] = useState<string>(todayStr());
     const [saving, setSaving] = useState(false);
 
     // 既存エントリでフォームを初期化
@@ -25,6 +28,11 @@ export const useReviewForm = (bookInfo: BookDetailInfo | null, existingEntry: Us
             setStatus(existingEntry.status);
             setRating(existingEntry.rating ?? 0);
             setReview(existingEntry.review ?? '');
+            setFinishedAt(
+                existingEntry.finished_reading_at
+                    ? existingEntry.finished_reading_at.split('T')[0]
+                    : todayStr()
+            );
         }
     }, [existingEntry]);
 
@@ -69,9 +77,8 @@ export const useReviewForm = (bookInfo: BookDetailInfo | null, existingEntry: Us
                 }
             }
 
-            const alreadyRead = existingEntry?.status === 'read';
             const finishedReadingAt = status === 'read'
-                ? (alreadyRead ? existingEntry.finished_reading_at : new Date().toISOString())
+                ? `${finishedAt}T00:00:00.000Z`
                 : null;
 
             const { error: upsertError } = await supabase
@@ -95,7 +102,7 @@ export const useReviewForm = (bookInfo: BookDetailInfo | null, existingEntry: Us
         } finally {
             setSaving(false);
         }
-    }, [bookInfo, router, status, rating, review, existingEntry]);
+    }, [bookInfo, router, status, rating, review, finishedAt, existingEntry]);
 
     const deleteEntry = useCallback(async () => {
         if (!existingEntry) return;
@@ -121,5 +128,5 @@ export const useReviewForm = (bookInfo: BookDetailInfo | null, existingEntry: Us
         }
     }, [existingEntry, router]);
 
-    return { status, rating, review, saving, setStatus, setRating, setReview, save, deleteEntry };
+    return { status, rating, review, finishedAt, saving, setStatus, setRating, setReview, setFinishedAt, save, deleteEntry };
 };

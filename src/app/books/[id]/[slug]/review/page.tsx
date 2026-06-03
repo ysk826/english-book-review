@@ -39,7 +39,7 @@ function ReviewFormContent() {
 
     const { bookInfo, loading: bookLoading } = useBookDetail();
     const { userBook, loading: entryLoading } = useUserBookEntry(bookInfo?.id ?? '');
-    const { status, rating, review, saving, setStatus, setRating, setReview, save, deleteEntry } =
+    const { status, rating, review, finishedAt, saving, setStatus, setRating, setReview, setFinishedAt, save, deleteEntry } =
         useReviewForm(bookInfo, userBook);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -75,16 +75,32 @@ function ReviewFormContent() {
                         <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-2">
                             読書ステータス
                         </label>
-                        <select
-                            id="status"
-                            value={status}
-                            onChange={(e) => setStatus(e.target.value)}
-                            className="w-auto px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                            {STATUS_OPTIONS.map((opt) => (
-                                <option key={opt.value} value={opt.value}>{opt.label}</option>
-                            ))}
-                        </select>
+                        <div className="flex items-center gap-4 flex-wrap">
+                            <select
+                                id="status"
+                                value={status}
+                                onChange={(e) => setStatus(e.target.value)}
+                                className="w-auto px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                {STATUS_OPTIONS.map((opt) => (
+                                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                ))}
+                            </select>
+                            {status === 'read' && (
+                                <div className="flex items-center gap-2">
+                                    <label htmlFor="finishedAt" className="text-sm text-gray-600 whitespace-nowrap">
+                                        読み終わった日
+                                    </label>
+                                    <input
+                                        id="finishedAt"
+                                        type="date"
+                                        value={finishedAt}
+                                        onChange={(e) => setFinishedAt(e.target.value)}
+                                        className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     {/* 星評価 */}
