@@ -12,7 +12,13 @@ const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
  * 感想入力ページのフォーム状態と保存ロジックを管理するフック
  * @usedBy books/[id]/[slug]/review/page.tsx
  */
-const todayStr = () => new Date().toISOString().split('T')[0];
+const todayStr = () => {
+    const d = new Date();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+};
 
 export const useReviewForm = (bookInfo: BookDetailInfo | null, existingEntry: UserBook | null) => {
     const router = useRouter();
