@@ -30,11 +30,11 @@
 ### Task 中
 
 - [x] `closeEditModal()` バグを修正する（`useProfile.ts:75`、正しくは `closeProfileEditModal()`）
-- [ ] 検索結果のキャンセルボタンを実装する（`BookSearchResults.tsx`、`onClick` が空関数）
+- [x] 検索結果のキャンセルボタンを実装する（`BookSearchResults.tsx`、`onClick` が空関数）
 - [x] プロフィールのページで読んだ本のサムネイルが表示されない
 - [x] 読んだ本がプロフィールページでカウントされていない
 - [x] ステータス表示を日本語化する（`SavedBooksList.tsx`、`read` / `reading` / `want_to_read` がそのまま表示されていた）
-- [ ] ローディング中の表示を追加する（`useProfile` / `useSavedBook` の `loading` が UI に反映されていない）
+- [x] ローディング中の表示を追加する（`useProfile` / `useSavedBook` の `loading` が UI に反映されていない）
 - [x] プロフィールのアバター画像を変更できるようにする（現状はイニシャルのプレースホルダーのみ。画像アップロード or URL 入力で `profiles.avatar` に保存）
 - [ ] 書籍編集・保存時のトースト通知を追加する（`useBookEdit` に成功・失敗のフィードバックがない）
 - [ ] `profiles` テーブルの `read_count` / `reading_count` / `want_to_read_count` 列を削除する（更新ロジックがなく常に初期値のままの死んだ列）
@@ -96,6 +96,7 @@
 - [x] デバッグ用コードを削除する（`profile/page.tsx` の `testFetchBooks` 関数とボタン）
 - [x] `closeEditModal()` バグを修正する（`useProfile.ts:75`、正しくは `closeProfileEditModal()`）
 - [x] Supabase RLS（Row Level Security）ポリシーを確認・設定する（`user_books` / `profiles` / `books` テーブル。`supabase/rls.sql` を Dashboard で実行）
+- [x] 検索結果のキャンセルボタンを実装する（検索がヘッダーに移動したため `BookSearchResults.tsx` は未使用に。ヘッダーの ✕ ボタンは `clearResults` で実装済み）
 - [x] 書籍詳細ページの `next/head` を `generateMetadata` に移行する（`page.tsx` を Server Component 化し `book-detail-content.tsx` を分離。スラグから title を復元）
 - [x] ライブラリから本を削除できる機能を追加する（Review ページの一番左に削除ボタン、確認モーダル経由で `user_books` を削除）
 
