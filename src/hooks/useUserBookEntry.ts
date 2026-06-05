@@ -18,6 +18,7 @@ export const useUserBookEntry = (bookId: string) => {
             return;
         }
 
+        setLoading(true);
         supabase.auth.getUser().then(({ data: { user } }) => {
             if (!user) {
                 setLoading(false);
