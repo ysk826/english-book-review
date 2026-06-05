@@ -72,20 +72,18 @@ function ReviewForm({ bookInfo, userBook, backUrl }: { bookInfo: BookDetailInfo;
                                 ))}
                             </select>
                         </div>
-                        {status === 'read' && (
-                            <div>
-                                <label htmlFor="finishedAt" className="block text-sm font-medium text-gray-700 mb-2">
-                                    読み終わった日
-                                </label>
-                                <input
-                                    id="finishedAt"
-                                    type="date"
-                                    value={finishedAt}
-                                    onChange={(e) => setFinishedAt(e.target.value)}
-                                    className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
-                        )}
+                        <div className={status === 'read' ? '' : 'invisible pointer-events-none'}>
+                            <label htmlFor="finishedAt" className="block text-sm font-medium text-gray-700 mb-2">
+                                読み終わった日
+                            </label>
+                            <input
+                                id="finishedAt"
+                                type="date"
+                                value={finishedAt}
+                                onChange={(e) => setFinishedAt(e.target.value)}
+                                className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
                     </div>
 
                     {/* 星評価 */}
