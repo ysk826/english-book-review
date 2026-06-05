@@ -7,6 +7,8 @@ import Header from '@/components/Header';
 import { useBookDetail } from '@/hooks/useBookDetail';
 import { useUserBookEntry } from '@/hooks/useUserBookEntry';
 import { useReviewForm } from '@/hooks/useReviewForm';
+import { BookDetailInfo } from '@/types/book';
+import { UserBook } from '@/types/database';
 
 const STATUS_OPTIONS = [
     { value: 'read', label: '読了' },
@@ -31,27 +33,10 @@ function StarSelector({ rating, onChange }: { rating: number; onChange: (n: numb
     );
 }
 
-function ReviewFormContent() {
-    const params = useParams();
-    const searchParams = useSearchParams();
-    const qs = searchParams.toString();
-    const backUrl = `/books/${params.id}/${params.slug}${qs ? `?${qs}` : ''}`;
-
-    const { bookInfo, loading: bookLoading } = useBookDetail();
-    const { userBook, loading: entryLoading } = useUserBookEntry(bookInfo?.id ?? '');
+function ReviewForm({ bookInfo, userBook, backUrl }: { bookInfo: BookDetailInfo; userBook: UserBook | null; backUrl: string }) {
     const { status, rating, review, finishedAt, saving, setStatus, setRating, setReview, setFinishedAt, save, deleteEntry } =
         useReviewForm(bookInfo, userBook);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-    if (bookLoading || entryLoading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500" />
-            </div>
-        );
-    }
-
-    if (!bookInfo) notFound();
 
     return (
         <>
@@ -193,6 +178,28 @@ function ReviewFormContent() {
             )}
         </>
     );
+}
+
+function ReviewFormContent() {
+    const params = useParams();
+    const searchParams = useSearchParams();
+    const qs = searchParams.toString();
+    const backUrl = `/books/${params.id}/${params.slug}${qs ? `?${qs}` : ''}`;
+
+    const { bookInfo, loading: bookLoading } = useBookDetail();
+    const { userBook, loading: entryLoading } = useUserBookEntry(bookInfo?.id ?? '');
+
+    if (bookLoading || entryLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500" />
+            </div>
+        );
+    }
+
+    if (!bookInfo) notFound();
+
+    return <ReviewForm bookInfo={bookInfo} userBook={userBook} backUrl={backUrl} />;
 }
 
 export default function ReviewPage() {
