@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { UserBook } from '@/types/database';
@@ -22,25 +22,15 @@ const todayStr = () => {
 
 export const useReviewForm = (bookInfo: BookDetailInfo | null, existingEntry: UserBook | null) => {
     const router = useRouter();
-    const [status, setStatus] = useState<string>('read');
-    const [rating, setRating] = useState<number>(0);
-    const [review, setReview] = useState<string>('');
-    const [finishedAt, setFinishedAt] = useState<string>(todayStr());
+    const [status, setStatus] = useState<string>(existingEntry?.status ?? 'read');
+    const [rating, setRating] = useState<number>(existingEntry?.rating ?? 0);
+    const [review, setReview] = useState<string>(existingEntry?.review ?? '');
+    const [finishedAt, setFinishedAt] = useState<string>(
+        existingEntry?.finished_reading_at
+            ? existingEntry.finished_reading_at.split('T')[0]
+            : todayStr()
+    );
     const [saving, setSaving] = useState(false);
-
-    // 既存エントリでフォームを初期化
-    useEffect(() => {
-        if (existingEntry) {
-            setStatus(existingEntry.status);
-            setRating(existingEntry.rating ?? 0);
-            setReview(existingEntry.review ?? '');
-            setFinishedAt(
-                existingEntry.finished_reading_at
-                    ? existingEntry.finished_reading_at.split('T')[0]
-                    : todayStr()
-            );
-        }
-    }, [existingEntry]);
 
     const save = useCallback(async () => {
         if (!bookInfo) return;
