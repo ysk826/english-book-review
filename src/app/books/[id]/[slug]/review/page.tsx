@@ -40,6 +40,11 @@ function ReviewForm({ bookInfo, userBook, backUrl }: { bookInfo: BookDetailInfo;
 
     return (
         <>
+        {saving && (
+            <div className="fixed top-0 left-0 right-0 h-1 z-50 origin-left bg-blue-500"
+                style={{ animation: 'saving-progress 1.5s ease-out forwards' }}
+            />
+        )}
         <div className="min-h-screen bg-gray-50">
             <Header />
 
