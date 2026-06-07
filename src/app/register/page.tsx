@@ -80,7 +80,7 @@ export default function RegisterPage() {
                 {/* ロゴ・ブランディング */}
                 <div className="text-center mb-8">
                     <div className="text-5xl mb-3">📚</div>
-                    <h1 className="text-2xl font-bold text-slate-800">English Book Review</h1>
+                    <h1 className="text-2xl font-bold text-slate-800">Stride Log</h1>
                     <p className="text-slate-500 mt-1 text-sm">洋書の記録をはじめよう。</p>
                 </div>
 

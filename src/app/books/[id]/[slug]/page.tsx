@@ -13,7 +13,7 @@ export async function generateMetadata({
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
     return {
-        title: `${title} | English Book Review`,
+        title: `${title} | Stride Log`,
         description: `「${title}」のレビュー・感想`,
     };
 }

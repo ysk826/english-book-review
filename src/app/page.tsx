@@ -8,7 +8,7 @@ export default function HomePage() {
             <header className="flex items-center justify-between px-8 py-5">
                 <div className="flex items-center gap-2">
                     <span className="text-2xl">📚</span>
-                    <span className="font-bold text-slate-800 text-lg">English Book Review</span>
+                    <span className="font-bold text-slate-800 text-lg">Stride Log</span>
                 </div>
                 <div className="flex items-center gap-3">
                     <Link
@@ -71,7 +71,7 @@ export default function HomePage() {
             </main>
 
             <footer className="text-center py-8 text-xs text-slate-400">
-                © 2025 English Book Review
+                © 2025 Stride Log
             </footer>
         </div>
     );

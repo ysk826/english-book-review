@@ -115,7 +115,7 @@ export default function Header() {
                     className="flex items-center gap-2 font-bold text-slate-800 hover:text-blue-600 transition-colors shrink-0"
                 >
                     <span className="text-xl">📚</span>
-                    <span className="hidden sm:inline">English Book Review</span>
+                    <span className="hidden sm:inline">Stride Log</span>
                 </Link>
 
                 {/* 検索 */}

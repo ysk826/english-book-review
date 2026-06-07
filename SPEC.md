@@ -7,7 +7,7 @@
 
 ### 名称
 
-English Book Review App（洋書レビューアプリケーション）
+Stride Log App（洋書レビューアプリケーション）
 
 ### 目的
 

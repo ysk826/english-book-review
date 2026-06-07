@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "English Book Review",
+  title: "Stride Log",
   description: "読んだ洋書をかんたんに記録・管理できるアプリ。書籍検索・レビュー・読書ステータス管理に対応。",
 };
 
