@@ -205,10 +205,10 @@ export default function Header() {
                                     alt={userName}
                                     width={32}
                                     height={32}
-                                    className="w-8 h-8 rounded-full object-cover hover:ring-2 hover:ring-blue-400 transition"
+                                    className="w-8 h-8 rounded-full object-cover hover:ring-2 hover:ring-teal-600 transition"
                                 />
                             ) : (
-                                <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center hover:ring-2 hover:ring-blue-400 transition">
+                                <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center hover:ring-2 hover:ring-teal-600 transition">
                                     <span className="text-gray-600 text-sm font-medium">{userName.charAt(0).toUpperCase()}</span>
                                 </div>
                             )}
@@ -216,7 +216,7 @@ export default function Header() {
                     )}
                     <button
                         onClick={handleLogout}
-                        className="text-sm text-slate-500 hover:text-slate-800 transition-colors"
+                        className="text-sm text-slate-500 hover:text-teal-600 transition-colors"
                     >
                         ログアウト
                     </button>
