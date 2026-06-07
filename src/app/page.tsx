@@ -35,7 +35,7 @@ export default function HomePage() {
                     {/* 左: コピー + CTA */}
                     <div>
                         <p className="text-teal-400 text-sm font-semibold tracking-widest uppercase mb-4">洋書読書管理アプリ</p>
-                        <h1 className="text-4xl lg:text-5xl font-bold text-white leading-tight mb-6">
+                        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight mb-6">
                             読んだ本を記録して、<br />
                             <span className="text-teal-400">次の一冊</span>を見つけよう。
                         </h1>
