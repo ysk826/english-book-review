@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import { mapAuthError } from '@/utils/mapAuthError';
 
 export default function UpdatePasswordPage() {
     const [loading, setLoading] = useState(false);
@@ -31,7 +32,7 @@ export default function UpdatePasswordPage() {
 
         const { error } = await supabase.auth.updateUser({ password: newPassword });
         if (error) {
-            setErrorMessage(error.message);
+            setErrorMessage(mapAuthError(error.message));
             setLoading(false);
             return;
         }

@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { mapAuthError } from '@/utils/mapAuthError';
 
 export default function LoginPage() {
     const [errorMessage, setErrorMessage] = useState('');
@@ -24,7 +25,7 @@ export default function LoginPage() {
             });
 
             if (loginError) {
-                setErrorMessage(loginError.message);
+                setErrorMessage(mapAuthError(loginError.message));
                 return;
             }
 

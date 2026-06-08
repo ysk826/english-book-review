@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import { mapAuthError } from '@/utils/mapAuthError';
 
 export default function RegisterPage() {
     const [errorMessage, setErrorMessage] = useState('');
@@ -28,7 +29,7 @@ export default function RegisterPage() {
 
             // 登録エラーチェック
             if (authError) {
-                setErrorMessage(authError.message);
+                setErrorMessage(mapAuthError(authError.message));
                 return;
             }
 
