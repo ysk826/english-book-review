@@ -204,7 +204,7 @@ export default function Header() {
 
                 {/* ユーザーメニュー */}
                 {userName && (
-                    <div ref={menuRef} className="relative shrink-0">
+                    <div ref={menuRef} className="relative shrink-0 ml-auto">
                         <button
                             onClick={() => setIsMenuOpen(prev => !prev)}
                             className="block focus:outline-none"
