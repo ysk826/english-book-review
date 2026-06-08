@@ -90,7 +90,7 @@ export default function LoginPage() {
 
                         {/* パスワードリセットリンク */}
                         <div className="text-right -mt-2">
-                            <Link href="/reset-password" className="text-xs text-slate-400 hover:text-teal-600 transition-colors">
+                            <Link href="/forgot-password" className="text-xs text-slate-400 hover:text-teal-600 transition-colors">
                                 パスワードをお忘れの方
                             </Link>
                         </div>

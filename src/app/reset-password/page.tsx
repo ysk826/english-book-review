@@ -1,37 +1,68 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
 export default function ResetPasswordPage() {
     const [loading, setLoading] = useState(false);
-    const [sent, setSent] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [success, setSuccess] = useState(false);
+    const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setLoading(true);
         setErrorMessage('');
 
-        const email = (e.target as HTMLFormElement).elements.namedItem('email') as HTMLInputElement;
+        const form = e.target as HTMLFormElement;
+        const currentPassword = (form.elements.namedItem('currentPassword') as HTMLInputElement).value;
+        const newPassword = (form.elements.namedItem('newPassword') as HTMLInputElement).value;
+        const confirmPassword = (form.elements.namedItem('confirmPassword') as HTMLInputElement).value;
 
-        const { error } = await supabase.auth.resetPasswordForEmail(email.value, {
-            redirectTo: `${window.location.origin}/update-password`,
-        });
-
-        if (error) {
-            setErrorMessage(error.message);
-        } else {
-            setSent(true);
+        if (newPassword !== confirmPassword) {
+            setErrorMessage('新しいパスワードが一致しません');
+            return;
         }
+        if (newPassword.length < 6) {
+            setErrorMessage('新しいパスワードは6文字以上で入力してください');
+            return;
+        }
+
+        setLoading(true);
+
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        if (userError || !user?.email) {
+            setErrorMessage('ユーザー情報の取得に失敗しました');
+            setLoading(false);
+            return;
+        }
+
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+            email: user.email,
+            password: currentPassword,
+        });
+        if (signInError) {
+            setErrorMessage('現在のパスワードが正しくありません');
+            setLoading(false);
+            return;
+        }
+
+        const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
+        if (updateError) {
+            setErrorMessage(updateError.message);
+            setLoading(false);
+            return;
+        }
+
+        setSuccess(true);
         setLoading(false);
+        setTimeout(() => router.push('/profile'), 2000);
     };
 
     return (
         <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
 
-                {/* ロゴ */}
                 <div className="text-center mb-8">
                     <div className="flex items-center justify-center gap-2 text-slate-800 mb-3">
                         <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" viewBox="0 0 256 256">
@@ -43,36 +74,58 @@ export default function ResetPasswordPage() {
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
-                    {sent ? (
+                    {success ? (
                         <div className="text-center py-4">
                             <div className="text-teal-600 mb-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 256 256" className="mx-auto">
-                                    <path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48ZM98.71,128,40,181.81V74.19Zm11.84,10.85,12,11.05a8,8,0,0,0,10.82,0l12-11.05,58,53.15H52.57ZM157.29,128,216,74.19V181.81ZM40,68H216l-88,80.92Z" />
+                                    <path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z" />
                                 </svg>
                             </div>
-                            <h2 className="text-xl font-semibold text-slate-800 mb-2">メールを送信しました</h2>
-                            <p className="text-slate-500 text-sm leading-relaxed mb-6">
-                                入力したメールアドレスにパスワードリセット用のリンクを送りました。メールをご確認ください。
-                            </p>
-                            <Link href="/login" className="text-teal-600 hover:underline text-sm font-medium">
-                                ログインに戻る
-                            </Link>
+                            <h2 className="text-xl font-semibold text-slate-800 mb-2">パスワードを変更しました</h2>
+                            <p className="text-slate-500 text-sm">マイページに移動します...</p>
                         </div>
                     ) : (
                         <>
-                            <h2 className="text-xl font-semibold text-slate-800 mb-2">パスワードをリセット</h2>
-                            <p className="text-slate-500 text-sm mb-6">登録済みのメールアドレスを入力してください。リセット用のリンクをお送りします。</p>
+                            <h2 className="text-xl font-semibold text-slate-800 mb-6">パスワードを変更</h2>
 
                             <form onSubmit={handleSubmit} className="space-y-5">
                                 <div>
-                                    <label htmlFor="email" className="block text-sm font-medium text-slate-600 mb-1.5">
-                                        メールアドレス
+                                    <label htmlFor="currentPassword" className="block text-sm font-medium text-slate-600 mb-1.5">
+                                        現在のパスワード
                                     </label>
                                     <input
-                                        type="email"
-                                        id="email"
-                                        name="email"
-                                        placeholder="example@mail.com"
+                                        type="password"
+                                        id="currentPassword"
+                                        name="currentPassword"
+                                        placeholder="••••••••"
+                                        required
+                                        className="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-slate-800 placeholder-slate-300 focus:outline-none focus:ring-[2.5px] focus:ring-teal-600 focus:ring-offset-0 focus:border-transparent transition"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label htmlFor="newPassword" className="block text-sm font-medium text-slate-600 mb-1.5">
+                                        新しいパスワード（6文字以上）
+                                    </label>
+                                    <input
+                                        type="password"
+                                        id="newPassword"
+                                        name="newPassword"
+                                        placeholder="••••••••"
+                                        required
+                                        className="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-slate-800 placeholder-slate-300 focus:outline-none focus:ring-[2.5px] focus:ring-teal-600 focus:ring-offset-0 focus:border-transparent transition"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-600 mb-1.5">
+                                        新しいパスワード（確認）
+                                    </label>
+                                    <input
+                                        type="password"
+                                        id="confirmPassword"
+                                        name="confirmPassword"
+                                        placeholder="••••••••"
                                         required
                                         className="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-slate-800 placeholder-slate-300 focus:outline-none focus:ring-[2.5px] focus:ring-teal-600 focus:ring-offset-0 focus:border-transparent transition"
                                     />
@@ -89,13 +142,13 @@ export default function ResetPasswordPage() {
                                     disabled={loading}
                                     className="w-full py-2.5 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors"
                                 >
-                                    {loading ? '送信中...' : 'リセットメールを送信'}
+                                    {loading ? '変更中...' : '変更する'}
                                 </button>
                             </form>
 
                             <p className="text-center text-sm text-slate-500 mt-6">
-                                <Link href="/login" className="text-teal-600 hover:underline font-medium">
-                                    ログインに戻る
+                                <Link href="/profile" className="text-teal-600 hover:underline font-medium">
+                                    キャンセル
                                 </Link>
                             </p>
                         </>
