@@ -49,7 +49,11 @@ export default function ResetPasswordPage() {
 
         const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
         if (updateError) {
-            setErrorMessage(updateError.message);
+            setErrorMessage(
+                updateError.message.includes('different from the old password')
+                    ? '新しいパスワードは現在のパスワードと異なるものを設定してください'
+                    : updateError.message
+            );
             setLoading(false);
             return;
         }
