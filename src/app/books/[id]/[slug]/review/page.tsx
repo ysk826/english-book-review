@@ -108,15 +108,21 @@ function ReviewForm({ bookInfo, userBook, backUrl }: { bookInfo: BookDetailInfo;
 
                     {/* 感想テキスト */}
                     <div>
-                        <label htmlFor="review" className="block text-sm font-medium text-gray-700 mb-2">
-                            感想
-                        </label>
+                        <div className="flex justify-between items-baseline mb-2">
+                            <label htmlFor="review" className="block text-sm font-medium text-gray-700">
+                                感想
+                            </label>
+                            <span className={`text-xs ${review.length >= 1000 ? 'text-red-500' : 'text-gray-400'}`}>
+                                {review.length} / 1000
+                            </span>
+                        </div>
                         <textarea
                             id="review"
                             value={review}
                             onChange={(e) => setReview(e.target.value)}
                             placeholder="この本の感想を書いてください..."
                             rows={6}
+                            maxLength={1000}
                             className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-teal-600"
                         />
                     </div>

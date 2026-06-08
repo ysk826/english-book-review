@@ -113,6 +113,7 @@ export default function BookAddForm({
                     value={review}
                     onChange={(e) => onReviewChange(e.target.value)}
                     placeholder="この本の感想を書いてください..."
+                    maxLength={1000}
                     className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm h-24 resize-none focus:outline-none focus:ring-2 focus:ring-teal-600"
                 />
             </div>
