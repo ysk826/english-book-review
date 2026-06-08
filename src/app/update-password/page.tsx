@@ -111,7 +111,7 @@ export default function UpdatePasswordPage() {
                                     disabled={loading}
                                     className="w-full py-2.5 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors"
                                 >
-                                    {loading ? '変更中...' : 'パスワードを変更する'}
+                                    {loading ? '設定中...' : 'パスワードを設定する'}
                                 </button>
                             </form>
 
