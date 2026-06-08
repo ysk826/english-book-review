@@ -94,7 +94,7 @@ export default function HomePage() {
             <section className="bg-white py-24 px-8">
                 <div className="max-w-4xl mx-auto">
                     <h2 className="text-3xl font-bold text-slate-800 text-center mb-4">シンプルに、続けられる。</h2>
-                    <p className="text-slate-500 text-center mb-14">学習コストゼロ。初見で使えるインターフェース。</p>
+                    <p className="text-slate-500 text-center mb-14">説明不要。開いたその日から使えます。</p>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                         {[
                             {
