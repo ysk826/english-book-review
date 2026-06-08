@@ -127,7 +127,7 @@ export default function Header() {
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                                 placeholder="タイトル・著者で検索"
-                                className="w-full pl-4 pr-10 py-2 text-sm border border-slate-200 rounded-lg bg-slate-50 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:bg-white transition"
+                                className="w-full pl-4 pr-10 py-2 text-sm border border-slate-200 rounded-lg bg-slate-50 focus:outline-none focus:ring-[3px] focus:ring-teal-600 focus:bg-white transition"
                             />
                             {query ? (
                                 <button
