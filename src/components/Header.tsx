@@ -124,7 +124,7 @@ export default function Header() {
                 </Link>
 
                 {/* 検索 */}
-                <div ref={searchRef} className="flex-1 relative">
+                <div ref={searchRef} className="flex-1 max-w-xs relative">
                     <form onSubmit={handleSubmit} className="flex items-center">
                         <div className="relative w-full">
                             <input
