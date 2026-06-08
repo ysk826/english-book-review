@@ -13,10 +13,12 @@ const DROPDOWN_PAGE = 8;
 export default function Header() {
     const [userName, setUserName] = useState<string | null>(null);
     const [userAvatar, setUserAvatar] = useState<string | null>(null);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const router = useRouter();
     const searchRef = useRef<HTMLDivElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const sentinelRef = useRef<HTMLDivElement>(null);
+    const menuRef = useRef<HTMLDivElement>(null);
     const { query, setQuery, results, loading, clearResults } = useHeaderSearch();
     const [visibleCount, setVisibleCount] = useState(DROPDOWN_PAGE);
 
@@ -59,11 +61,14 @@ export default function Header() {
         return () => io.disconnect();
     }, [results]);
 
-    // ドロップダウン外クリックで閉じる
+    // 検索・メニュー外クリックで閉じる
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
             if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
                 clearResults();
+            }
+            if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+                setIsMenuOpen(false);
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
@@ -197,10 +202,14 @@ export default function Header() {
                     )}
                 </div>
 
-                {/* ユーザー情報 */}
-                <div className="flex items-center gap-4 shrink-0">
-                    {userName && (
-                        <Link href="/profile" title={`${userName} のプロフィール`} className="shrink-0">
+                {/* ユーザーメニュー */}
+                {userName && (
+                    <div ref={menuRef} className="relative shrink-0">
+                        <button
+                            onClick={() => setIsMenuOpen(prev => !prev)}
+                            className="block focus:outline-none"
+                            aria-label="メニューを開く"
+                        >
                             {userAvatar ? (
                                 <Image
                                     src={userAvatar}
@@ -214,15 +223,39 @@ export default function Header() {
                                     <span className="text-gray-600 text-sm font-medium">{userName.charAt(0).toUpperCase()}</span>
                                 </div>
                             )}
-                        </Link>
-                    )}
-                    <button
-                        onClick={handleLogout}
-                        className="text-sm text-slate-500 hover:text-teal-600 transition-colors"
-                    >
-                        ログアウト
-                    </button>
-                </div>
+                        </button>
+
+                        {isMenuOpen && (
+                            <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden z-50">
+                                <div className="px-4 py-3 border-b border-slate-100">
+                                    <p className="text-sm font-medium text-slate-800 truncate">{userName}</p>
+                                </div>
+                                <Link
+                                    href="/profile"
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                                >
+                                    マイページ
+                                </Link>
+                                <Link
+                                    href="/reset-password"
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                                >
+                                    パスワード変更
+                                </Link>
+                                <div className="border-t border-slate-100">
+                                    <button
+                                        onClick={handleLogout}
+                                        className="w-full text-left px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors"
+                                    >
+                                        ログアウト
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         </header>
     );

@@ -88,6 +88,13 @@ export default function LoginPage() {
                             />
                         </div>
 
+                        {/* パスワードリセットリンク */}
+                        <div className="text-right -mt-2">
+                            <Link href="/reset-password" className="text-xs text-slate-400 hover:text-teal-600 transition-colors">
+                                パスワードをお忘れの方
+                            </Link>
+                        </div>
+
                         {/* エラーメッセージ */}
                         {errorMessage && (
                             <p className="text-sm text-red-500 bg-red-50 px-4 py-2.5 rounded-lg">
