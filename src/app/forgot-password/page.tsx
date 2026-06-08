@@ -20,11 +20,12 @@ export default function ForgotPasswordPage() {
         });
 
         if (error) {
-            setErrorMessage(
-                error.message.includes('security purposes')
-                    ? 'セキュリティのため、再送信は15秒後にお試しください'
-                    : error.message
-            );
+            if (error.message.includes('security purposes')) {
+                const seconds = error.message.match(/\d+/)?.[0] ?? '15';
+                setErrorMessage(`セキュリティのため、再送信は${seconds}秒後にお試しください`);
+            } else {
+                setErrorMessage(error.message);
+            }
         } else {
             setSent(true);
         }
