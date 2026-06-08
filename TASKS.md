@@ -11,7 +11,8 @@
 ### Phase 1
 
 - [x] ログアウト機能を実装する（プロフィールページにボタンを追加）
-- [ ] パスワードリセット画面を実装する（`/reset-password`）
+- [x] パスワードリセット画面を実装する（`/reset-password`）
+- [ ] Supabaseのメール送信者名を変更する（Project Settings → Auth → SMTP Settings の Sender name を `Stride Log` に。送信元アドレスも変えたい場合はカスタムSMTP設定が必要）
 
 ### Task 重
 
@@ -83,6 +84,11 @@
 
 ## Done（完了）
 
+- [x] 認証エラーメッセージを日本語化する（`login/page.tsx`・`register/page.tsx`・`update-password/page.tsx`、Supabaseが返す英語エラーを`mapAuthError()`ユーティリティで日本語に変換）
+- [x] ブランドカラーをblueからtealに統一する（モーダル保存ボタン・スピナー・フォーカスリング・リンク・統計数値など全コンポーネント。読書ステータスバッジは意味的な色分けのため維持）
+- [x] レビューtextareaにmaxLengthと文字数カウンターを追加する（`review/page.tsx`・`BookAddForm.tsx`、上限1000文字・上限到達時は赤表示）
+- [x] ヘッダー検索バーの幅を適切に制限する（`Header.tsx`、`flex-1`のみで全幅を占有していたため`max-w-xs`でキャップ）
+- [x] ヘッダーのユーザーアイコンを右端に固定する（`Header.tsx`、`ml-auto`を追加）
 - [x] 書籍詳細ページのデザインを変更する（左サイドバーに書影＋フォーム、右メインにタイトル・著者・あらすじの 2 カラムレイアウト）
 - [x] `middleware.ts` を実装してルート保護を追加する（未ログインで `/profile` 等に直接アクセスできる）
 - [x] プロフィールのアバター画像を変更できるようにする（canvas APIで400×400にリサイズ・圧縮してSupabase Storageにアップロード）
