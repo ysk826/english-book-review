@@ -10,13 +10,17 @@ export const useHeaderSearch = () => {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState<SearchResultBook[]>([]);
     const [loading, setLoading] = useState(false);
+    const [isEmpty, setIsEmpty] = useState(false);
 
     const handleSearch = useCallback(async (searchQuery: string) => {
         if (!searchQuery.trim()) return;
         setLoading(true);
+        setIsEmpty(false);
         try {
             const { data } = await axios.get(`/api/books?q=${encodeURIComponent(searchQuery.trim())}`);
-            setResults(data.items || []);
+            const items: SearchResultBook[] = data.items || [];
+            setResults(items);
+            setIsEmpty(items.length === 0);
         } catch {
             setResults([]);
             toast.error('検索に失敗しました');
@@ -40,7 +44,8 @@ export const useHeaderSearch = () => {
     const clearResults = useCallback(() => {
         setResults([]);
         setQuery('');
+        setIsEmpty(false);
     }, []);
 
-    return { query, setQuery, results, loading, handleSearch, clearResults };
+    return { query, setQuery, results, loading, isEmpty, handleSearch, clearResults };
 };

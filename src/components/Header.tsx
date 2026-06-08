@@ -19,7 +19,7 @@ export default function Header() {
     const dropdownRef = useRef<HTMLDivElement>(null);
     const sentinelRef = useRef<HTMLDivElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
-    const { query, setQuery, results, loading, clearResults } = useHeaderSearch();
+    const { query, setQuery, results, loading, isEmpty, clearResults } = useHeaderSearch();
     const [visibleCount, setVisibleCount] = useState(DROPDOWN_PAGE);
 
     useEffect(() => {
@@ -156,13 +156,17 @@ export default function Header() {
                     </form>
 
                     {/* ドロップダウン */}
-                    {(results.length > 0 || loading) && (
+                    {(results.length > 0 || loading || isEmpty) && (
                         <div
                             ref={dropdownRef}
                             className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden max-h-96 overflow-y-auto"
                         >
                             {loading ? (
                                 <div className="p-4 text-center text-sm text-slate-500">検索中...</div>
+                            ) : isEmpty ? (
+                                <div className="p-4 text-center text-sm text-slate-500">
+                                    「{query}」に一致する本が見つかりませんでした
+                                </div>
                             ) : (
                                 <>
                                     {visibleResults.map((book, index) => {
