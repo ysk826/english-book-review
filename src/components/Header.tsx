@@ -187,8 +187,8 @@ export default function Header() {
                                                     </div>
                                                 )}
                                                 <div className="min-w-0">
-                                                    <p className="text-sm font-medium text-slate-800 group-hover:text-blue-600 group-hover:font-bold truncate transition-colors">{book.title}</p>
-                                                    <p className="text-xs text-slate-500 group-hover:text-blue-500 group-hover:font-bold truncate transition-colors">{book.authors.join(', ')}</p>
+                                                    <p className="text-sm font-medium text-slate-800 group-hover:text-teal-600 group-hover:font-bold truncate transition-colors">{book.title}</p>
+                                                    <p className="text-xs text-slate-500 group-hover:text-teal-500 group-hover:font-bold truncate transition-colors">{book.authors.join(', ')}</p>
                                                     <p className="text-xs text-slate-400">{book.publishedDate}</p>
                                                 </div>
                                             </button>

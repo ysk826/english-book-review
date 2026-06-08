@@ -51,7 +51,7 @@ function ReviewForm({ bookInfo, userBook, backUrl }: { bookInfo: BookDetailInfo;
             <div className="max-w-2xl mx-auto px-4 py-8">
                 {/* 本のコンテキスト */}
                 <div className="mb-6">
-                    <Link href={backUrl} className="text-sm text-blue-500 hover:underline">
+                    <Link href={backUrl} className="text-sm text-teal-600 hover:underline">
                         ← {bookInfo.title} に戻る
                     </Link>
                     <h1 className="text-xl font-bold text-gray-900 mt-2">{bookInfo.title}</h1>
@@ -70,7 +70,7 @@ function ReviewForm({ bookInfo, userBook, backUrl }: { bookInfo: BookDetailInfo;
                                 id="status"
                                 value={status}
                                 onChange={(e) => setStatus(e.target.value)}
-                                className="w-auto px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-auto px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-600"
                             >
                                 {STATUS_OPTIONS.map((opt) => (
                                     <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -86,7 +86,7 @@ function ReviewForm({ bookInfo, userBook, backUrl }: { bookInfo: BookDetailInfo;
                                 type="date"
                                 value={finishedAt}
                                 onChange={(e) => setFinishedAt(e.target.value)}
-                                className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-600"
                             />
                         </div>
                     </div>
@@ -117,7 +117,7 @@ function ReviewForm({ bookInfo, userBook, backUrl }: { bookInfo: BookDetailInfo;
                             onChange={(e) => setReview(e.target.value)}
                             placeholder="この本の感想を書いてください..."
                             rows={6}
-                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-teal-600"
                         />
                     </div>
 
@@ -195,7 +195,7 @@ function ReviewFormContent() {
     if (bookLoading || entryLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500" />
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600" />
             </div>
         );
     }
@@ -210,7 +210,7 @@ export default function ReviewPage() {
         <Suspense
             fallback={
                 <div className="min-h-screen flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500" />
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600" />
                 </div>
             }
         >

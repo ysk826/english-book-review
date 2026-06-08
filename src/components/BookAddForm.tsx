@@ -41,7 +41,7 @@ function RatingToast({ selected, onDone }: { selected: number; onDone: () => voi
                 </button>
             </div>
             <div className="h-0.5 bg-gray-100">
-                <div className="h-full bg-blue-500 animate-[progress-drain_3s_linear_forwards]" />
+                <div className="h-full bg-teal-600 animate-[progress-drain_3s_linear_forwards]" />
             </div>
         </div>
     );
@@ -79,7 +79,7 @@ export default function BookAddForm({
                     id="status"
                     value={status}
                     onChange={(e) => onStatusChange(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-600"
                 >
                     <option value="read">読了</option>
                     <option value="reading">読書中</option>
@@ -113,14 +113,14 @@ export default function BookAddForm({
                     value={review}
                     onChange={(e) => onReviewChange(e.target.value)}
                     placeholder="この本の感想を書いてください..."
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm h-24 resize-none focus:outline-none focus:ring-2 focus:ring-teal-600"
                 />
             </div>
 
             <button
                 onClick={onSubmit}
                 disabled={saving}
-                className="w-full py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                className="w-full py-2.5 rounded-lg bg-teal-600 text-white text-sm font-medium hover:bg-teal-700 disabled:opacity-50 transition-colors"
             >
                 {saving ? "追加中..." : "マイライブラリに追加"}
             </button>

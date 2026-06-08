@@ -123,7 +123,7 @@ export default function SavedBooksList({ title, savedBooks, loading, onEditBook 
                                         )}
                                         <button
                                             onClick={() => onEditBook(book)}
-                                            className="text-gray-400 hover:text-blue-500 transition-colors"
+                                            className="text-gray-400 hover:text-teal-600 transition-colors"
                                             aria-label="レビューを編集"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

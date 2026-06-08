@@ -134,7 +134,7 @@ export default function BookEditModal({ isOpen, book, onClose, onSave }: BookEdi
                         </button>
                         <button
                             onClick={handleSave}
-                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                            className="px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700"
                         >
                             保存
                         </button>
