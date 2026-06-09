@@ -82,6 +82,7 @@ export default function UpdatePasswordPage() {
                                         id="newPassword"
                                         name="newPassword"
                                         placeholder="••••••••"
+                                        autoComplete="new-password"
                                         required
                                         className="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-slate-800 placeholder-slate-300 focus:outline-none focus:ring-[2.5px] focus:ring-teal-600 focus:ring-offset-0 focus:border-transparent transition"
                                     />
@@ -96,6 +97,7 @@ export default function UpdatePasswordPage() {
                                         id="confirmPassword"
                                         name="confirmPassword"
                                         placeholder="••••••••"
+                                        autoComplete="new-password"
                                         required
                                         className="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-slate-800 placeholder-slate-300 focus:outline-none focus:ring-[2.5px] focus:ring-teal-600 focus:ring-offset-0 focus:border-transparent transition"
                                     />

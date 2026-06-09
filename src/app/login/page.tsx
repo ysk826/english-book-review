@@ -69,6 +69,7 @@ export default function LoginPage() {
                                 id="email"
                                 name="email"
                                 placeholder="example@mail.com"
+                                autoComplete="email"
                                 required
                                 className="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-slate-800 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
                             />
@@ -84,6 +85,7 @@ export default function LoginPage() {
                                 id="password"
                                 name="password"
                                 placeholder="••••••••"
+                                autoComplete="current-password"
                                 required
                                 className="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-slate-800 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
                             />

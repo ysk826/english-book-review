@@ -16,6 +16,7 @@ function SearchContent() {
     const [results, setResults] = useState<SearchResultBook[]>([]);
     const [loading, setLoading] = useState(false);
     const [loadingMore, setLoadingMore] = useState(false);
+    const [fetchError, setFetchError] = useState(false);
     const sentinelRef = useRef<HTMLDivElement>(null);
     // refで管理することでstale closureを避ける
     const nextStartIndexRef = useRef(0);
@@ -53,7 +54,7 @@ function SearchContent() {
             hasMoreRef.current = data.hasMore ?? false;
             nextStartIndexRef.current = startIndex + PAGE_SIZE;
         } catch {
-            // silently ignore
+            setFetchError(true);
         } finally {
             fetchingRef.current = false;
             setLoading(false);
@@ -66,6 +67,7 @@ function SearchContent() {
         if (!query.trim()) return;
         nextStartIndexRef.current = 0;
         hasMoreRef.current = false;
+        setFetchError(false);
         fetchBooks(0);
     }, [query, fetchBooks]);
 
@@ -115,6 +117,10 @@ function SearchContent() {
                 </h1>
                 {loading ? (
                     <div className="text-center py-16 text-slate-500">検索中...</div>
+                ) : fetchError ? (
+                    <div className="text-center py-16 text-slate-500">
+                        検索中にエラーが発生しました。時間をおいて再度お試しください。
+                    </div>
                 ) : results.length === 0 ? (
                     <div className="text-center py-16 text-slate-500">
                         該当する書籍が見つかりませんでした

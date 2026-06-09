@@ -113,13 +113,17 @@ export default function BookEditModal({ isOpen, book, onClose, onSave }: BookEdi
 
                     {/* 感想入力 */}
                     <div>
-                        <label className="block text-sm font-medium mb-1">
-                            感想
-                        </label>
+                        <div className="flex justify-between items-baseline mb-1">
+                            <label className="block text-sm font-medium">感想</label>
+                            <span className={`text-xs ${(editingReview?.length ?? 0) >= 1000 ? 'text-red-500' : 'text-gray-400'}`}>
+                                {editingReview?.length ?? 0} / 1000
+                            </span>
+                        </div>
                         <textarea
                             value={editingReview != null ? editingReview : ""}
                             onChange={(e) => setEditingReview(e.target.value)}
                             placeholder="この本の感想を書いてください..."
+                            maxLength={1000}
                             className="w-full p-2 border rounded h-24 resize-none"
                         />
                     </div>
