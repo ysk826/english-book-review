@@ -74,7 +74,7 @@ export const useSavedBook = (): UseSavedBookReturn => {
                 .order('created_at', { ascending: false })
 
             if (booksError || !savedBooksData) {
-                throw new Error(booksError.message);
+                throw new Error(booksError?.message ?? 'データの取得に失敗しました');
             }
             // 取得したデータをパースして状態に設定
             const parsedBooks = (savedBooksData as unknown as UserBookRecord[]).map(parseBookData);
