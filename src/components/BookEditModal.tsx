@@ -15,6 +15,13 @@ export default function BookEditModal({ isOpen, book, onClose, onSave }: BookEdi
         }
     }, [book]);
 
+    useEffect(() => {
+        if (!isOpen) return;
+        const handleKeyDown = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [isOpen, onClose]);
+
     // モーダルが開いていない場合は何も表示しない
     if (!isOpen || !book) return null;
 
