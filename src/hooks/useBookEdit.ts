@@ -13,7 +13,6 @@ import { toast } from 'sonner';
 export const useBookEdit = (onBookUpdated?: (updatedBook: UserBookRecord) => void): UseBookEditReturn => {
     // 編集中の本の情報を管理
     const [editingBook, setEditingBook] = useState<UserBookRecord | null>(null);
-    const [_loading, setLoading] = useState(true)
 
     // モーダルの表示状態を管理
     const [isBookEditModalOpen, setIsBookEditModalOpen] = useState(false);
@@ -68,8 +67,6 @@ export const useBookEdit = (onBookUpdated?: (updatedBook: UserBookRecord) => voi
             console.error('エラー:', error);
             toast.error('保存に失敗しました');
         } finally {
-            // 編集モードを終了
-            setLoading(false);
             closeBookEditModal();
         }
     }

@@ -7,7 +7,7 @@ import { supabase } from "@/lib/supabase";
 
 export default function UserProfileEditModal({ isOpen, profile, onClose, onSave }: UserProfileEditModalProps) {
     const [editingName, setEditingName] = useState(profile ? profile.name : "");
-    const [edittingBio, setEditingBio] = useState(profile?.bio ?? "");
+    const [editingBio, setEditingBio] = useState(profile?.bio ?? "");
     const [avatarUrl, setAvatarUrl] = useState(profile?.avatar ?? null);
     const [nameError, setNameError] = useState("");
 
@@ -97,7 +97,7 @@ export default function UserProfileEditModal({ isOpen, profile, onClose, onSave 
         const updatedProfile: Profile = {
             ...profile,
             name: editingName,
-            bio: edittingBio,
+            bio: editingBio,
             avatar: avatarUrl,
         };
         onSave(updatedProfile);
@@ -194,7 +194,7 @@ export default function UserProfileEditModal({ isOpen, profile, onClose, onSave 
                     <div>
                         <label className="block text-sm font-medium mb-1">自己紹介</label>
                         <textarea
-                            value={edittingBio}
+                            value={editingBio}
                             onChange={(e) => setEditingBio(e.target.value)}
                             placeholder="自己紹介を入力してください..."
                             className="w-full p-2 border rounded h-24 resize-none"
