@@ -116,7 +116,7 @@ export default function SavedBooksList({ title, savedBooks, loading, onEditBook 
                                     <div className="flex items-end justify-between mt-auto pt-2">
                                         {book.finished_reading_at ? (
                                             <span className="text-xs text-gray-400">
-                                                {new Date(book.finished_reading_at).toLocaleDateString('ja-JP')}
+                                                {book.finished_reading_at.slice(0, 10).replace(/-/g, '/')}
                                             </span>
                                         ) : (
                                             <span />

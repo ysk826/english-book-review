@@ -33,7 +33,7 @@ export default function ProfilePage() {
     const readThisYearCount = savedBooks.filter(b =>
         b.status === 'read' &&
         b.finished_reading_at !== null &&
-        new Date(b.finished_reading_at).getFullYear() === currentYear
+        new Date(b.finished_reading_at).getUTCFullYear() === currentYear
     ).length;
 
     const readCount = savedBooks.filter(b => b.status === 'read').length;

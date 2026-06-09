@@ -73,8 +73,9 @@ export const useReviewForm = (bookInfo: BookDetailInfo | null, existingEntry: Us
                 }
             }
 
+            // T12:00:00.000Z（UTC正午）で保存。UTC深夜だとタイムゾーンによっては日付が前後にズレるため
             const finishedReadingAt = status === 'read'
-                ? `${finishedAt}T00:00:00.000Z`
+                ? `${finishedAt}T12:00:00.000Z`
                 : null;
 
             const { error: upsertError } = await supabase
