@@ -76,6 +76,8 @@ export const useProfile = (): UseProfileReturn => {
         // 更新成功時にプロフィールを更新
         setProfile(updatedProfile)
         closeProfileEditModal();
+        // ヘッダーのアバター・名前を最新化するよう通知
+        window.dispatchEvent(new Event('profile-updated'));
     }
 
     // コンポーネントがマウントされた時にプロフィールをフェッチ

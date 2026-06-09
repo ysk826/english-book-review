@@ -37,6 +37,8 @@ export default function Header() {
             }
         };
         fetchUserName();
+        window.addEventListener('profile-updated', fetchUserName);
+        return () => window.removeEventListener('profile-updated', fetchUserName);
     }, []);
 
     // 新しい検索結果が来たら表示数をリセット
