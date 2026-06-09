@@ -46,6 +46,9 @@ export const useReviewForm = (bookInfo: BookDetailInfo | null, existingEntry: Us
             // DB 未登録の書籍（ISBN ベース）の場合は books テーブルへ先に登録
             let bookId = bookInfo.id;
             if (!UUID_REGEX.test(bookId)) {
+                // ISBNではなくタイトルで既存書籍を検索する。
+                // ISBNは版ごとに異なるため厳密に使うと同一書籍が複数レコードに分散する。
+                // 洋書アプリとして「タイトルが同じ＝同じ本」と扱い、DBに登録済みであれば再利用する。
                 const { data: existing } = await supabase
                     .from('books')
                     .select('id')

@@ -35,7 +35,9 @@ export const useBookLibrary = (bookInfo: BookDetailInfo) => {
                 router.push('/login');
                 return;
             }
-            // 1. 本の存在確認（版に関わらずタイトルで同一書籍とみなす）
+            // 1. 本の存在確認（ISBNではなくタイトルで同一書籍とみなす）
+            // ISBNは版ごとに異なるため厳密に使うと同一書籍が複数レコードに分散する。
+            // 洋書アプリとして「タイトルが同じ＝同じ本」と扱い、DBに登録済みであれば再利用する。
             const { data: existingBooks } = await supabase
                 .from('books')
                 .select('id')
