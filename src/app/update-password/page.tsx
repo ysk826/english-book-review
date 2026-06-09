@@ -9,6 +9,7 @@ export default function UpdatePasswordPage() {
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [success, setSuccess] = useState(false);
+    const [isSessionError, setIsSessionError] = useState(false);
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -32,6 +33,11 @@ export default function UpdatePasswordPage() {
 
         const { error } = await supabase.auth.updateUser({ password: newPassword });
         if (error) {
+            if (error.message.includes('Auth session missing')) {
+                setIsSessionError(true);
+                setLoading(false);
+                return;
+            }
             setErrorMessage(mapAuthError(error.message));
             setLoading(false);
             return;
@@ -57,7 +63,23 @@ export default function UpdatePasswordPage() {
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
-                    {success ? (
+                    {isSessionError ? (
+                        <div className="text-center py-4">
+                            <div className="text-slate-300 mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 256 256" className="mx-auto">
+                                    <path d="M236.8,188.09,149.35,36.22a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM120,104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm8,88a12,12,0,1,1,12-12A12,12,0,0,1,128,192Z"/>
+                                </svg>
+                            </div>
+                            <h2 className="text-xl font-semibold text-slate-800 mb-2">リンクが無効です</h2>
+                            <p className="text-slate-500 text-sm leading-relaxed mb-6">
+                                このリンクは期限切れか、すでに使用済みです。<br />
+                                もう一度パスワードリセットメールを送信してください。
+                            </p>
+                            <Link href="/forgot-password" className="inline-block px-6 py-2.5 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transition-colors text-sm">
+                                再度メールを送信する
+                            </Link>
+                        </div>
+                    ) : success ? (
                         <div className="text-center py-4">
                             <div className="text-teal-600 mb-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 256 256" className="mx-auto">
