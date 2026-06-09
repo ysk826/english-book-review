@@ -15,8 +15,7 @@ export const useProfile = (): UseProfileReturn => {
     const [isProfileEditModalOpen, setIsProfileEditModalOpen] = useState(false);
 
     // プロフィール編集モーダルを開く関数
-    const openProfileEditModal = (profile: Profile) => {
-        setProfile(profile);
+    const openProfileEditModal = () => {
         setIsProfileEditModalOpen(true);
     }
 

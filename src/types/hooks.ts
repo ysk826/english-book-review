@@ -15,7 +15,7 @@ export type UseProfileReturn = {
     /** プロフィール編集モーダルの表示状態 */
     isProfileEditModalOpen: boolean;
     /** プロフィール編集モーダルを開く関数 */
-    openProfileEditModal: (profile: Profile) => void;
+    openProfileEditModal: () => void;
     /** プロフィール編集モーダルを閉じる関数 */
     closeProfileEditModal: () => void;
     /** 編集内容を保存する関数 */

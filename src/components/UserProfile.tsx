@@ -37,7 +37,7 @@ export default function UserProfile({ profile, onEditProfile, readThisYearCount,
                                 {profile?.name}
                             </h2>
                             <button
-                                onClick={() => onEditProfile(profile)}
+                                onClick={onEditProfile}
                                 title="プロフィールを編集"
                                 className="absolute left-full top-1/2 -translate-y-1/2 ml-1.5 text-gray-400 hover:text-gray-600 transition-colors"
                             >
