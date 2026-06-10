@@ -57,15 +57,15 @@ export default function UserProfile({ profile, onEditProfile, readThisYearCount,
                 {/* 統計情報 */}
                 <div className="grid grid-cols-3 gap-4 text-center border-t pt-4">
                     <div>
-                        <div className="text-2xl font-bold text-teal-600">{readCount}</div>
+                        <div className="text-2xl font-bold text-emerald-600">{readCount}</div>
                         <div className="text-sm text-gray-600">読んだ本</div>
                     </div>
                     <div>
-                        <div className="text-2xl font-bold text-green-600">{readingCount}</div>
+                        <div className="text-2xl font-bold text-blue-600">{readingCount}</div>
                         <div className="text-sm text-gray-600">読書中</div>
                     </div>
                     <div>
-                        <div className="text-2xl font-bold text-orange-600">{wantToReadCount}</div>
+                        <div className="text-2xl font-bold text-amber-600">{wantToReadCount}</div>
                         <div className="text-sm text-gray-600">読みたい本</div>
                     </div>
                 </div>
@@ -74,7 +74,7 @@ export default function UserProfile({ profile, onEditProfile, readThisYearCount,
             {/* 右: 読書統計カード */}
             <div className="bg-white rounded-lg p-6 md:w-48 flex flex-col justify-end gap-6">
                 <div className="text-center">
-                    <div className="text-3xl font-bold text-teal-600">{readThisYearCount}</div>
+                    <div className="text-3xl font-bold text-emerald-600">{readThisYearCount}</div>
                     <div className="text-sm text-gray-600 mt-1">今年読んだ本</div>
                 </div>
             </div>
